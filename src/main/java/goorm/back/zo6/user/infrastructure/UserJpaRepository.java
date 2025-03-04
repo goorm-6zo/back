@@ -1,0 +1,11 @@
+package goorm.back.zo6.user.infrastructure;
+
+import goorm.back.zo6.user.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserJpaRepository extends JpaRepository<User, Long> {
+    Boolean existsByPhone(String phone);
+    Optional<User> findByEmailAndIsDeleted(String email, boolean isDeleted);
+}
