@@ -48,6 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             User user = getUser(token);
             setSecuritySession(user);
             filterChain.doFilter(request, response);
+
         }catch (CustomException e){
             ErrorCode errorCode =  e.getErrorCode();
             switch (errorCode) {
@@ -107,9 +108,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         return token;
     }
+
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(errorCode.getStatus().value());
-        response.getWriter().print(objectMapper.writeValueAsString(errorCode));
+        response.getWriter().print(objectMapper.writeValueAsString(errorCode.getMessage()));
     }
 }

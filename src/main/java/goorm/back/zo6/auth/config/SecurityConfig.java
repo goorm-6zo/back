@@ -33,20 +33,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //cors 설정
         http.cors((cors -> cors.configurationSource(configurationSource())));
-
         // csfr disable
         http.csrf((auth) -> auth.disable());
-
         // form 로그인 disable
         http.formLogin((auth) -> auth.disable());
-
         // HTTP Basic 인증 방식 disable
         http.httpBasic((auth) -> auth.disable());
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Swagger 관련 경로 허용
-                .requestMatchers("/api/v1/users/*","/api/v1/auth/*").permitAll()
+                .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
