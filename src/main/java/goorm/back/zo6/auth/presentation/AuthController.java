@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Tag(name = "Auth", description = "Authorization API")
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -30,15 +33,17 @@ public class AuthController {
 
     private final AuthService authService;
 
+    public static final String BEARER_PREFIX = "Bearer ";
+
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "이메일과 비밀번호를 입력받아 JWT 토큰을 발급합니다.")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         LoginResponse loginResponse = authService.login(request);
-
-        ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME,loginResponse.accessToken(),TOKEN_VALID_TIME);
+        String encodedToken = Base64.getUrlEncoder().encodeToString((BEARER_PREFIX + loginResponse.accessToken()).getBytes(StandardCharsets.UTF_8));
+        ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, encodedToken, TOKEN_VALID_TIME);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .header(HttpHeaders.SET_COOKIE,cookie.toString())
                 .body("로그인 성공!");
     }
 }

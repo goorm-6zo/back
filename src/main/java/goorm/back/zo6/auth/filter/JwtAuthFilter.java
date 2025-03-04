@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 
@@ -36,7 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = findToken(request);
+            String bearerToken = findToken(request);
+            String token = jwtUtil.resolveToken(bearerToken);
+
             if (!verifyToken(request, token)) {
                 filterChain.doFilter(request, response);
                 return;
@@ -99,7 +103,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("Authorization")){
-                token = cookie.getValue();
+                String encodedToken = cookie.getValue();
+                String decodedToken = new String(Base64.getUrlDecoder().decode(encodedToken), StandardCharsets.UTF_8);
+                token = decodedToken;
             }
         }
         return token;
