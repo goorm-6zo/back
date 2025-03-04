@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/no-token/{user-id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable("user-id")Long userId){
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> findById(@PathVariable("userId") Long userId){
         return ResponseEntity.ok().body(userService.findById(userId));
     }
 
