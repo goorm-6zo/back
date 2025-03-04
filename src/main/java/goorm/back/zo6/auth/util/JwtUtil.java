@@ -19,8 +19,6 @@ public class JwtUtil {
     @Value("${jwt.valid-time}")
     private long TOKEN_VALID_TIME;
 
-    public static final String BEARER_PREFIX = "bearer ";
-
     private JwtUtil(@Value("${jwt.secret}") String secret){
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
@@ -57,13 +55,6 @@ public class JwtUtil {
     public String getRole(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build()
                 .parseClaimsJws(token).getBody().get("role", String.class);
-    }
-
-    public String resolveToken(String bearerToken){
-        if(bearerToken != null && bearerToken.toLowerCase().startsWith(BEARER_PREFIX)){
-            return bearerToken.substring(7).trim();
-        }
-        return null;
     }
 
     public boolean validateToken(String token){

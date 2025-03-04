@@ -38,8 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String bearerToken = findToken(request);
-            String token = jwtUtil.resolveToken(bearerToken);
+            String token = findToken(request);
 
             if (!verifyToken(request, token)) {
                 filterChain.doFilter(request, response);
@@ -103,9 +102,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("Authorization")){
-                String encodedToken = cookie.getValue();
-                String decodedToken = new String(Base64.getUrlDecoder().decode(encodedToken), StandardCharsets.UTF_8);
-                token = decodedToken;
+                token = cookie.getValue();
             }
         }
         return token;
