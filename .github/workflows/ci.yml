@@ -18,6 +18,16 @@ jobs:
         with:
           java-version: '23'
           distribution: 'temurin'
+          
+      - uses: actions/checkout@v2
+      - name: Create resources folder if not exists
+        run: mkdir -p ./src/main/resources
+      - name: Create application.yml file
+        run: echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: application.yml
+          path: ./src/main/resources/application.yml
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
