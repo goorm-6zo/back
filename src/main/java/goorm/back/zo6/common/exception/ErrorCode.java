@@ -36,7 +36,6 @@ public enum ErrorCode {
     SESSION_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
     ;
 
-
     private final HttpStatus status;
     private final String message;
 
