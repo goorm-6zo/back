@@ -1,5 +1,7 @@
 package goorm.back.zo6.auth.util;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -63,18 +65,21 @@ public class JwtUtil {
     }
 
     private boolean valid(SecretKey secretKey, String token){
+        if (token == null) {
+            throw new CustomException(ErrorCode.MISSING_TOKEN);
+        }
         try{
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build()
                     .parseClaimsJws(token);
             return claims.getBody().getExpiration().before(new Date());
         }catch (SignatureException ex){
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
         }catch (MalformedJwtException ex){
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.UNSUPPORTED_TOKEN);
         }catch (ExpiredJwtException ex){
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }catch (IllegalArgumentException ex){
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.UNKNOWN_TOKEN_ERROR);
         }
     }
 }

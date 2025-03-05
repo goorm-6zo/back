@@ -8,6 +8,7 @@ import lombok.Builder;
 public record UserResponse(
     Long id,
     String email,
+    String name,
     String phone,
     String birthDate,
     Boolean isDeleted,
@@ -18,6 +19,7 @@ public record UserResponse(
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .name(user.getName())
                 .phone(user.getPhone())
                 .birthDate(user.getBirthDate())
                 .isDeleted(user.getIsDeleted())

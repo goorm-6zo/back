@@ -1,17 +1,15 @@
 package goorm.back.zo6.user.presentation;
 
-import goorm.back.zo6.auth.util.CookieUtil;
+import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.user.application.UserService;
-import goorm.back.zo6.user.dto.request.LoginRequest;
 import goorm.back.zo6.user.dto.request.SignUpRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
 import goorm.back.zo6.user.dto.response.SignUpResponse;
 import goorm.back.zo6.user.dto.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Users", description = "유저 API")
@@ -22,6 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
+    @Operation(summary = "유저 조회", description = "유저 id로 유저를 조회합니다.")
     public ResponseEntity<UserResponse> findById(@PathVariable("userId") Long userId){
         return ResponseEntity.ok().body(userService.findById(userId));
     }
