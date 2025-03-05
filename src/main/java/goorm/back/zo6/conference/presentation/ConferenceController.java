@@ -1,0 +1,40 @@
+package goorm.back.zo6.conference.presentation;
+
+import goorm.back.zo6.conference.application.ConferenceQueryService;
+import goorm.back.zo6.conference.dto.response.ConferenceDetailResponse;
+import goorm.back.zo6.conference.dto.response.ConferenceResponse;
+import goorm.back.zo6.conference.dto.response.SessionResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/conference")
+@RequiredArgsConstructor
+public class ConferenceController {
+
+    private final ConferenceQueryService conferenceQueryService;
+
+    @GetMapping
+    public ResponseEntity<List<ConferenceResponse>> getAllConferences() {
+        List<ConferenceResponse> conferences = conferenceQueryService.getAllConferences();
+        return ResponseEntity.ok(conferences);
+    }
+
+    @GetMapping("/{conferenceId}")
+    public ResponseEntity<ConferenceDetailResponse> getConference(@PathVariable Long conferenceId) {
+        ConferenceDetailResponse response = conferenceQueryService.getConference(conferenceId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{conferenceId}/sessions")
+    public ResponseEntity<List<SessionResponse>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
+        List<SessionResponse> sessions = conferenceQueryService.getSessionByConferenceId(conferenceId);
+        return ResponseEntity.ok(sessions);
+    }
+}
