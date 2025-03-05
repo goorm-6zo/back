@@ -12,7 +12,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 빌더 유도
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@DynamicUpdate //JPA의 Dirty Checking을 사용할 경우, 모든 필드에 대해 UPDATE 쿼리가 나간다.
 @Getter
 @SQLDelete(sql = "UPDATE  users SET is_deleted = true WHERE user_id = ?") // soft delete
 @SQLRestriction("is_deleted = false")
