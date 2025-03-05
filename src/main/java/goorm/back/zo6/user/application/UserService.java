@@ -32,7 +32,7 @@ public class UserService {
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest request){
-        userRepository.findByEmailAndIsDeleted(request.email(),false)
+        userRepository.findByEmail(request.email())
                 .ifPresent(user -> {
                     throw new CustomException(ErrorCode.USER_ALREADY_EXISTS);
                 });
@@ -40,5 +40,16 @@ public class UserService {
         User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), request.birth_date(), Role.of("USER")));
 
         return SignUpResponse.from(user);
+    }
+
+    public UserResponse findByToken(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return UserResponse.from(user);
+    }
+
+    @Transactional
+    public void delete(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        userRepository.deleteById(user.getId());
     }
 }
