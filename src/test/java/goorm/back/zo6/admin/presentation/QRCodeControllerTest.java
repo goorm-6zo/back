@@ -117,7 +117,7 @@ public class QRCodeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isNotFound(),
-                        jsonPath("$.code").value(HttpStatus.NOT_FOUND.name()),
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()),
                         jsonPath("$.message").value("존재하지 않는 컨퍼런스입니다.")
                 );
     }
@@ -133,7 +133,7 @@ public class QRCodeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isNotFound(),
-                        jsonPath("$.code").value(HttpStatus.NOT_FOUND.name()),
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()),
                         jsonPath("$.message").value("존재하지 않는 세션입니다.")
                 );
     }
