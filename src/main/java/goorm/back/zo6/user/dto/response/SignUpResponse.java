@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record SignUpResponse(
-        Long userId,
+        Long id,
         String email,
         String phone,
         String name,
@@ -17,7 +17,7 @@ public record SignUpResponse(
 ) {
     public static SignUpResponse from(User user){
         return SignUpResponse.builder()
-                .userId(user.getId())
+                .id(user.getId())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .name(user.getName())
