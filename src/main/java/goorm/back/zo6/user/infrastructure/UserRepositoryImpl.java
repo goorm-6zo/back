@@ -30,7 +30,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmailAndIsDeleted(String email, boolean isDeleted) {
-        return userJpaRepository.findByEmailAndIsDeleted(email, isDeleted);
+    public void deleteById(Long userId) {
+        userJpaRepository.deleteById(userId);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userJpaRepository.findByEmail(email);
     }
 }

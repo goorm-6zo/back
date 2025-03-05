@@ -4,14 +4,17 @@ import goorm.back.zo6.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Builder
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 빌더 유도
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@DynamicUpdate //JPA의 Dirty Checking을 사용할 경우, 모든 필드에 대해 UPDATE 쿼리가 나간다.
 @Getter
+@SQLDelete(sql = "UPDATE  users SET is_deleted = true WHERE user_id = ?") // soft delete
+@SQLRestriction("is_deleted = false")
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,5 +53,9 @@ public class User extends BaseEntity {
                 .birthDate(birthDate)
                 .role(role)
                 .build();
+    }
+
+    public void logicalDelete() {
+        this.isDeleted = true;
     }
 }
