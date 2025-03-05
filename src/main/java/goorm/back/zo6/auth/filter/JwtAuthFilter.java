@@ -101,6 +101,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private static String findToken(HttpServletRequest request){
         String token = null;
         Cookie[] cookies = request.getCookies();
+
+        if(cookies == null){
+            return null;
+        }
+
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("Authorization")){
                 token = cookie.getValue();
