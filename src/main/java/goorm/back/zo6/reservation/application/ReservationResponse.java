@@ -1,4 +1,4 @@
-package goorm.back.zo6.reservation.dto.response;
+package goorm.back.zo6.reservation.application;
 
 import lombok.Builder;
 

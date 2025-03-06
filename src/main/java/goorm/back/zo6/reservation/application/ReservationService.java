@@ -3,8 +3,6 @@ package goorm.back.zo6.reservation.application;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.ConferenceRepository;
 import goorm.back.zo6.conference.domain.Session;
-import goorm.back.zo6.reservation.dto.request.ReservationRequest;
-import goorm.back.zo6.reservation.dto.response.ReservationResponse;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
 import goorm.back.zo6.reservation.infrastructure.ReservationSessionJpaRepository;

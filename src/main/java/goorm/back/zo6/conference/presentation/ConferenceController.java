@@ -1,9 +1,9 @@
 package goorm.back.zo6.conference.presentation;
 
 import goorm.back.zo6.conference.application.ConferenceQueryService;
-import goorm.back.zo6.conference.dto.response.ConferenceDetailResponse;
-import goorm.back.zo6.conference.dto.response.ConferenceResponse;
-import goorm.back.zo6.conference.dto.response.SessionResponse;
+import goorm.back.zo6.conference.application.ConferenceDetailResponse;
+import goorm.back.zo6.conference.application.ConferenceResponse;
+import goorm.back.zo6.conference.application.SessionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

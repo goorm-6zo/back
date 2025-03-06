@@ -1,7 +1,7 @@
 package goorm.back.zo6.reservation.presnetation;
 
-import goorm.back.zo6.reservation.dto.request.ReservationRequest;
-import goorm.back.zo6.reservation.dto.response.ReservationResponse;
+import goorm.back.zo6.reservation.application.ReservationRequest;
+import goorm.back.zo6.reservation.application.ReservationResponse;
 import goorm.back.zo6.reservation.application.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

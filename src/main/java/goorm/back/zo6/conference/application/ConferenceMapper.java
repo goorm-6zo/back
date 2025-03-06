@@ -2,9 +2,6 @@ package goorm.back.zo6.conference.application;
 
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
-import goorm.back.zo6.conference.dto.response.ConferenceDetailResponse;
-import goorm.back.zo6.conference.dto.response.ConferenceResponse;
-import goorm.back.zo6.conference.dto.response.SessionResponse;
 import org.springframework.stereotype.Component;
 
 @Component

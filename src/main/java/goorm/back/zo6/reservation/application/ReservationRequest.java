@@ -1,4 +1,4 @@
-package goorm.back.zo6.reservation.dto.request;
+package goorm.back.zo6.reservation.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

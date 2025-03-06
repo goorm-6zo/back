@@ -1,4 +1,4 @@
-package goorm.back.zo6.conference.dto.response;
+package goorm.back.zo6.conference.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
