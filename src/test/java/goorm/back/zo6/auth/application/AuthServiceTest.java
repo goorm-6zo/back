@@ -57,7 +57,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "1234");
 
         // db 에서 유저 조회
-        when(userRepository.findByEmailAndIsDeleted(loginRequest.email(),false)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(testUser));
         // db 비밀번호 매칭 확인
         when(passwordEncoder.matches(loginRequest.password(), testUser.getPassword().getValue())).thenReturn(true);
         // jwt 토큰 생성
@@ -70,7 +70,7 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals("mockToken",response.accessToken());
 
-        verify(userRepository, times(1)).findByEmailAndIsDeleted(loginRequest.email(), false);
+        verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
         verify(jwtUtil, times(1)).createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getName(), testUser.getRole());
     }
@@ -82,7 +82,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("nonexistent@gmail.com", "1234");
 
         // DB에서 유저 조회 실패 (이메일이 존재하지 않음)
-        when(userRepository.findByEmailAndIsDeleted(loginRequest.email(), false))
+        when(userRepository.findByEmail(loginRequest.email()))
                 .thenReturn(Optional.empty());
 
         // when & then
@@ -90,7 +90,7 @@ class AuthServiceTest {
 
         assertEquals(ErrorCode.USER_NOT_MATCH_LOGIN_INFO, exception.getErrorCode());
 
-        verify(userRepository, times(1)).findByEmailAndIsDeleted(loginRequest.email(), false);
+        verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, never()).matches(anyString(), anyString());
         verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
     }
@@ -102,7 +102,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "wrongPassword");
 
         // 유저는 존재
-        when(userRepository.findByEmailAndIsDeleted(loginRequest.email(), false))
+        when(userRepository.findByEmail(loginRequest.email()))
                 .thenReturn(Optional.of(testUser));
 
         // 비밀번호가 일치하지 않음
@@ -114,7 +114,7 @@ class AuthServiceTest {
 
         assertEquals(ErrorCode.USER_NOT_MATCH_LOGIN_INFO, exception.getErrorCode());
 
-        verify(userRepository, times(1)).findByEmailAndIsDeleted(loginRequest.email(), false);
+        verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
         verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
     }

@@ -20,7 +20,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponse login(LoginRequest loginRequest){
-        User user = userRepository.findByEmailAndIsDeleted(loginRequest.email(),false)
+        User user = userRepository.findByEmail(loginRequest.email())
                 .filter(m -> passwordEncoder.matches(loginRequest.password(),m.getPassword().getValue()))
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_MATCH_LOGIN_INFO));
 

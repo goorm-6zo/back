@@ -28,6 +28,12 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED,"만료된 토큰입니다."),
     UNKNOWN_TOKEN_ERROR(HttpStatus.BAD_REQUEST,"토큰의 값이 존재하지 않습니다."),
     MISSING_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 존재하지 않습니다."),
+
+    // Conference Error
+    CONFERENCE_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 컨퍼런스입니다."),
+
+    // Session Error
+    SESSION_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
     ;
 
     private final HttpStatus status;
