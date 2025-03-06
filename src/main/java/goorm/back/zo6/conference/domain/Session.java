@@ -1,7 +1,6 @@
 package goorm.back.zo6.conference.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,5 +46,14 @@ public class Session {
         this.location = location;
         this.time = time;
         this.summary = summary;
+    }
+
+    public boolean isReservable() { return capacity > 0; }
+
+    public void reserveSeat() {
+        if (this.capacity <= 0) {
+            throw new IllegalStateException("No available seats for this session");
+        }
+        this.capacity--;
     }
 }

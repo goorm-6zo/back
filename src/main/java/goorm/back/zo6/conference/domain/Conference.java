@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -30,4 +31,31 @@ public class Conference {
         return this.sessions.stream().anyMatch(session -> session.getId().equals(sessionId));
     }
 
+    public void validateSessionOwnership(Set<Long> sessionIds) {
+        if (!hasSessions) {
+            throw new IllegalStateException("This conference does not have sessions");
+        }
+
+        Set<Long> existingSessionIds = this.sessions.stream()
+                .map(Session::getId)
+                .collect(Collectors.toSet());
+
+        if (!existingSessionIds.containsAll(sessionIds)) {
+            throw new IllegalStateException("This conference does not have all the sessions");
+        }
+    }
+
+    public Set<Long> getSessionIds() {
+        return this.sessions.stream()
+                .map(Session::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public boolean hasReservablesSessions() {
+        return this.sessions.stream()
+                .anyMatch(Session::isReservable);
+    }
+
+    public boolean isReservableWithoutSessions() {
+        return !hasSessions || !hasReservablesSessions();}
 }

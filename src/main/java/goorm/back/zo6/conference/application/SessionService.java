@@ -4,6 +4,7 @@ import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.domain.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +18,19 @@ public class SessionService {
         return sessionRepository.findByConferenceId(conferenceId);
     }
 
-    public Session createSession(Session session) {
-        return sessionRepository.save(session);
+    public Session getSession(Long sessionId) {
+        return sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
+    }
+
+    public boolean isSessionReservable(Long sessionId) {
+        Session session = getSession(sessionId);
+        return session.isReservable();
+    }
+
+    public boolean areSessionsReservable(Long conferenceId, List<Long> sessionIds) {
+        List<Session> sessions = getSessionsByConferenceId(conferenceId);
+        return sessions.stream()
+                .filter(session -> sessionIds.contains(session.getId()))
+                .allMatch(Session::isReservable);
     }
 }
