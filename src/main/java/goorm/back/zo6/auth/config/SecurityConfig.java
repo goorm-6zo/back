@@ -42,7 +42,7 @@ public class SecurityConfig {
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Swagger 관련 경로 허용
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated());
 
