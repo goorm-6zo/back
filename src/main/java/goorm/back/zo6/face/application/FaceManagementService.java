@@ -53,19 +53,6 @@ public class FaceManagementService {
         }
     }
 
-    private String getFileExtension(String fileName) {
-        if (fileName == null || fileName.lastIndexOf(".") == -1) {
-            throw new CustomException(ErrorCode.INVALID_FILE_NAME);
-        }
-        // 확장자 분리
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-
-        if(!ALLOWED_EXTENSIONS.contains(extension)){
-            throw new CustomException(ErrorCode.UNSUPPORTED_FILE_EXTENSION);
-        }
-        return extension;
-    }
-
     // 얼굴 이미지 다운로드 url 반환
     public String getFaceImageUrl(Long userId){
         Face face = faceRepository.findFaceIdByUserId(userId);
@@ -97,5 +84,18 @@ public class FaceManagementService {
 
     private String makeImageKey(Long userId, String extension) {
         return String.format("images/faces/%d/face.%s",userId,extension);
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf(".") == -1) {
+            throw new CustomException(ErrorCode.INVALID_FILE_NAME);
+        }
+        // 확장자 분리
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
+        if(!ALLOWED_EXTENSIONS.contains(extension)){
+            throw new CustomException(ErrorCode.UNSUPPORTED_FILE_EXTENSION);
+        }
+        return extension;
     }
 }
