@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class SessionRepositoryImpl implements SessionRepository {
+
     private final SessionJpaRepository sessionJpaRepository;
 
     @Override
@@ -21,15 +22,5 @@ public class SessionRepositoryImpl implements SessionRepository {
     @Override
     public Optional<Session> findById(Long id) {
         return sessionJpaRepository.findById(id);
-    }
-
-    @Override
-    public Session save(Session session) {
-        return sessionJpaRepository.save(session);
-    }
-
-    @Override
-    public Boolean existsByConferenceId(Long conferenceId) {
-        return sessionJpaRepository.existsByConferenceId(conferenceId);
     }
 }

@@ -1,44 +1,18 @@
 package goorm.back.zo6.conference.application;
 
-import goorm.back.zo6.conference.domain.Conference;
-import goorm.back.zo6.conference.domain.ConferenceRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import goorm.back.zo6.conference.domain.Session;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class ConferenceQueryService {
+public interface ConferenceQueryService {
 
-    private final ConferenceRepository conferenceRepository;
-    private final ConferenceMapper conferenceMapper;
+    List<ConferenceResponse> getAllConferences();
 
-    public List<ConferenceResponse> getAllConferences() {
-        return conferenceRepository.findAll().stream()
-                .map(conferenceMapper::toConferenceResponse)
-                .toList();
-    }
+    ConferenceDetailResponse getConference(Long conferenceId);
 
-    public ConferenceDetailResponse getConference(Long id) {
-        Conference conference = findConferenceOrThrow(id);
-        return conferenceMapper.toConferenceDetailResponse(conference);
-    }
+    List<Session> getSessionsByConferenceId(Long conferenceId);
 
-    public List<SessionResponse> getSessionByConferenceId(Long conferenceId) {
-        Conference conference = findConferenceOrThrow(conferenceId);
+    boolean isSessionReservable(Long sessionId);
 
-        if (!conference.getHasSessions()) {
-            throw new IllegalArgumentException("This conference does not have any sessions.");
-        }
-
-        return conference.getSessions().stream()
-                .map(conferenceMapper::toSessionResponse)
-                .toList();
-    }
-
-    private Conference findConferenceOrThrow(Long id) {
-        return conferenceRepository.findWithSessionsById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Conference not found."));
-    }
+    boolean areSessionsReservable(Long conferenceId, List<Long> sessionId);
 }

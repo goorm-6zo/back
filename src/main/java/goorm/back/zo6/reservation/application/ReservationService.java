@@ -5,7 +5,6 @@ import goorm.back.zo6.conference.domain.ConferenceRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
-import goorm.back.zo6.reservation.infrastructure.ReservationSessionJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ConferenceRepository conferenceRepository;
-    private final ReservationSessionJpaRepository reservationSessionJpaRepository;
 
     @Transactional
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
@@ -61,13 +59,6 @@ public class ReservationService {
 
     private Set<Session> validateSessionReservations(Conference conference, List<Long> sessionIds, String name, String phone) {
         conference.validateSessionOwnership(Set.copyOf(sessionIds));
-
-        boolean duplicateReservation = sessionIds.stream()
-                .anyMatch(sessionId -> reservationRepository.existsBySessionIdAndNameAndPhone(sessionId, name, phone));
-
-        if (duplicateReservation) {
-            throw new IllegalArgumentException("Duplicate reservation detected for one or more sessions");
-        }
 
         return conference.getSessions().stream()
                 .filter(session -> sessionIds.contains(session.getId()))

@@ -12,7 +12,6 @@ import java.util.Optional;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final ReservationJpaRepository reservationJpaRepository;
-    private final ReservationSessionJpaRepository reservationSessionJpaRepository;
 
     @Override
     public Boolean existsByConferenceId(Long conferenceId) {
@@ -22,11 +21,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public Boolean existsByConferenceIdAndNameAndPhone(Long conferenceId, String name, String phone) {
         return reservationJpaRepository.existsByConferenceIdAndNameAndPhone(conferenceId, name, phone);
-    }
-
-    @Override
-    public Boolean existsBySessionIdAndNameAndPhone(Long sessionId, String name, String phone) {
-        return reservationSessionJpaRepository.existsBySessionIdAndNameAndPhone(sessionId, name, phone);
     }
 
     @Override
@@ -42,10 +36,5 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public Optional<Reservation> findByNameAndPhone(String name, String phone) {
         return reservationJpaRepository.findByNameAndPhone(name, phone);
-    }
-
-    @Override
-    public Long countBySessionId(Long sessionId) {
-        return reservationSessionJpaRepository.countBySessionId(sessionId);
     }
 }

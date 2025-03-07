@@ -1,9 +1,7 @@
 package goorm.back.zo6.conference.presentation;
 
-import goorm.back.zo6.conference.application.ConferenceQueryService;
-import goorm.back.zo6.conference.application.ConferenceDetailResponse;
-import goorm.back.zo6.conference.application.ConferenceResponse;
-import goorm.back.zo6.conference.application.SessionResponse;
+import goorm.back.zo6.conference.application.*;
+import goorm.back.zo6.conference.domain.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +31,19 @@ public class ConferenceController {
     }
 
     @GetMapping("/{conferenceId}/sessions")
-    public ResponseEntity<List<SessionResponse>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
-        List<SessionResponse> sessions = conferenceQueryService.getSessionByConferenceId(conferenceId);
-        return ResponseEntity.ok(sessions);
+    public ResponseEntity<List<Session>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
+        return ResponseEntity.ok(conferenceQueryService.getSessionsByConferenceId(conferenceId));
+    }
+
+    @GetMapping("/sessions/{sessionId}/reservable")
+    public ResponseEntity<Boolean> isSessionReservable(@PathVariable Long sessionId) {
+        Boolean reservable = conferenceQueryService.isSessionReservable(sessionId);
+        return ResponseEntity.ok(reservable);
+    }
+
+    @GetMapping("/{conferenceId}/sessions/reservable")
+    public ResponseEntity<Boolean> areSessionsReservable(@PathVariable Long conferenceId, @PathVariable List<Long> sessionIds) {
+        boolean allReservable = conferenceQueryService.areSessionsReservable(conferenceId, sessionIds);
+        return ResponseEntity.ok(allReservable);
     }
 }

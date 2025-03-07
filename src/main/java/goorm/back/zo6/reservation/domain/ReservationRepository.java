@@ -14,10 +14,7 @@ public interface ReservationRepository {
 
     Boolean existsByConferenceIdAndNameAndPhone(Long conferenceId, String name, String phone);
 
-    Boolean existsBySessionIdAndNameAndPhone(Long sessionId, String name, String phone);
-
     Optional<Reservation> findByNameAndPhone(String name, String phone);
 
-    Long countBySessionId(Long sessionId);
 }
 
