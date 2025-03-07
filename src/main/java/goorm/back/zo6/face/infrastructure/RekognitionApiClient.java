@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class RekognitionApiClient {
         if (!response.faceRecords().isEmpty()) {
             return response.faceRecords().get(0).face().faceId(); // Rekognition Face ID 반환
         }
-
+        // null 리턴이 좀 별로?
         return null;
     }
 
