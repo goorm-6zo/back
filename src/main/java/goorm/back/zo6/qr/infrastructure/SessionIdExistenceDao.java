@@ -1,6 +1,6 @@
-package goorm.back.zo6.admin.infrastructure;
+package goorm.back.zo6.qr.infrastructure;
 
-import goorm.back.zo6.admin.domain.IdExistenceDao;
+import goorm.back.zo6.qr.domain.IdExistenceDao;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

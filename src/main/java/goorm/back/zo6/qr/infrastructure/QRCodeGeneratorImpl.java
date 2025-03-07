@@ -1,11 +1,11 @@
-package goorm.back.zo6.admin.infrastructure;
+package goorm.back.zo6.qr.infrastructure;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import goorm.back.zo6.admin.domain.QRCodeGenerator;
+import goorm.back.zo6.qr.domain.QRCodeGenerator;
 import org.springframework.stereotype.Component;
 import java.util.Base64;
 

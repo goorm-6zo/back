@@ -1,4 +1,4 @@
-package goorm.back.zo6.admin.infrastructure;
+package goorm.back.zo6.qr.infrastructure;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
