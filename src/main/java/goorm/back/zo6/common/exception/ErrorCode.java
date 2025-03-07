@@ -30,10 +30,10 @@ public enum ErrorCode {
     MISSING_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 존재하지 않습니다."),
 
     // Conference Error
-    CONFERENCE_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 컨퍼런스입니다."),
+    CONFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 컨퍼런스입니다."),
 
     // Session Error
-    SESSION_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
+    SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
     ;
 
     private final HttpStatus status;
