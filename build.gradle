@@ -77,6 +77,11 @@ dependencies {
     // zxing(QR)
     implementation 'com.google.zxing:core:3.5.3'
     implementation 'com.google.zxing:javase:3.5.3'
+
+    // aws Rekognition, S3
+    implementation platform('software.amazon.awssdk:bom:2.20.112')
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:rekognition'
 }
 
 tasks.named('test') {
