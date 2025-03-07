@@ -23,13 +23,12 @@ import java.util.List;
 public class FaceManagementService {
 
     private final S3FaceClient s3FaceClient; // s3에 저장하기 위함
-    private final RekognitionApiClient rekognitionApiClient; // rekognition collection에 저장하기 위함
+    private final RekognitionApiClient rekognitionApiClient; // rekognition collection 에 저장하기 위함
     private final FaceRepository faceRepository;
 
     @Value("${amazon.aws.s3.bucket-name}")
     private String bucketName;
     private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png");
-
 
     // 얼굴 이미지 저장, S3 저장 및 collection 저장
     @Transactional
@@ -43,14 +42,9 @@ public class FaceManagementService {
         // Rekognition Collection 에 유저 얼굴 등록
         String rekognitionFaceId = rekognitionApiClient.addFaceToCollection(imageKey, userId, bucketName);
 
-        if(rekognitionFaceId != null){
-            Face face = faceRepository.save(Face.of(imageKey, rekognitionFaceId, userId));
-            log.info(" 얼굴 등록 완료!, userId : {}, Face ID: {}", userId, rekognitionFaceId);
-            return FaceResponse.from(face);
-        }else{
-            log.info("얼굴 등록 실패!, userId :{}", userId);
-            throw new CustomException(ErrorCode.FACE_UPLOAD_FAIL);
-        }
+        Face face = faceRepository.save(Face.of(imageKey, rekognitionFaceId, userId));
+        log.info(" 얼굴 등록 완료!, userId : {}, Face ID: {}", userId, rekognitionFaceId);
+        return FaceResponse.from(face);
     }
 
     // 얼굴 이미지 다운로드 url 반환
@@ -58,28 +52,26 @@ public class FaceManagementService {
         Face face = faceRepository.findFaceIdByUserId(userId);
         String imageKey = face.getImageKey();
         String getUrl = s3FaceClient.generateDownloadPreSignedUrl(imageKey, bucketName);
+
+        log.info("s3 이미지 조회 PresingedUrl 생성에 성공하였습니다.");
         return getUrl;
     }
 
     // 얼굴 이미지 삭제, s3 이미지 삭제, rekognition collection 이미지 삭제
+    @Transactional
     public void deleteFaceImage(Long userId) {
         Face face = faceRepository.findFaceIdByUserId(userId);
-        if(face != null){
-            String fileName = face.getImageKey();
-            String rekognitionId = face.getRekognitionFaceId();
+        String imageKey = face.getImageKey();
+        String rekognitionId = face.getRekognitionFaceId();
 
-            // S3에 저장된 이미지 삭제
-            s3FaceClient.deleteFaceImage(fileName, bucketName);
-            // Rekognition Collection 에 저장된 이미지 삭제
-            rekognitionApiClient.deleteFaceFromCollection(rekognitionId);
-            // DB 에서 삭제
-            faceRepository.deleteByUserId(userId);
+        // S3에 저장된 이미지 삭제
+        s3FaceClient.deleteFaceImage(imageKey, bucketName);
+        // Rekognition Collection 에 저장된 이미지 삭제
+        rekognitionApiClient.deleteFaceFromCollection(rekognitionId);
+        // DB 에서 삭제
+        faceRepository.deleteByUserId(userId);
 
-            log.info("얼굴 데이터 삭제 완료! userId : {}", userId);
-        }else{
-            log.info("얼굴 데이터 삭제 실패! userId : {}", userId);
-            throw new CustomException(ErrorCode.FACE_NOT_FOUND);
-        }
+        log.info("얼굴 데이터 삭제 완료! userId : {}", userId);
     }
 
     private String makeImageKey(Long userId, String extension) {

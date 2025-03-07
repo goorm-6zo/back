@@ -31,9 +31,17 @@ public enum ErrorCode {
 
     // S3 Error
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다."),
+    FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패하였습니다."),
     UNSUPPORTED_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "허용되지 않는 파일 확장자 입니다."),
     INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "파일 이름이 없거나 확장자가 없습니다."),
+    PRESIGNED_URL_GENERATION_FAILED(HttpStatus.BAD_REQUEST, "이미지 조회 PresignedUrl 을 생성할 수 없습니다."),
 
+    // Rekognition Error
+    REKOGNITION_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Rekognition Collection 에서 이미지 업로드를 실패하였습니다."),
+    REKOGNITION_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Rekognition Collection 에서 이미지 삭제를 실패하였습니다."),
+    REKOGNITION_NO_MATCH_FOUND(HttpStatus.BAD_REQUEST, "Rekognition 얼굴 매칭에 실패하였습니다."),
+    REKOGNITION_API_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR,"Rekognition Api 호출 시 문제가 발생하였습니다."),
+    REKOGNITION_CREATE_COLLECTION_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Rekognition Collection 생성 실패"),
     // Face Error
     FACE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST,"유저 얼굴 이미지 저장 실패하였습니다."),
     FACE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저의 얼굴 이미지 저장 정보를 조회할 수 없습니다."),
