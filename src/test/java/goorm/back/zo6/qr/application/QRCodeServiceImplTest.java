@@ -1,7 +1,7 @@
-package goorm.back.zo6.admin.application;
+package goorm.back.zo6.qr.application;
 
-import goorm.back.zo6.admin.domain.IdExistenceDao;
-import goorm.back.zo6.admin.domain.QRCodeGenerator;
+import goorm.back.zo6.qr.domain.IdExistenceDao;
+import goorm.back.zo6.qr.domain.QRCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
