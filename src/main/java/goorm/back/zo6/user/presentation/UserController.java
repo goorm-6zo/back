@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Tag(name = "Users", description = "유저 API")
 @RestController
 @RequestMapping("/api/v1/users")
@@ -40,9 +42,9 @@ public class UserController {
 
     @DeleteMapping
     @Operation(summary = "유저 탈퇴", description = "유저 토큰으로 유저를 논리 탈퇴합니다.")
-    public ResponseEntity<String> delete(@AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<Map<String,String>> delete(@AuthenticationPrincipal LoginUser loginUser) {
         String email = loginUser.user().getEmail();
         userService.delete(email);
-        return ResponseEntity.ok().body("성공적으로 회원 탈퇴하였습니다.");
+        return ResponseEntity.ok().body(Map.of("message","성공적으로 회원 탈퇴하였습니다."));
     }
 }
