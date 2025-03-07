@@ -149,7 +149,7 @@ class UserControllerTest {
         mockMvc.perform(delete("/api/v1/users")
                         .cookie(new Cookie("Authorization", testToken)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("성공적으로 회원 탈퇴하였습니다."));
+                .andExpect(jsonPath("$.message").value("성공적으로 회원 탈퇴하였습니다."));
 
         // 데이터베이스에서 삭제 확인
         Optional<User> user = userRepository.findByEmail(email);
