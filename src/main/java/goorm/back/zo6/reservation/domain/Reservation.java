@@ -29,6 +29,7 @@ public class Reservation {
     private Conference conference;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<ReservationSession> reservationSessions = new HashSet<>();
 
     @Column(name = "name", nullable = false)
