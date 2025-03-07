@@ -1,7 +1,7 @@
-package goorm.back.zo6.admin.application;
+package goorm.back.zo6.qr.application;
 
-import goorm.back.zo6.admin.domain.IdExistenceDao;
-import goorm.back.zo6.admin.domain.QRCodeGenerator;
+import goorm.back.zo6.qr.domain.IdExistenceDao;
+import goorm.back.zo6.qr.domain.QRCodeGenerator;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class QRCodeServiceImpl implements QRCodeService {
-    private final IdExistenceDao conferenceidExistenceDao;
+    private final IdExistenceDao conferenceIdExistenceDao;
     private final IdExistenceDao sessionIdExistenceDao;
     private final QRCodeGenerator qrCodeGenerator;
     private final QRContentBuilder qrContentBuilder;
@@ -20,7 +20,7 @@ class QRCodeServiceImpl implements QRCodeService {
             QRCodeGenerator qrCodeGenerator,
             QRContentBuilder qrContentBuilder
     ) {
-        this.conferenceidExistenceDao = conferenceIdExistenceDao;
+        this.conferenceIdExistenceDao = conferenceIdExistenceDao;
         this.sessionIdExistenceDao = sessionIdExistenceDao;
         this.qrCodeGenerator = qrCodeGenerator;
         this.qrContentBuilder = qrContentBuilder;
@@ -37,12 +37,12 @@ class QRCodeServiceImpl implements QRCodeService {
     }
 
     private void validateConferenceId(Long conferenceId) {
-        if (!conferenceidExistenceDao.exists(conferenceId))
-            throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUNT);
+        if (!conferenceIdExistenceDao.exists(conferenceId))
+            throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
     }
 
     private void validateSectionId(Long sessionId) {
         if (sessionId != null && !sessionIdExistenceDao.exists(sessionId))
-            throw new CustomException(ErrorCode.SESSION_NOT_FOUNT);
+            throw new CustomException(ErrorCode.SESSION_NOT_FOUND);
     }
 }
