@@ -15,8 +15,8 @@ class QRCodeController {
     @GetMapping
     public ResponseEntity<QRCodeResponse> getQRCode(
             @RequestParam(name = "conferenceId") Long conferenceId,
-            @RequestParam(name = "sectionId", required = false) Long sectionId,
+            @RequestParam(name = "sessionId", required = false) Long sessionId,
             @RequestParam(name = "url") String url) {
-        return ResponseEntity.ok(qrCodeService.createQRCode(conferenceId, sectionId, url));
+        return ResponseEntity.ok(qrCodeService.createQRCode(conferenceId, sessionId, url));
     }
 }
