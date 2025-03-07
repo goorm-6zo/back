@@ -1,7 +1,7 @@
 package goorm.back.zo6.reservation.application;
 
 import goorm.back.zo6.conference.domain.Conference;
-import goorm.back.zo6.conference.domain.ConferenceRepository;
+import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ConferenceRepository conferenceRepository;
+    private final ConferenceJpaRepository conferenceJpaRepository;
 
     @Transactional
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
 
         validateRequest(reservationRequest);
 
-        Conference conference = conferenceRepository.findById(reservationRequest.getConferenceId())
+        Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId())
                 .orElseThrow(() -> new IllegalArgumentException("Conference not found"));
 
         Set<Session> reservedSessions = validateSessionReservations(
