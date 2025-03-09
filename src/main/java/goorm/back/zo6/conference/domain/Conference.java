@@ -1,6 +1,8 @@
 package goorm.back.zo6.conference.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "conference")
 public class Conference {

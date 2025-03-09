@@ -24,6 +24,16 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex){
+        log.error("[IllegalArgumentException] 예외 발생: {}", ex.getMessage());
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        String errorMessage = ex.getMessage();
+
+        return ResponseEntity.status(status).body(ErrorResponse.of(status, errorMessage));
+    }
+
     // @RequestParam, @PathVariable의 유효성 검사를 수행
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex){
