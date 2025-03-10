@@ -58,7 +58,12 @@ public class ReservationService {
     }
 
     private Set<Session> validateSessionReservations(Conference conference, List<Long> sessionIds, String name, String phone) {
-        conference.validateSessionOwnership(Set.copyOf(sessionIds));
+
+        if (!sessionIds.isEmpty()) {
+            conference.validateSessionOwnership(Set.copyOf(sessionIds));
+        }
+
+        if (sessionIds.isEmpty()) { return Set.of(); }
 
         return conference.getSessions().stream()
                 .filter(session -> sessionIds.contains(session.getId()))

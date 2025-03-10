@@ -6,6 +6,7 @@ import java.util.HashSet;
 public class ConferenceFixture {
     public static Conference 컨퍼런스() {
         return Conference.builder()
+                .id(1L)
                 .name("테스트 컨퍼런스")
                 .hasSessions(true)
                 .sessions(new HashSet<>())
