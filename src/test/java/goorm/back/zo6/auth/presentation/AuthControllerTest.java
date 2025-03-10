@@ -94,7 +94,7 @@ class AuthControllerTest {
                         status().isOk(),
                         header().exists(HttpHeaders.SET_COOKIE),
                         header().string(HttpHeaders.SET_COOKIE, Matchers.containsString("Authorization=")),
-                        content().string("로그인 성공!")
+                        jsonPath("$.message").value("로그인 성공!")
                 );
     }
 
