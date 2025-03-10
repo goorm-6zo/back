@@ -1,9 +1,11 @@
 package goorm.back.zo6.fixture;
+
 import goorm.back.zo6.conference.domain.Conference;
 
 import java.util.HashSet;
 
 public class ConferenceFixture {
+
     public static Conference 컨퍼런스() {
         return Conference.builder()
                 .id(1L)

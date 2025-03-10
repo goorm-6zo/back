@@ -1,4 +1,5 @@
 package goorm.back.zo6.fixture;
+
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 
@@ -13,3 +14,4 @@ public class UserFixture {
                 .build();
     }
 }
+

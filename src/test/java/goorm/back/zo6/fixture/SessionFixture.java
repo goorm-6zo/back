@@ -1,4 +1,5 @@
 package goorm.back.zo6.fixture;
+
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 
