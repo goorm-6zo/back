@@ -51,6 +51,9 @@ public enum ErrorCode {
 
     // Session Error
     SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
+
+    // Event Error
+    PAYLOAD_CONVERT_ERROR(HttpStatus.BAD_REQUEST, "이벤트 내용 변환 중 에러 발생"),
     ;
 
     private final HttpStatus status;

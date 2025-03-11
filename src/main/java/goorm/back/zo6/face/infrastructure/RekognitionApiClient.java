@@ -52,7 +52,8 @@ public class RekognitionApiClient {
             // 정상적인 경우 Rekognition Face ID 반환
             return response.faceRecords().get(0).face().faceId();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // 얼굴 업로드 api 호출 시 에러가 발생
             log.info("collection 에 얼굴 업로드 중 api 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
