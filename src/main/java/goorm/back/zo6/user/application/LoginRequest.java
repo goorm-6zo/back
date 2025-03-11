@@ -1,4 +1,4 @@
-package goorm.back.zo6.user.dto.request;
+package goorm.back.zo6.user.application;
 
 public record LoginRequest(
     String email,

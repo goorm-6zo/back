@@ -2,8 +2,8 @@ package goorm.back.zo6.auth.presentation;
 
 import goorm.back.zo6.auth.application.AuthService;
 import goorm.back.zo6.auth.util.CookieUtil;
-import goorm.back.zo6.user.dto.request.LoginRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
+import goorm.back.zo6.user.application.LoginRequest;
+import goorm.back.zo6.user.application.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Map;
 
 @Tag(name = "Auth", description = "Authorization API")

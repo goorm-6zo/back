@@ -1,4 +1,4 @@
-package goorm.back.zo6.user.dto.response;
+package goorm.back.zo6.user.application;
 
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
@@ -9,8 +9,6 @@ public record UserResponse(
     Long id,
     String email,
     String name,
-    String phone,
-    String birthDate,
     Boolean isDeleted,
     Role role
 )
@@ -20,8 +18,6 @@ public record UserResponse(
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .phone(user.getPhone())
-                .birthDate(user.getBirthDate())
                 .isDeleted(user.getIsDeleted())
                 .role(user.getRole())
                 .build();

@@ -1,4 +1,4 @@
-package goorm.back.zo6.user.dto.response;
+package goorm.back.zo6.user.application;
 
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
@@ -19,7 +19,6 @@ public record SignUpResponse(
         return SignUpResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .phone(user.getPhone())
                 .name(user.getName())
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
