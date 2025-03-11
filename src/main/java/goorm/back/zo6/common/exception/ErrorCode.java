@@ -47,6 +47,15 @@ public enum ErrorCode {
     FACE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저의 얼굴 이미지 저장 정보를 조회할 수 없습니다."),
 
     // Conference Error
+
+    CONFERENCE_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 컨퍼런스입니다."),
+
+    // Session Error
+    SESSION_NOT_FOUNT(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
+
+    // File Exception
+    FILE_CONVERSION_EXCEPTION(HttpStatus.BAD_REQUEST, "파일 변환 중에 에러가 발생했습니다."),
+
     CONFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 컨퍼런스입니다."),
 
     // Session Error
@@ -54,6 +63,9 @@ public enum ErrorCode {
 
     // Event Error
     PAYLOAD_CONVERT_ERROR(HttpStatus.BAD_REQUEST, "이벤트 내용 변환 중 에러 발생"),
+
+    // Attendance Error
+    MISSING_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "conferenceId 또는 sessionId 가 필요합니다."),
     ;
 
     private final HttpStatus status;

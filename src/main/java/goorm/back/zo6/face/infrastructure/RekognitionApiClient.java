@@ -8,12 +8,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.SdkBytes;
-import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
 import java.nio.ByteBuffer;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -52,6 +50,8 @@ public class RekognitionApiClient {
             // 정상적인 경우 Rekognition Face ID 반환
             return response.faceRecords().get(0).face().faceId();
 
+        }catch (CustomException e){
+            throw e;
         }
         catch (Exception e) {
             // 얼굴 업로드 api 호출 시 에러가 발생
@@ -85,7 +85,10 @@ public class RekognitionApiClient {
 
             return FaceMatchingResponse.of(userId, similarity);
 
-        }catch (Exception e){
+        }catch (CustomException e){
+            throw e;
+        }
+        catch (Exception e){
             // 얼굴 매칭 api 호출 시 에러가 발생
             log.info("얼굴 매칭 중 api 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
@@ -108,7 +111,7 @@ public class RekognitionApiClient {
     }
 
     // Rekognition Collection 생성 (최초 1회 실행)
-    public void createCollection() {
+    public String createCollection() {
         try{
             CreateCollectionRequest request = CreateCollectionRequest.builder()
                     .collectionId(collectionId)
@@ -116,6 +119,7 @@ public class RekognitionApiClient {
 
             CreateCollectionResponse response = rekognitionClient.createCollection(request);
             log.info("Rekognition Collection 생성 완료! ARN: {}", response.collectionArn());
+            return response.collectionArn();
         }catch (Exception e){
             log.info("collection 생성 중, api 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_CREATE_COLLECTION_FAIL);

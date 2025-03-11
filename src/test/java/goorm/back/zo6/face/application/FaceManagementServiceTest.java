@@ -82,8 +82,11 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.FACE_UPLOAD_FAIL))
                 .when(s3FaceClient).uploadFile(eq(testFaceImage), eq(imageKey), eq(bucketName));
 
-        // when & then
-        assertThrows(CustomException.class, () -> faceManagementService.uploadUserFace(userId, testFaceImage));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.uploadUserFace(userId, testFaceImage));
+
+        // then
+        assertEquals(ErrorCode.FACE_UPLOAD_FAIL, exception.getErrorCode());
         // S3는 호출이 된다.
         verify(s3FaceClient, times(1)).uploadFile(testFaceImage, imageKey, bucketName);
         // faceRepository, rekognitionApiClient 는 호출되지 않는다.
@@ -106,10 +109,11 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.FACE_UPLOAD_FAIL))
                 .when(rekognitionApiClient).addFaceToCollection(eq(imageKey), eq(userId), eq(bucketName));
 
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.uploadUserFace(userId, testFaceImage));
 
-        // 예외 검증
-        assertThrows(CustomException.class, () -> faceManagementService.uploadUserFace(userId, testFaceImage));
-
+        // then
+        assertEquals(ErrorCode.FACE_UPLOAD_FAIL, exception.getErrorCode());
         // S3는 호출이 된다.
         verify(s3FaceClient, times(1)).uploadFile(testFaceImage, imageKey, bucketName);
         // Rekognition 호출이 된다.
@@ -176,13 +180,14 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.FACE_NOT_FOUND))
                 .when(faceRepository).findFaceIdByUserId(eq(userId));
 
-        // when & then
+        // when
         // 예외 발생 확인
-        assertThrows(CustomException.class, () -> faceManagementService.getFaceImageUrl(userId));
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.getFaceImageUrl(userId));
 
+        // then
+        assertEquals(ErrorCode.FACE_NOT_FOUND, exception.getErrorCode());
         // faceRepository 호출 검증
         verify(faceRepository, times(1)).findFaceIdByUserId(userId);
-
         // S3 Presigned URL 생성이 호출되지 않아야 함
         verifyNoInteractions(s3FaceClient);
     }
@@ -203,13 +208,13 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.PRESIGNED_URL_GENERATION_FAILED))
                 .when(s3FaceClient).generateDownloadPreSignedUrl(eq(imageKey), eq(bucketName));
 
-        // when & then
-        // 예외 발생 확인
-        assertThrows(CustomException.class, () -> faceManagementService.getFaceImageUrl(userId));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.getFaceImageUrl(userId));
 
+        // then
+        assertEquals(ErrorCode.PRESIGNED_URL_GENERATION_FAILED, exception.getErrorCode());
         // faceRepository 호출 검증
         verify(faceRepository, times(1)).findFaceIdByUserId(userId);
-
         // S3 Presigned URL 생성이 호출되었는지 검증
         verify(s3FaceClient, times(1)).generateDownloadPreSignedUrl(imageKey, bucketName);
     }
@@ -248,13 +253,13 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.FACE_NOT_FOUND))
                 .when(faceRepository).findFaceIdByUserId(userId);
 
-        // when & then
-        // 예외 발생 확인
-        assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
 
+        // then
+        assertEquals(ErrorCode.FACE_NOT_FOUND, exception.getErrorCode());
         // FaceRepository 는 호출이 된다.
         verify(faceRepository, times(1)).findFaceIdByUserId(userId);
-
         // S3와 Rekognition API가 호출되지 않아야 함
         verifyNoInteractions(s3FaceClient, rekognitionApiClient);
     }
@@ -274,12 +279,13 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.FILE_DELETE_FAILED))
                 .when(s3FaceClient).deleteFaceImage(imageKey, bucketName);
 
-        // when & then
-        assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
 
+        // then
+        assertEquals(ErrorCode.FILE_DELETE_FAILED, exception.getErrorCode());
         // S3 삭제 호출
         verify(s3FaceClient, times(1)).deleteFaceImage(imageKey, bucketName);
-
         // Rekognition 및 DB 삭제가 호출되지 않는다.
         verifyNoInteractions(rekognitionApiClient);
         verify(faceRepository, never()).deleteByUserId(userId);
@@ -303,13 +309,13 @@ class FaceManagementServiceTest {
         doThrow(new CustomException(ErrorCode.REKOGNITION_DELETE_FAILED))
                 .when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
 
-        // when & then
-        // 예외 발생 확인
-        assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> faceManagementService.deleteFaceImage(userId));
 
+        // then
+        assertEquals(ErrorCode.REKOGNITION_DELETE_FAILED, exception.getErrorCode());
         // S3 삭제가 호출
         verify(s3FaceClient, times(1)).deleteFaceImage(imageKey, bucketName);
-
         // Rekognition 삭제 호출
         verify(rekognitionApiClient, times(1)).deleteFaceFromCollection(rekognitionFaceId);
 
