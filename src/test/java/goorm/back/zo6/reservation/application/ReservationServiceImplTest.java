@@ -13,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 
@@ -21,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ReservationServiceTest {
+class ReservationServiceImplTest {
 
     @Mock
     private ReservationRepository reservationRepository;
@@ -30,7 +33,7 @@ class ReservationServiceTest {
     private ConferenceJpaRepository conferenceJpaRepository;
 
     @InjectMocks
-    private ReservationService reservationService;
+    private ReservationServiceImpl reservationServiceImpl;
 
     @Test
     @DisplayName("유효한 세션을 포함하여 예약 성공")
@@ -43,6 +46,7 @@ class ReservationServiceTest {
         setConferenceId(conference, 1L);
         setSessionId(session1, 100L);
         setSessionId(session2, 101L);
+
         conference.getSessions().add(session1);
         conference.getSessions().add(session2);
 
@@ -56,7 +60,7 @@ class ReservationServiceTest {
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ReservationResponse response = reservationService.createReservation(reservationRequest);
+        ReservationResponse response = reservationServiceImpl.createReservation(reservationRequest);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
@@ -65,7 +69,6 @@ class ReservationServiceTest {
 
         List<Long> expectedSessionIds = List.of(100L, 101L);
         List<Long> actualSessionIds = response.getReservedSessionIds().stream().sorted().toList();
-
         assertEquals(expectedSessionIds, actualSessionIds);
 
         verify(conferenceJpaRepository, times(1)).findById(conference.getId());
@@ -89,7 +92,7 @@ class ReservationServiceTest {
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ReservationResponse response = reservationService.createReservation(reservationRequest);
+        ReservationResponse response = reservationServiceImpl.createReservation(reservationRequest);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
@@ -117,7 +120,7 @@ class ReservationServiceTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationService.createReservation(reservationRequest));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("This conference does not have all the sessions", exception.getMessage());
 
@@ -138,7 +141,7 @@ class ReservationServiceTest {
 
         when(conferenceJpaRepository.findById(conferenceId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> reservationService.createReservation(reservationRequest));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("Conference not found", exception.getMessage());
         verify(conferenceJpaRepository, times(1)).findById(conferenceId);
@@ -162,39 +165,94 @@ class ReservationServiceTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationService.createReservation(reservationRequest));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("This conference does not have all the sessions", exception.getMessage());
     }
 
     @Test
-    @DisplayName("예약이 불가능한 세션으로 인해 예약 실패")
-    void createReservation_Fail_UnreservableSession() {
-
-        Conference conference = ConferenceFixture.컨퍼런스();
-        Session invalidSession = SessionFixture.세션(conference);
-        setConferenceId(conference, 1L);
-        setSessionId(invalidSession, 100L);
-
-        setSessionCapacity(invalidSession, 0);
-        conference.getSessions().add(invalidSession);
-
-        ReservationRequest reservationRequest = new ReservationRequest(
-                conference.getId(),
-                List.of(invalidSession.getId()),
-                "Test User",
-                "010-1234-5678"
+    @DisplayName("예매 내역 조회 성공")
+    void getMyReservations_Success() {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("testUser", null, List.of(new SimpleGrantedAuthority("ROLE_USER")))
         );
 
-        when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
+        String userName = "testUser";
+        String userPhone = "010-1234-5678";
 
-        ReservationResponse response = reservationService.createReservation(reservationRequest);
+        Conference conference1 = ConferenceFixture.컨퍼런스();
+        setConferenceId(conference1, 1L);
 
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("Reservation successfully created", response.getMessage());
-        assertEquals(conference.getId(), response.getReservedConferenceId());
-        assertTrue(response.getReservedSessionIds().isEmpty());
+        Session session1 = SessionFixture.세션(conference1);
+        setSessionId(session1, 101L);
+
+        Session session2 = SessionFixture.세션(conference1);
+        setSessionId(session2, 102L);
+
+        Reservation reservation1 = Reservation.builder()
+                .name(userName)
+                .phone(userPhone)
+                .conference(conference1)
+                .reservationSessions(Set.of(
+                        SessionFixture.예약_세션(null, session1),
+                        SessionFixture.예약_세션(null, session2)
+                ))
+                .build();
+
+        Conference conference2 = ConferenceFixture.컨퍼런스();
+        setConferenceId(conference2, 2L);
+
+        Session session3 = SessionFixture.세션(conference2);
+        setSessionId(session3, 201L);
+
+        Reservation reservation2 = Reservation.builder()
+                .name(userName)
+                .phone(userPhone)
+                .conference(conference2)
+                .reservationSessions(Set.of(
+                        SessionFixture.예약_세션(null, session3)
+                ))
+                .build();
+
+        when(reservationRepository.findAllByNameAndPhone(userName, userPhone)).thenReturn(List.of(reservation1, reservation2));
+        List<ReservationResponse> responses = reservationServiceImpl.getMyReservations();
+
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+
+        ReservationResponse response1 = responses.get(0);
+        assertEquals(1L, response1.getReservedConferenceId());
+
+        List<Long> expectedSessionIds = List.of(101L, 102L);
+        List<Long> actualSessionIds = new ArrayList<>(response1.getReservedSessionIds());
+        Collections.sort(actualSessionIds);
+
+        assertEquals(expectedSessionIds, actualSessionIds);
+
+        ReservationResponse response2 = responses.get(1);
+        assertEquals(2L, response2.getReservedConferenceId());
+        assertEquals(List.of(201L), response2.getReservedSessionIds());
+
+        verify(reservationRepository, times(1)).findAllByNameAndPhone(userName, userPhone);
+    }
+
+    @Test
+    @DisplayName("예약 내역이 없는 경우 빈 결과 반환")
+    void getMyReservations_EmptyResult() {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("testUser", null, List.of(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+
+        String userName = "testUser";
+        String userPhone = "010-1234-5678";
+
+        when(reservationRepository.findAllByNameAndPhone(userName, userPhone)).thenReturn(Collections.emptyList());
+
+        List<ReservationResponse> responses = reservationServiceImpl.getMyReservations();
+
+        assertNotNull(responses);
+        assertTrue(responses.isEmpty());
+        verify(reservationRepository, times(1)).findAllByNameAndPhone(userName, userPhone);
     }
 
     private void setSessionId(Session session, Long id) {

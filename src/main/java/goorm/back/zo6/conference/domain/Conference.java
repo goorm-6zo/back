@@ -6,17 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Entity
 @Table(name = "conference")
 public class Conference {
 
@@ -32,7 +30,7 @@ public class Conference {
     private Boolean hasSessions;
 
     @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Session> sessions;
+    private Set<Session> sessions = new HashSet<>();
 
     public Boolean containsSession(Long sessionId) {
         return this.sessions.stream().anyMatch(session -> session.getId().equals(sessionId));

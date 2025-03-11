@@ -5,6 +5,7 @@ import goorm.back.zo6.reservation.domain.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,5 +37,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public Optional<Reservation> findByNameAndPhone(String name, String phone) {
         return reservationJpaRepository.findByNameAndPhone(name, phone);
+    }
+
+    @Override
+    public List<Reservation> findAllByNameAndPhone(String name, String phone) {
+        return reservationJpaRepository.findAllByNameAndPhone(name, phone);
     }
 }

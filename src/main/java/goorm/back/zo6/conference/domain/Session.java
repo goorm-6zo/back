@@ -60,4 +60,11 @@ public class Session {
         }
         this.capacity--;
     }
+
+    public void setConference(Conference conference) {
+        if (conference == null) {
+            throw new IllegalArgumentException("conferenceId must not be null");
+        }
+        this.conference = conference;
+    }
 }

@@ -16,5 +16,6 @@ public interface ReservationRepository {
 
     Optional<Reservation> findByNameAndPhone(String name, String phone);
 
+    List<Reservation> findAllByNameAndPhone(String name, String phone);
 }
 

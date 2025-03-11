@@ -38,11 +38,15 @@ public class Reservation {
     @Column(name = "phone", nullable = false)
     private String phone;
 
+    //@Column(name = "email", nullable = false) 카카오 로그인 추가 후 적용 예정
+    //private String email;
+
     @Builder
     public Reservation(Conference conference, String name, String phone) {
         this.conference = conference;
         this.name = name;
         this.phone = phone;
+        //this.email = email;
     }
 
     public void addSession(Session session) {
