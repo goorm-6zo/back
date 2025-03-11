@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Map;
 
 @Tag(name = "Auth", description = "Authorization API")
 @RestController
@@ -35,12 +36,12 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "이메일과 비밀번호를 입력받아 JWT 토큰을 발급합니다.")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<Map<String,String>> login(@RequestBody LoginRequest request) {
         LoginResponse loginResponse = authService.login(request);
         ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), TOKEN_VALID_TIME);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE,cookie.toString())
-                .body("로그인 성공!");
+                .body(Map.of("message","로그인 성공!"));
     }
 }
