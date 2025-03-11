@@ -2,7 +2,6 @@ package goorm.back.zo6.face.presentation;
 
 import goorm.back.zo6.face.application.RekognitionService;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
-import goorm.back.zo6.face.dto.response.FaceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
