@@ -13,7 +13,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 

@@ -2,6 +2,7 @@ package goorm.back.zo6.face.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.face.dto.response.CollectionResponse;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
@@ -49,7 +50,6 @@ class RekognitionServiceTest {
         assertNotNull(result);
         assertEquals(userId, result.userId());
         assertEquals(similarity, result.similarity());
-
         verify(rekognitionApiClient, times(1)).authorizeUserFace(imageBytes);
     }
 
@@ -67,8 +67,11 @@ class RekognitionServiceTest {
         doThrow(new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND))
                 .when(rekognitionApiClient).authorizeUserFace(imageBytes);
 
-        // when & then
-        assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(uploadedFile));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(uploadedFile));
+
+        // then
+        assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
         verify(rekognitionApiClient, times(1)).authorizeUserFace(imageBytes);
     }
     // 파일 변환 중 IOException 발생 시 예외 확인
@@ -81,8 +84,11 @@ class RekognitionServiceTest {
         // 파일 변환 중 IOException 발생하도록 설정
         when(uploadedFile.getBytes()).thenThrow(new IOException());
 
-        // when & then
-        assertThrows(IOException.class, () -> rekognitionService.authenticationByUserFace(uploadedFile));
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(uploadedFile));
+
+        // then
+        assertEquals(ErrorCode.FILE_CONVERSION_EXCEPTION, exception.getErrorCode());
         verifyNoInteractions(rekognitionApiClient);
     }
 
@@ -91,26 +97,32 @@ class RekognitionServiceTest {
     void createCollection_Success() {
         // given
         // collection 생성
-        doNothing().when(rekognitionApiClient).createCollection();
+        String expectedArn = "arn:aws:rekognition:us-east-1:123456789012:collection/test-collection";
+
+        when(rekognitionApiClient.createCollection()).thenReturn(expectedArn);
 
         // when
-        rekognitionService.createCollection();
+        CollectionResponse response = rekognitionService.createCollection();
 
         // then
+        assertNotNull(response);
+        assertEquals(expectedArn,response.collectionArn());
         verify(rekognitionApiClient, times(1)).createCollection();
-
     }
 
     @Test
-    @DisplayName("rekognition collection 생성 - 실패")
+    @DisplayName("rekognition collection 생성 - collection 생성 실패")
     void createCollection_Fails() {
         // given
         // collection 생성시 에러 발생
         doThrow(new CustomException(ErrorCode.REKOGNITION_CREATE_COLLECTION_FAIL))
                 .when(rekognitionApiClient).createCollection();
 
-        // when & then
-        assertThrows(CustomException.class, () -> rekognitionService.createCollection());
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.createCollection());
+
+        //then
+        assertEquals(ErrorCode.REKOGNITION_CREATE_COLLECTION_FAIL, exception.getErrorCode());
         verify(rekognitionApiClient, times(1)).createCollection();
     }
 }
