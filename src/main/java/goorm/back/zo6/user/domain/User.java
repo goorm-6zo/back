@@ -3,7 +3,6 @@ package goorm.back.zo6.user.domain;
 import goorm.back.zo6.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -21,7 +20,7 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "name")
@@ -32,9 +31,6 @@ public class User extends BaseEntity {
 
     @Column(name = "phone", unique = true)
     private String phone;
-
-    @Column(name = "birth_date")
-    private String birthDate;
 
     @Column(name = "is_deleted")
     @Builder.Default
@@ -50,9 +46,16 @@ public class User extends BaseEntity {
                 .name(name)
                 .password(Password.from(password))
                 .phone(phone)
-                .birthDate(birthDate)
                 .role(role)
                 .build();
+    }
+
+    public void updatePhoneNumber(String phoneNumber){
+        this.phone = phoneNumber;
+    }
+
+    public void updateNickname(String nickname) {
+        this.name = nickname;
     }
 
     public void logicalDelete() {
