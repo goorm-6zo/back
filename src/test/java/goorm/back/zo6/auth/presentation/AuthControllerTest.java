@@ -1,6 +1,5 @@
 package goorm.back.zo6.auth.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.application.AuthService;
 import goorm.back.zo6.auth.util.JwtUtil;
@@ -8,7 +7,7 @@ import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.LoginRequest;
+import goorm.back.zo6.user.application.LoginRequest;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -28,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,7 +62,6 @@ class AuthControllerTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();

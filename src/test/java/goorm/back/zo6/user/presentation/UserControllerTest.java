@@ -1,14 +1,12 @@
 package goorm.back.zo6.user.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.util.JwtUtil;
-import goorm.back.zo6.common.exception.CustomException;
-import goorm.back.zo6.user.application.UserService;
+import goorm.back.zo6.user.application.UserServiceImpl;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.SignUpRequest;
+import goorm.back.zo6.user.application.SignUpRequest;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,7 +45,7 @@ class UserControllerTest {
     private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -64,7 +61,6 @@ class UserControllerTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .role(Role.of("USER"))
                 .build();
         userJpaRepository.saveAndFlush(testUser);
@@ -77,7 +73,7 @@ class UserControllerTest {
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getEmail());
     }
 
     @Test

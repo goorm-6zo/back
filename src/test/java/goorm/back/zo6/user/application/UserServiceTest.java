@@ -6,10 +6,6 @@ import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.SignUpRequest;
-import goorm.back.zo6.user.dto.response.SignUpResponse;
-import goorm.back.zo6.user.dto.response.UserResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +24,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -41,7 +37,6 @@ class UserServiceTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -52,7 +47,6 @@ class UserServiceTest {
                 .name("홍길순")
                 .email(email)
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -75,8 +69,6 @@ class UserServiceTest {
         assertNotNull(response);
         assertEquals("test@gmail.com", response.email());
         assertEquals("홍길순", response.name());
-        assertEquals("01011112222", response.phone());
-        assertEquals("2000-10-20", response.birthDate());
         assertEquals("test@gmail.com", response.email());
         assertEquals(Role.USER, response.role());
         
@@ -101,8 +93,6 @@ class UserServiceTest {
         assertNotNull(response);
         assertEquals("test@gmail.com", response.email());
         assertEquals("홍길순", response.name());
-        assertEquals("01011112222", response.phone());
-        assertEquals("2000-10-20", response.birthDate());
         assertEquals("test@gmail.com", response.email());
         assertEquals(Role.USER, response.role());
 
