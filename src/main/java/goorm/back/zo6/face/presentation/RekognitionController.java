@@ -24,8 +24,8 @@ public class RekognitionController {
     @PostMapping(value = "/authentication", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "얼굴 인증", description = "유저의 얼굴 이미지를 받아서 인증합니다.")
     public ResponseEntity<FaceAuthResultResponse> authenticationByUserFace(
-            @RequestBody ParticipationRequest participationRequest,
-            @RequestParam("faceImage") MultipartFile faceImage) {
+            @RequestPart ParticipationRequest participationRequest,
+            @RequestPart("faceImage") MultipartFile faceImage) {
         FaceAuthResultResponse result = rekognitionService.authenticationByUserFace(participationRequest, faceImage);
         return ResponseEntity.ok(result);
     }

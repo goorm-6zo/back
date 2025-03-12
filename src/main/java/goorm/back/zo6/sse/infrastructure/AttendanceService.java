@@ -1,4 +1,4 @@
-package goorm.back.zo6.conference.infrastructure.attendance;
+package goorm.back.zo6.sse.infrastructure;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -24,6 +24,11 @@ public class AttendanceService {
         String key = getRelevantKey(conferenceId, sessionId);
         redisTemplate.opsForSet().add(key, userId.toString());
         redisTemplate.expire(key, Duration.ofSeconds(timestamp));
+    }
+
+    public long getAttendanceCount(Long conferenceId, Long sessionId){
+        String key = getRelevantKey(conferenceId, sessionId);
+        return Math.toIntExact(redisTemplate.opsForSet().size(key));
     }
 
     public void deleteAttendanceData(Long conferenceId, Long sessionId){

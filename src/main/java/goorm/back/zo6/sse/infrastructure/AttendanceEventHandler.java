@@ -1,4 +1,4 @@
-package goorm.back.zo6.conference.infrastructure.attendance;
+package goorm.back.zo6.sse.infrastructure;
 
 import goorm.back.zo6.face.infrastructure.event.AttendanceEvent;
 import lombok.RequiredArgsConstructor;
