@@ -1,0 +1,35 @@
+= Conference API 문서
+:toc: left
+:toclevels: 2
+
+== 컨퍼런스 API
+
+=== 1. 모든 컨퍼런스 리스트 조회 성공
+
+==== 요청
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-response.adoc[]
+
+
+---
+
+=== 2. 존재하지 않는 컨퍼런스 요청 실패
+
+==== 요청
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-response.adoc[]
+
+
+---
+
+=== 3. 특정 컨퍼런스 조회
+
+==== 요청
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-response.adoc[]

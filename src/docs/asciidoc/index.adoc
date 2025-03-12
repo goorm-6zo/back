@@ -1,0 +1,181 @@
+= 마패(MASKPASS) API 문서
+:doctype: book
+:toc: left
+:toclevels: 2
+
+== 유저 인증 API
+
+=== 1. 로그인 성공
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-success/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-success/http-response.adoc[]
+
+---
+
+=== 2. 로그인 실패 (잘못된 비밀번호)
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-fail_-wrong-password/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-fail_-wrong-password/http-response.adoc[]
+
+---
+
+=== 3. 로그인 실패 (존재하지 않는 이메일)
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-fail_-non-existent-email/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-fail_-non-existent-email/http-response.adoc[]
+
+== 컨퍼런스 API
+
+=== 1. 모든 컨퍼런스 리스트 조회 성공
+
+==== 요청
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-response.adoc[]
+
+
+---
+
+=== 2. 존재하지 않는 컨퍼런스 요청 실패
+
+==== 요청
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-response.adoc[]
+
+
+---
+
+=== 3. 특정 컨퍼런스 조회
+
+==== 요청
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-request.adoc[]
+
+==== 응답
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-response.adoc[]
+
+== QR 코드 생성 API
+
+QR 코드를 생성하여 URL과 함께 반환합니다.
+컨퍼런스 ID와 세션 ID를 기반으로 QR을 생성하며, 세션 ID는 선택값입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/admin/qr`
+- **Query Parameters:**
+- `conferenceId` (필수): 컨퍼런스 ID
+- `sessionId` (선택): 세션 ID
+- `url` (필수): QR에 포함될 URL
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-create_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** QR 코드 정보 반환
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-create_-success/http-response.adoc[]
+
+'''
+
+== 오류 케이스
+
+QR 코드 생성 과정에서 발생할 수 있는 오류 케이스를 설명합니다.
+
+'''
+
+=== 실패 - 존재하지 않는 Conference ID
+
+요청한 `conferenceId`가 존재하지 않을 때 발생합니다.
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-conference-id_-not-found/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-conference-id_-not-found/http-response.adoc[]
+
+'''
+
+=== 실패 - 존재하지 않는 Session ID
+
+요청한 `sessionId`가 존재하지 않을 때 발생합니다.
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-session-id_-not-found/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-session-id_-not-found/http-response.adoc[]
+
+== 예약 API
+
+=== 1. 예약 생성 성공
+
+==== 요청
+include::{snippets}/reservation-controller-test/create-reservation_-success/http-request.adoc[]
+
+==== 응답
+include::{snippets}/reservation-controller-test/create-reservation_-success/http-response.adoc[]
+
+
+---
+
+=== 2. 내 예약 목록 조회 (로그인 후 테스트 작성 예정)
+
+==== 요청
+
+
+==== 응답
+
+== 유저 API
+
+=== 1. 유저 ID로 조회 성공
+
+==== 요청
+include::{snippets}/user-controller-test/find-by-id_-success/http-request.adoc[]
+
+==== 응답
+include::{snippets}/user-controller-test/find-by-id_-success/http-response.adoc[]
+
+
+---
+
+=== 2. 유저 토큰으로 조회 성공
+
+==== 요청
+
+==== 응답
+
+
+---
+
+=== 3. 유저 회원가입 성공
+
+==== 요청
+include::{snippets}/user-controller-test/sign-up-test/http-request.adoc[]
+
+==== 응답
+include::{snippets}/user-controller-test/sign-up-test/http-response.adoc[]
+
+
+---
+
+=== 4. 토큰 기반 유저 회원 탈퇴 성공
+
+==== 요청
+
+
+==== 응답
