@@ -31,8 +31,14 @@ public class ConferenceController {
     }
 
     @GetMapping("/{conferenceId}/sessions")
-    public ResponseEntity<List<Session>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
+    public ResponseEntity<List<SessionResponse>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
         return ResponseEntity.ok(conferenceQueryService.getSessionsByConferenceId(conferenceId));
+    }
+
+    @GetMapping("/{conferenceId}/sessions/{sessionId}")
+    public ResponseEntity<Session> getSessionDetail(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
+        Session session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
+        return ResponseEntity.ok(session);
     }
 
     @GetMapping("/sessions/{sessionId}/reservable")
@@ -42,8 +48,8 @@ public class ConferenceController {
     }
 
     @GetMapping("/{conferenceId}/sessions/reservable")
-    public ResponseEntity<Boolean> areSessionsReservable(@PathVariable Long conferenceId, @PathVariable List<Long> sessionIds) {
-        boolean allReservable = conferenceQueryService.areSessionsReservable(conferenceId, sessionIds);
+    public ResponseEntity<Boolean> areSessionsReservable(@PathVariable Long conferenceId, @PathVariable List<Long> sessionId) {
+        boolean allReservable = conferenceQueryService.areSessionsReservable(conferenceId, sessionId);
         return ResponseEntity.ok(allReservable);
     }
 }

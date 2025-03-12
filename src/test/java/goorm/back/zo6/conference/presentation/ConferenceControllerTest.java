@@ -2,9 +2,12 @@ package goorm.back.zo6.conference.presentation;
 
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.conference.domain.Conference;
+import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
+import goorm.back.zo6.conference.infrastructure.SessionJpaRepository;
 import goorm.back.zo6.config.RestDocsConfiguration;
 import goorm.back.zo6.fixture.ConferenceFixture;
+import goorm.back.zo6.fixture.SessionFixture;
 import goorm.back.zo6.fixture.UserFixture;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
@@ -17,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -26,6 +30,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -51,6 +62,9 @@ class ConferenceControllerTest {
     private ConferenceJpaRepository conferenceJpaRepository;
 
     @Autowired
+    private SessionJpaRepository sessionJpaRepository;
+
+    @Autowired
     private UserJpaRepository userJpaRepository;
 
     @Autowired
@@ -69,7 +83,13 @@ class ConferenceControllerTest {
                 .build();
 
         User testUser = userJpaRepository.saveAndFlush(UserFixture.유저());
-        Conference testConference = conferenceJpaRepository.saveAndFlush(ConferenceFixture.컨퍼런스());
+        Conference testConference = ConferenceFixture.컨퍼런스();
+        conferenceJpaRepository.saveAndFlush(testConference);
+
+        Session testSession = SessionFixture.세션(testConference);
+        testConference.addSession(testSession);
+        sessionJpaRepository.saveAndFlush(testSession);
+        conferenceJpaRepository.saveAndFlush(testConference);
 
         testToken = generateTestToken(testUser);
     }
@@ -81,6 +101,8 @@ class ConferenceControllerTest {
                 .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk());
     }
+
+
 
     @Test
     @DisplayName("존재하지 않는 컨퍼런스 요청 실패")
@@ -107,6 +129,39 @@ class ConferenceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(testConference.getId()))
                 .andExpect(jsonPath("$.name").value(testConference.getName()));
+    }
+
+    @Test
+    @DisplayName("특정 컨퍼런스 특정 세션 조회")
+    void getConference_ReturnsSpecificSession() throws Exception {
+        Conference testConference = conferenceJpaRepository.findAll().get(0);
+        Long testConferenceId = testConference.getId();
+
+        Session testSession = sessionJpaRepository.findAll().get(0);
+        Long testSessionId = testSession.getId();
+
+        mockMvc.perform(get("/api/v1/conference/" + testConferenceId + "/sessions/" + testSessionId)
+                .header("Authorization", "Bearer " + testToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("특정 컨퍼런스의 세션 리스트 조회 성공")
+    void getSessionsByConferenceId_ReturnsSessionList() throws Exception {
+        // Given: 테스트 데이터를 설정합니다 (컨퍼런스 및 세션).
+        Conference conference = new Conference(1L, "Test Conference", "Test Description", "Test Location", LocalDateTime.now(), 100, true, new HashSet<>());
+        conferenceJpaRepository.save(conference);
+
+        Session session1 = new Session(conference, "Test Session", 100, "온라인", LocalDateTime.now(), "Test Summary");
+        Session session2 = new Session(conference, "Test Session", 100, "온라인", LocalDateTime.now(), "Test Summary" );
+        sessionJpaRepository.saveAll(List.of(session1, session2));
+
+        // When: 생성한 컨퍼런스의 세션 리스트 API를 호출합니다.
+        mockMvc.perform(get("/api/v1/conference/" + conference.getId() + "/sessions")
+                        .header("Authorization", "Bearer " + testToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // Then: 상태 코드가 200 OK인지 확인합니다.
+                .andDo(restDocs.document());
     }
 
     private String generateTestToken(User user) {

@@ -14,9 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,7 +45,7 @@ class ConferenceQueryServiceImplTest {
     @BeforeEach
     void setUp() {
         testConference = ConferenceFixture.컨퍼런스();
-        testSession = SessionFixture.세션(testConference);
+        testSession = SessionFixture.세션_아이디포함(testConference);
         testConference.getSessions().add(testSession);
     }
 
@@ -58,6 +60,10 @@ class ConferenceQueryServiceImplTest {
                     return new ConferenceResponse(
                             conference.getId(),
                             conference.getName(),
+                            conference.getDescription(),
+                            conference.getLocation(),
+                            conference.getConferenceAt(),
+                            conference.getCapacity(),
                             conference.getHasSessions()
                     );
                 });
@@ -84,6 +90,10 @@ class ConferenceQueryServiceImplTest {
                     return new ConferenceDetailResponse(
                             conference.getId(),
                             conference.getName(),
+                            conference.getDescription(),
+                            conference.getLocation(),
+                            conference.getConferenceAt(),
+                            conference.getCapacity(),
                             conference.getHasSessions(),
                             List.of()
                     );
@@ -118,7 +128,7 @@ class ConferenceQueryServiceImplTest {
         when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
         when(sessionRepository.findByConferenceId(conferenceId)).thenReturn(List.of(testSession));
 
-        List<Session> sessions = conferenceQueryServiceImpl.getSessionsByConferenceId(conferenceId);
+        List<SessionResponse> sessions = conferenceQueryServiceImpl.getSessionsByConferenceId(conferenceId);
 
         assertThat(sessions).hasSize(1);
         assertThat(sessions.get(0).getName()).isEqualTo(testSession.getName());
@@ -207,5 +217,20 @@ class ConferenceQueryServiceImplTest {
         verify(sessionRepository, times(1)).findById(sessionId);
     }
 
+    @Test
+    @DisplayName("특정 컨퍼런스의 특정 세션 상세 조회 - 성공")
+    void getSessionDetail_WhenSessionBelongsToConference_ReturnsSession() {
+        Long conferenceId = 1L;
+        Long sessionId = 100L;
 
+        when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
+
+        Session result = conferenceQueryServiceImpl.getSessionDetail(conferenceId, sessionId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(sessionId);
+        verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
+        verify(sessionRepository, times(1)).findById(sessionId);
+    }
 }

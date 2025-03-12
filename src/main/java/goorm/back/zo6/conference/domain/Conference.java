@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,11 +27,33 @@ public class Conference {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "location", nullable = false)
+    private String location;
+
+    @Column(name = "conference_at", nullable = false)
+    private LocalDateTime conferenceAt;
+
+    @Column(name = "capacity", nullable = false)
+    private Integer capacity;
+
     @Column(name = "has_sessions", nullable = false)
     private Boolean hasSessions;
 
     @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Session> sessions = new HashSet<>();
+
+    public void addSession(Session session) {
+        session.setConference(this);
+        this.sessions.add(session);
+    }
+
+    public void removeSession(Session session) {
+        this.sessions.remove(session);
+        session.setConference(null);
+    }
 
     public Boolean containsSession(Long sessionId) {
         return this.sessions.stream().anyMatch(session -> session.getId().equals(sessionId));
@@ -62,5 +85,16 @@ public class Conference {
     }
 
     public boolean isReservableWithoutSessions() {
-        return !hasSessions || !hasReservablesSessions();}
+        return !hasSessions || !hasReservablesSessions();
+    }
+
+    public void validateCapacity(int currentParticipantCount) {
+        if (currentParticipantCount > capacity) {
+            throw new IllegalStateException("Conference capacity exceeded. Max capacity: " + capacity);
+        }
+    }
+
+    public boolean canAccommodate(int currentParticipantCount) {
+        return currentParticipantCount < capacity;
+    }
 }
