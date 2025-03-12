@@ -24,14 +24,14 @@ public class SwaggerConfig {
     }
     private Info apiInfo() {
         return new Info()
-                .title("DangDangCrew 명세서")
+                .title("MaskPass 명세서")
                 .description("api 명세서")
                 .version("1.0.0");
     }
     private List<Server> servers() {
         List<Server> servers = new ArrayList<>();
         servers.add(new Server().url("http://localhost:8080").description("Local URL"));
-        servers.add(new Server().url("http://43.201.71.178:8080").description("zo6"));
+        servers.add(new Server().url("https://server/maskpass.site").description("zo6"));
         return servers;
     }
 }
