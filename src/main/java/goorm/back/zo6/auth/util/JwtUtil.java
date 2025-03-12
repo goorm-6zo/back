@@ -25,15 +25,15 @@ public class JwtUtil {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(Long userId, String email, String name, Role role){
+    public String createAccessToken(String email){
         Date timeNow = new Date(System.currentTimeMillis());
         Date expirationTime = new Date(timeNow.getTime() + TOKEN_VALID_TIME);
 
         return Jwts.builder()
-                .claim("userId", userId)
+//                .claim("userId", userId)
                 .claim("email",email)
-                .claim("name",name)
-                .claim("role",role.getRoleSecurity())
+//                .claim("name",name)
+//                .claim("role",role.getRoleSecurity())
                 .setIssuedAt(timeNow)
                 .setExpiration(expirationTime)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -81,5 +81,17 @@ public class JwtUtil {
         }catch (IllegalArgumentException ex){
             throw new CustomException(ErrorCode.UNKNOWN_TOKEN_ERROR);
         }
+    }
+
+    public String generateToken(String email) {
+        Date timeNow = new Date(System.currentTimeMillis());
+        Date expirationTime = new Date(timeNow.getTime() + TOKEN_VALID_TIME);
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(expirationTime)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
     }
 }

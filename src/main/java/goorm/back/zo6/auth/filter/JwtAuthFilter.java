@@ -5,7 +5,6 @@ import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 
@@ -70,21 +67,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private User getUser(String token){
-        Long userId = jwtUtil.getUserId(token);
         String email = jwtUtil.getUsername(token);
-        String name = jwtUtil.getName(token);
-        String role = jwtUtil.getRole(token);
 
         log.info("getUser username: ", email);
         return User.builder()
-                .id(userId)
                 .email(email)
-                .name(name)
-                .role(Role.of(role))
                 .build();
     }
 
-    private boolean verifyToken(HttpServletRequest request,String token) throws IOException, ServletException {
+    private boolean verifyToken(HttpServletRequest request,String token) {
         Boolean isValid = (Boolean) request.getAttribute("isTokenValid");
         if(isValid != null) return isValid;
 
