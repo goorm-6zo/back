@@ -24,6 +24,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -97,7 +99,9 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOriginPattern(SERVER_URL);
-        configuration.addAllowedOrigin("http://localhost:5173");  // 특정 도메인 허용
+        configuration.addAllowedOrigin("http://localhost:5173");
+        //configuration.addAllowedOriginPattern(SERVER_URL);
+        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
