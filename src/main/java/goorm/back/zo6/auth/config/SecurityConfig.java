@@ -66,6 +66,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.addAllowedOriginPattern(SERVER_URL);
         configuration.addAllowedOrigin(SERVER_URL);  // 특정 도메인 허용
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
