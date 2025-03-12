@@ -5,8 +5,8 @@ import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.LoginRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
+import goorm.back.zo6.user.application.LoginRequest;
+import goorm.back.zo6.user.application.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class AuthService {
                 .filter(m -> passwordEncoder.matches(loginRequest.password(),m.getPassword().getValue()))
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_MATCH_LOGIN_INFO));
 
-        String accessToken = jwtUtil.createAccessToken(user.getId(),user.getEmail(), user.getName(),user.getRole());
+        String accessToken = jwtUtil.createAccessToken(user.getEmail());
         return LoginResponse.builder().accessToken(accessToken).build();
     }
 }
