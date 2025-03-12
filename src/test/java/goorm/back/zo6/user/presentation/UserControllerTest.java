@@ -119,7 +119,7 @@ class UserControllerTest {
     @DisplayName("유저 회원가입 성공 테스트")
     void signUpTest() throws Exception {
         // given
-        SignUpRequest request = new SignUpRequest("홍길동","test@naver.com","4321", "2000-10-10","010-1234-5678");
+        SignUpRequest request = new SignUpRequest("홍길동","test@naver.com","4321","010-1234-5678");
 
         // when & then
         mockMvc.perform(post("/api/v1/users/signup")
