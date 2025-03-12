@@ -9,6 +9,7 @@ public record UserResponse(
     Long id,
     String email,
     String name,
+    String phone,
     Boolean isDeleted,
     Role role
 )
@@ -18,6 +19,7 @@ public record UserResponse(
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .phone(user.getPhone())
                 .isDeleted(user.getIsDeleted())
                 .role(user.getRole())
                 .build();

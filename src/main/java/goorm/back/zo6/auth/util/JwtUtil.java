@@ -30,10 +30,7 @@ public class JwtUtil {
         Date expirationTime = new Date(timeNow.getTime() + TOKEN_VALID_TIME);
 
         return Jwts.builder()
-//                .claim("userId", userId)
                 .claim("email",email)
-//                .claim("name",name)
-//                .claim("role",role.getRoleSecurity())
                 .setIssuedAt(timeNow)
                 .setExpiration(expirationTime)
                 .signWith(secretKey, SignatureAlgorithm.HS256)

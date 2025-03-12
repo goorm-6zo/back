@@ -20,6 +20,7 @@ public record SignUpResponse(
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .phone(user.getPhone())
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .build();

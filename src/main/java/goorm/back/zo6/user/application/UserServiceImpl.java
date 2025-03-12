@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
                 request.name(),
                 passwordEncoder.encode(request.password()),
                 request.phone(),
-                request.birth_date(),
                 Role.of("USER")
         ));
 
