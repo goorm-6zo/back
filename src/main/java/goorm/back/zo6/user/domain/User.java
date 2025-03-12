@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static User singUpUser(String email, String name, String password, String phone, String birthDate, Role role){
+    public static User singUpUser(String email, String name, String password, String phone, Role role){
         return User.builder()
                 .email(email)
                 .name(name)
