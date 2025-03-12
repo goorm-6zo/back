@@ -35,8 +35,8 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew clean test
 
-      - name: Build deploy jar with prod profile
-        run: SPRING_PROFILES_ACTIVE=prod ./gradlew build
+      - name: Build deploy jar
+        run: ./gradlew build
 
       - name: Send file to the server
         uses: appleboy/scp-action@master
