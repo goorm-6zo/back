@@ -67,7 +67,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOriginPattern(SERVER_URL);
-        configuration.addAllowedOrigin(SERVER_URL);  // 특정 도메인 허용
+        configuration.addAllowedOrigin("http://localhost:5173");  // 특정 도메인 허용sta
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
