@@ -21,13 +21,35 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
     @Override
     public String generate(String content) {
+        return generate(content, null, null);
+    }
+
+    public String generate(String content, Long conferenceId, Long sessionId) {
         try {
-            BitMatrix bitMatrix = createQRCodeMatrix(content);
+            String formattedContent = formatUrl(content, conferenceId, sessionId);
+            BitMatrix bitMatrix = createQRCodeMatrix(formattedContent);
             BufferedImage image = MatrixToImageWriter.toBufferedImage(bitMatrix);
             return encodeImageToBase64(image);
         } catch (Exception e) {
             throw new RuntimeException("QR 생성 실패", e);
         }
+    }
+
+    private String formatUrl(String content, Long conferenceId, Long sessionId) {
+        StringBuilder urlBuilder = new StringBuilder(content);
+        if (conferenceId != null || sessionId != null) {
+            urlBuilder.append("?");
+        }
+        if (conferenceId != null) {
+            urlBuilder.append("conferenceId=").append(conferenceId);
+        }
+        if (sessionId != null) {
+            if (conferenceId != null) {
+                urlBuilder.append("&");
+            }
+            urlBuilder.append("sectionId=").append(sessionId);
+        }
+        return urlBuilder.toString();
     }
 
     private BitMatrix createQRCodeMatrix(String content) throws WriterException {
