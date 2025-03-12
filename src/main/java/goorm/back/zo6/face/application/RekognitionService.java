@@ -3,9 +3,10 @@ package goorm.back.zo6.face.application;
 import goorm.back.zo6.common.event.Events;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.face.dto.response.CollectionResponse;
 import goorm.back.zo6.face.infrastructure.event.AttendanceEvent;
 import goorm.back.zo6.face.dto.request.ParticipationRequest;
-import goorm.back.zo6.face.dto.response.CollectionResponse;
+
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;

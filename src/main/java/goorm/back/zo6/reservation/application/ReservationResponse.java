@@ -1,9 +1,11 @@
 package goorm.back.zo6.reservation.application;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class ReservationResponse {
     private boolean success;
 
