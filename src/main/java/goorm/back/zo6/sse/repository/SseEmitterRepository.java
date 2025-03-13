@@ -36,12 +36,9 @@ public class SseEmitterRepository implements EmitterRepository {
     }
     @Override
     public SseEmitter findEmitterByKey(String eventKey) {
-        return emitters.entrySet().stream()
-                .filter(e -> e.getKey().toString().startsWith(eventKey+"_"))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElse(null);
+        return emitters.get(eventKey);
     }
+
     @Override
     public Map<String, SseEmitter> findEmittersByKey(Set<String> eventKeys) {
         return emitters.entrySet().stream()

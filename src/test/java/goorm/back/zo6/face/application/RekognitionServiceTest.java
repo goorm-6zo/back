@@ -3,8 +3,6 @@ package goorm.back.zo6.face.application;
 import goorm.back.zo6.common.event.Events;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.face.dto.request.ParticipationRequest;
-
 import goorm.back.zo6.face.dto.response.CollectionResponse;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
@@ -39,7 +37,8 @@ class RekognitionServiceTest {
         String userId = "1";
         float similarity = 92.5f;
         MultipartFile uploadedFile = mock(MultipartFile.class);
-        ParticipationRequest participationEvent = new ParticipationRequest(1l,1l,1l);
+        Long conferenceId = 1L;
+        Long sessionId = 1L;
         MockedStatic<Events> mockEvents = mockStatic(Events.class);
 
         // 정상적인 파일 변환 설정
@@ -52,7 +51,7 @@ class RekognitionServiceTest {
         when(rekognitionApiClient.authorizeUserFace(imageBytes)).thenReturn(matchingResponse);
 
         // when
-        FaceAuthResultResponse result = rekognitionService.authenticationByUserFace(participationEvent, uploadedFile);
+        FaceAuthResultResponse result = rekognitionService.authenticationByUserFace(conferenceId, sessionId, uploadedFile);
 
         // then
         assertNotNull(result);
@@ -66,7 +65,8 @@ class RekognitionServiceTest {
     void authenticationByUserFace_WhenMatchFails() throws IOException {
         // given
         MultipartFile uploadedFile = mock(MultipartFile.class);
-        ParticipationRequest participationEvent = new ParticipationRequest(1l,1l,1l);
+        Long conferenceId = 1L;
+        Long sessionId = 1L;
 
         // 정상적인 파일 변환 설정
         when(uploadedFile.getBytes()).thenReturn(new byte[]{1, 2, 3});
@@ -77,7 +77,7 @@ class RekognitionServiceTest {
                 .when(rekognitionApiClient).authorizeUserFace(imageBytes);
 
         // when
-        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(participationEvent, uploadedFile));
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(conferenceId, sessionId, uploadedFile));
 
         // then
         assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
@@ -89,13 +89,14 @@ class RekognitionServiceTest {
     void authenticationByUserFace_WhenIOException() throws IOException {
         // given
         MultipartFile uploadedFile = mock(MultipartFile.class);
-        ParticipationRequest participationEvent = new ParticipationRequest(1l,1l,1l);
+        Long conferenceId = 1L;
+        Long sessionId = 1L;
 
         // 파일 변환 중 IOException 발생하도록 설정
         when(uploadedFile.getBytes()).thenThrow(new IOException());
 
         // when
-        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(participationEvent, uploadedFile));
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(conferenceId, sessionId, uploadedFile));
 
         // then
         assertEquals(ErrorCode.FILE_CONVERSION_EXCEPTION, exception.getErrorCode());

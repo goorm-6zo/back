@@ -27,7 +27,8 @@ public class RekognitionService {
     private final RekognitionApiClient rekognitionApiClient;
 
     // 얼굴 비교 및 인증
-    public FaceAuthResultResponse authenticationByUserFace(ParticipationRequest request, MultipartFile uploadedFile) {
+    @Transactional
+    public FaceAuthResultResponse authenticationByUserFace(Long conferenceId, Long sessionId, MultipartFile uploadedFile) {
         try {
         // 전달 된 얼굴 이미지를 ByteBuffer 로 변환
         ByteBuffer imageBytes = ByteBuffer.wrap(uploadedFile.getBytes());
@@ -37,7 +38,7 @@ public class RekognitionService {
         log.info("유저 {} 얼굴정보 확인, 유사도 : {}", response.userId(), response.similarity());
 
         // 얼굴 인증 후 참가 이벤트 발생
-        Events.raise(new AttendanceEvent(request.userId(), request.conferenceId(), request.sessionId()));
+        Events.raise(new AttendanceEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
         return FaceAuthResultResponse.of(response.userId(), response.similarity());
 
         }catch (IOException e){

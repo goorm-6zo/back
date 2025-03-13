@@ -2,7 +2,9 @@ package goorm.back.zo6.sse.infrastructure;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,37 +12,47 @@ import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AttendanceService {
 
     private final RedisTemplate<String, String> redisTemplate;
+    private final SseService sseService;
 
     // 유저 참석 확인
-    public boolean isUserAttended(Long conferenceId, Long sessionId, Long userId){
-        String key = getRelevantKey(conferenceId, sessionId);
-        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, userId.toString()));
-    }
-
     public void saveUserAttendance(Long conferenceId, Long sessionId, Long userId, long timestamp){
-        String key = getRelevantKey(conferenceId, sessionId);
-        redisTemplate.opsForSet().add(key, userId.toString());
-        redisTemplate.expire(key, Duration.ofSeconds(timestamp));
-    }
+        if(conferenceId == null){
+            throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
+        }
 
-    public long getAttendanceCount(Long conferenceId, Long sessionId){
-        String key = getRelevantKey(conferenceId, sessionId);
-        return Math.toIntExact(redisTemplate.opsForSet().size(key));
-    }
+        long count = 0;
+        if(sessionId == null){
+            log.info("conference 참가");
+            String conferenceKey = "conference:" + conferenceId;
+            String conferenceCountKey = "conference_count:" + conferenceId;
 
-    public void deleteAttendanceData(Long conferenceId, Long sessionId){
-        String key = getRelevantKey(conferenceId,sessionId);
-        redisTemplate.delete(key);
-    }
+            Long addedToConference = redisTemplate.opsForSet().add(conferenceKey, userId.toString());
+            if(addedToConference != null && addedToConference > 0){
+                redisTemplate.opsForValue().increment(conferenceCountKey);
+            }
+            redisTemplate.expire(conferenceKey, Duration.ofSeconds(timestamp));
 
-    private String getRelevantKey(Long conferenceId, Long sessionId){
-        if(conferenceId != null) return "conference:" + conferenceId;
+            String countStr = redisTemplate.opsForValue().get(conferenceCountKey);
+            count = (countStr != null) ? Integer.parseInt(countStr) : 0;
+        }else{
+            // 세션 참석 처리
+            log.info("session 참가");
+            String sessionKey = "conference:" + conferenceId + ":session:" + sessionId;
+            String sessionCountKey = "conference:" + conferenceId + ":session_count:" + sessionId;
 
-        if(sessionId != null) return "conferenceSession:" + sessionId;
+            Long addedToSession = redisTemplate.opsForSet().add(sessionKey, userId.toString());
+            if(addedToSession != null && addedToSession > 0){
+                redisTemplate.opsForValue().increment(sessionCountKey);
+            }
+            redisTemplate.expire(sessionKey, Duration.ofSeconds(timestamp));
 
-        throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
+            String countStr = redisTemplate.opsForValue().get(sessionCountKey);
+            count = (countStr != null) ? Integer.parseInt(countStr) : 0;
+        }
+        sseService.sendAttendanceCount(conferenceId, sessionId, count);
     }
 }

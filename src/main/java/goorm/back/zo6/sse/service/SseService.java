@@ -2,7 +2,6 @@ package goorm.back.zo6.sse.service;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.infrastructure.AttendanceService;
 import goorm.back.zo6.sse.repository.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +15,6 @@ import java.io.IOException;
 @Log4j2
 public class SseService {
     private final EmitterRepository emitterRepository;
-    private final AttendanceService attendanceService;
 
     private static final long TIMEOUT = 1800*1000L;
     private static final long RECONNECTION_TIMEOUT = 1000L;
@@ -52,7 +50,7 @@ public class SseService {
     }
 
     // 기기에 해당하는 참석자 수 리턴
-    public void sendAttendanceCount(Long conferenceId, Long sessionId){
+    public void sendAttendanceCount(Long conferenceId, Long sessionId, long count){
         String eventKey = generateEventKey(conferenceId, sessionId);
         SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
         if(emitter != null){
@@ -61,13 +59,12 @@ public class SseService {
                         .name("AttendanceCount")
                         .id(eventKey)
                         .reconnectTime(RECONNECTION_TIMEOUT)
-                        .data(10L));
+                        .data(count));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 
     // SSE 연결이 종료되거나, 타임아웃되거나, 오류가 발생할 때 적절한 처리를 수행하도록 Emitter에 핸들러를 등록
     private void registerEmitterHandler(String eventId, SseEmitter sseEmitter){
@@ -102,10 +99,14 @@ public class SseService {
     }
 
     private String generateEventKey(Long conferenceId, Long sessionId){
-        if(conferenceId != null) return "conference:" + conferenceId;
+        if(conferenceId == null){
+            throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
+        }
 
-        if(sessionId != null) return "conferenceSession:" + sessionId;
-
-        throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
+        if(sessionId == null){
+            return "conference:" + conferenceId;
+        }else{
+            return "conference:" + conferenceId + ":session:" + sessionId;
+        }
     }
 }
