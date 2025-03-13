@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class JpqlEventStore implements EventStore{
+public class JpqlEventStore implements EventStore {
     private final ObjectMapper objectMapper;
 
     @PersistenceContext

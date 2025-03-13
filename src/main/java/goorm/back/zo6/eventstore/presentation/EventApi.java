@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class EventApi {
-    private EventStore eventStore;
+    private final EventStore eventStore;
 
     @RequestMapping(value = "/api/v1/events", method = RequestMethod.GET)
     public List<EventEntry> list(
