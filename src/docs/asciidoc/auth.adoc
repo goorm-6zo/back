@@ -1,0 +1,33 @@
+= Auth API 문서
+:toc: left
+:toclevels: 2
+
+== 유저 인증 API
+
+=== 1. 로그인 성공
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-success/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-success/http-response.adoc[]
+
+---
+
+=== 2. 로그인 실패 (잘못된 비밀번호)
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-fail_-wrong-password/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-fail_-wrong-password/http-response.adoc[]
+
+---
+
+=== 3. 로그인 실패 (존재하지 않는 이메일)
+
+==== 요청
+include::{snippets}/auth-controller-test/login-test_-fail_-non-existent-email/http-request.adoc[]
+
+==== 응답
+include::{snippets}/auth-controller-test/login-test_-fail_-non-existent-email/http-response.adoc[]

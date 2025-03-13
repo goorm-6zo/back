@@ -7,8 +7,8 @@ import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.LoginRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
+import goorm.back.zo6.user.application.LoginRequest;
+import goorm.back.zo6.user.application.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,6 @@ class AuthServiceTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -61,7 +60,7 @@ class AuthServiceTest {
         // db 비밀번호 매칭 확인
         when(passwordEncoder.matches(loginRequest.password(), testUser.getPassword().getValue())).thenReturn(true);
         // jwt 토큰 생성
-        when(jwtUtil.createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getName(), testUser.getRole())).thenReturn("mockToken");
+        when(jwtUtil.createAccessToken(testUser.getEmail())).thenReturn("mockToken");
 
         // when
         LoginResponse response = authService.login(loginRequest);
@@ -72,7 +71,7 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
-        verify(jwtUtil, times(1)).createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getName(), testUser.getRole());
+        verify(jwtUtil, times(1)).createAccessToken(testUser.getEmail());
     }
 
     @Test
@@ -92,7 +91,7 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, never()).matches(anyString(), anyString());
-        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
+        verify(jwtUtil, never()).createAccessToken(anyString());
     }
 
     @Test
@@ -116,6 +115,6 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
-        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
+        verify(jwtUtil, never()).createAccessToken(anyString());
     }
 }

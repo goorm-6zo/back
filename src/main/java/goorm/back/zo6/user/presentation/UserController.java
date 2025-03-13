@@ -1,10 +1,7 @@
 package goorm.back.zo6.user.presentation;
 
 import goorm.back.zo6.auth.domain.LoginUser;
-import goorm.back.zo6.user.application.UserService;
-import goorm.back.zo6.user.dto.request.SignUpRequest;
-import goorm.back.zo6.user.dto.response.SignUpResponse;
-import goorm.back.zo6.user.dto.response.UserResponse;
+import goorm.back.zo6.user.application.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +43,12 @@ public class UserController {
         String email = loginUser.user().getEmail();
         userService.delete(email);
         return ResponseEntity.ok().body(Map.of("message","성공적으로 회원 탈퇴하였습니다."));
+    }
+
+    @PostMapping("/phone")
+    public ResponseEntity<UserResponse> addPhone(@AuthenticationPrincipal LoginUser loginUser,
+                                                    @RequestBody PhoneNumberRequest request) {
+        UserResponse updatedUser = userService.addPhoneNumber(loginUser.getUsername(), request.getPhoneNumber());
+        return ResponseEntity.ok(updatedUser);
     }
 }
