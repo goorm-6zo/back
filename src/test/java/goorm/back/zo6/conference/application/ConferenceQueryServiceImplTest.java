@@ -142,7 +142,7 @@ class ConferenceQueryServiceImplTest {
                     Session sessionArg = invocation.getArgument(0);
                     return new SessionDto(
                             sessionArg.getId(),
-                            sessionArg.getConference(),
+                            sessionArg.getConference().getId() == null ? null : sessionArg.getConference().getId(),
                             sessionArg.getName(),
                             sessionArg.getCapacity(),
                             sessionArg.getLocation(),
@@ -178,7 +178,7 @@ class ConferenceQueryServiceImplTest {
         when(conferenceMapper.toSessionDto(any(Session.class)))
                 .thenReturn(new SessionDto(
                         testSession.getId(),
-                        testConferenceId,
+                        testConferenceId.getId(),
                         testSession.getName(),
                         testSession.getCapacity(),
                         testSession.getLocation(),

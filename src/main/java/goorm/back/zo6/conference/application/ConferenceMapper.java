@@ -28,7 +28,7 @@ public class ConferenceMapper {
                 conference.getCapacity(),
                 conference.getHasSessions(),
                 conference.getSessions().stream()
-                        .map(this::toSessionResponse).toList()
+                        .map(this::toSessionDto).toList()
         );
     }
 
@@ -46,7 +46,7 @@ public class ConferenceMapper {
     public SessionDto toSessionDto(Session session) {
         return new SessionDto(
                 session.getId(),
-                session.getConference(),
+                session.getConference().getId(),
                 session.getName(),
                 session.getCapacity(),
                 session.getLocation(),

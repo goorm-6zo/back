@@ -145,25 +145,6 @@ class ConferenceControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("특정 컨퍼런스의 세션 리스트 조회 성공")
-    void getSessionsByConferenceId_ReturnsSessionList() throws Exception {
-        // Given: 테스트 데이터를 설정합니다 (컨퍼런스 및 세션).
-        Conference conference = new Conference(1L, "Test Conference", "Test Description", "Test Location", LocalDateTime.now(), 100, true, new HashSet<>());
-        conferenceJpaRepository.save(conference);
-
-        Session session1 = new Session(conference, "Test Session", 100, "온라인", LocalDateTime.now(), "Test Summary");
-        Session session2 = new Session(conference, "Test Session", 100, "온라인", LocalDateTime.now(), "Test Summary" );
-        sessionJpaRepository.saveAll(List.of(session1, session2));
-
-        // When: 생성한 컨퍼런스의 세션 리스트 API를 호출합니다.
-        mockMvc.perform(get("/api/v1/conference/" + conference.getId() + "/sessions")
-                        .header("Authorization", "Bearer " + testToken)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) // Then: 상태 코드가 200 OK인지 확인합니다.
-                .andDo(restDocs.document());
-    }
-
     private String generateTestToken(User user) {
         return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
     }

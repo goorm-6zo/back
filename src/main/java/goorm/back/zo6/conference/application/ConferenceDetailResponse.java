@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.application;
 
+import goorm.back.zo6.conference.domain.Conference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,5 +17,10 @@ public class ConferenceDetailResponse {
     private LocalDateTime conferenceAt;
     private Integer capacity;
     private Boolean hasSessions;
-    private List<SessionResponse> sessions;
+    private List<SessionDto> sessions;
+
+    public static ConferenceDetailResponse fromEntity(Conference conference) {
+        return new ConferenceDetailResponse(conference.getId(), conference.getName(), conference.getDescription(), conference.getLocation(), conference.getConferenceAt(), conference.getCapacity(), conference.getHasSessions(), conference.getSessions().stream().map(SessionDto::fromEntity).toList()
+        );
+    }
 }
