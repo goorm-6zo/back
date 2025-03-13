@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 class QRContentBuilder {
-    public String build(Long conferenceId, Long sectionId, String url) {
-        return "conferenceId=" + conferenceId + "&sectionId=" + sectionId + "&url=" + url;
+    public String build(Long conferenceId, Long sessionId, String url) {
+        return url + "?conferenceId=" + conferenceId + "&sessionId=" + sessionId;
     }
 }

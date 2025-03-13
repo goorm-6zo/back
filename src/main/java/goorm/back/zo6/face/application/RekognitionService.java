@@ -41,9 +41,10 @@ public class RekognitionService {
 
         }catch (IOException e){
             throw new CustomException(ErrorCode.FILE_CONVERSION_EXCEPTION);
-    }
+        }
 
     }
+
     // 빠른 비교를 위해 rekognition collection 생성, 초기 1회 실행
     public CollectionResponse createCollection(){
         String collectionArl = rekognitionApiClient.createCollection();

@@ -79,6 +79,7 @@ class RekognitionServiceTest {
         // when
         CustomException exception = assertThrows(CustomException.class, () -> rekognitionService.authenticationByUserFace(conferenceId, sessionId, uploadedFile));
 
+
         // then
         assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
         verify(rekognitionApiClient, times(1)).authorizeUserFace(imageBytes);
