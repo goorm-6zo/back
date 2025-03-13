@@ -18,4 +18,17 @@ public class ConferenceFixture {
                 .sessions(new HashSet<>())
                 .build();
     }
+
+    public static Conference 컨퍼런스_아이디포함() {
+        return Conference.builder()
+                .id(1L)
+                .name("테스트 컨퍼런스")
+                .description("테스트 컨퍼런스 소개")
+                .location("테스트 주소 1234")
+                .conferenceAt(LocalDateTime.now())
+                .capacity(100)
+                .hasSessions(true)
+                .sessions(new HashSet<>())
+                .build();
+    }
 }

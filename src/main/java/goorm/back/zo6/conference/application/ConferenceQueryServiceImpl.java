@@ -33,13 +33,25 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     @Override
     public List<SessionResponse> getSessionsByConferenceId(Long conferenceId) {
         Conference conference = findConferenceOrThrow(conferenceId);
-
         if (!conference.getHasSessions()) {
             throw new IllegalArgumentException("This conference does not have any sessions.");
         }
 
         return conference.getSessions().stream()
                 .map(conferenceMapper::toSessionResponse)
+                .toList();
+    }
+
+    @Override
+    public List<SessionDto> getSessionsByConferenceIdDto(Long conferenceId) {
+        Conference conference = findConferenceOrThrow(conferenceId);
+
+        if (!conference.getHasSessions()) {
+            throw new IllegalArgumentException("This conference does not have any sessions.");
+        }
+
+        return conference.getSessions().stream()
+                .map(conferenceMapper::toSessionDto)
                 .toList();
     }
 

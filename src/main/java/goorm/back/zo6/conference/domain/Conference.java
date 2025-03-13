@@ -43,6 +43,7 @@ public class Conference {
     private Boolean hasSessions;
 
     @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<Session> sessions = new HashSet<>();
 
     public void addSession(Session session) {

@@ -31,8 +31,8 @@ public class ConferenceController {
     }
 
     @GetMapping("/{conferenceId}/sessions")
-    public ResponseEntity<List<SessionResponse>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
-        return ResponseEntity.ok(conferenceQueryService.getSessionsByConferenceId(conferenceId));
+    public ResponseEntity<List<SessionDto>> getSessionsByConferenceId(@PathVariable Long conferenceId) {
+        return ResponseEntity.ok(conferenceQueryService.getSessionsByConferenceIdDto(conferenceId));
     }
 
     @GetMapping("/{conferenceId}/sessions/{sessionId}")

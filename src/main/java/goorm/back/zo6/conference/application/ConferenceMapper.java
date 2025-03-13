@@ -42,4 +42,16 @@ public class ConferenceMapper {
                 session.getSummary()
         );
     }
+
+    public SessionDto toSessionDto(Session session) {
+        return new SessionDto(
+                session.getId(),
+                session.getConference(),
+                session.getName(),
+                session.getCapacity(),
+                session.getLocation(),
+                session.getTime(),
+                session.getSummary()
+        );
+    }
 }
