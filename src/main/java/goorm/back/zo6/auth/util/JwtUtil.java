@@ -71,7 +71,7 @@ public class JwtUtil {
         try{
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build()
                     .parseClaimsJws(token);
-            return claims.getBody().getExpiration().before(new Date());
+            return !claims.getBody().getExpiration().before(new Date());
         }catch (SignatureException ex){
             throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
         }catch (MalformedJwtException ex){

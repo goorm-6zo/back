@@ -14,19 +14,15 @@ public class Face {
     @Column(name = "face_id")
     Long id;
 
-    @Column(name = "image_key")
-    String imageKey;
-
     @Column(name = "rekognition_face_id")
     String rekognitionFaceId;
 
     @Column(name = "user_id")
     Long userId;
 
-    public static Face of(String imageKey, String rekognition_faceId,Long userId){
+    public static Face of(String rekognitionFaceId, Long userId){
         return Face.builder()
-                .imageKey(imageKey)
-                .rekognitionFaceId(rekognition_faceId)
+                .rekognitionFaceId(rekognitionFaceId)
                 .userId(userId)
                 .build();
     }

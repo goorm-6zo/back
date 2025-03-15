@@ -48,9 +48,9 @@ public class JpqlEventStore implements EventStore {
     @Override
     public List<EventEntry> get(long offset, long limit) {
         return entityManager.createNativeQuery(
-                        "SELECT * FROM evententry ORDER BY id ASC LIMIT ? ?", EventEntry.class)
-                .setParameter(1, offset)
-                .setParameter(2, limit)
+                        "SELECT * FROM evententry ORDER BY id ASC LIMIT ? OFFSET ?", EventEntry.class)
+                .setParameter(1, limit)
+                .setParameter(2, offset)
                 .getResultList();
     }
 }

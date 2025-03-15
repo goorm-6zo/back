@@ -24,16 +24,14 @@ public class RekognitionApiClient {
     private String collectionId;
 
     //얼굴을 Rekognition Collection 에 등록하고 Rekognition Face ID 반환
-    public String addFaceToCollection(String imageKey, Long userId, String bucketName) {
+    public String addFaceToCollection(Long userId,  byte[] imageBytes) {
         try {
             String externalImageId = String.valueOf(userId);
+            // Rekognition 요청 생성 (바이너리 이미지 전달)
             IndexFacesRequest request = IndexFacesRequest.builder()
                     .collectionId(collectionId)
                     .image(Image.builder()
-                            .s3Object(S3Object.builder()
-                                    .bucket(bucketName)
-                                    .name(imageKey)
-                                    .build())
+                            .bytes(SdkBytes.fromByteArray(imageBytes)) // 로컬 이미지 데이터를 직접 전달
                             .build())
                     .externalImageId(externalImageId)
                     .build();
