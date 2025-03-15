@@ -2,6 +2,7 @@ package goorm.back.zo6.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.domain.LoginUser;
+import goorm.back.zo6.auth.util.CookieUtil;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -9,7 +10,6 @@ import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 
@@ -33,12 +31,14 @@ import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = findToken(request);
+            String encryptToken = cookieUtil.findToken(request);
+            String token = cookieUtil.getDecodedCookieValue(encryptToken);
 
             if (!verifyToken(request, token)) {
                 filterChain.doFilter(request, response);
@@ -96,22 +96,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         request.setAttribute("isTokenValid", true);
         return true;
-    }
-
-    private static String findToken(HttpServletRequest request){
-        String token = null;
-        Cookie[] cookies = request.getCookies();
-
-        if(cookies == null){
-            return null;
-        }
-
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("Authorization")){
-                token = cookie.getValue();
-            }
-        }
-        return token;
     }
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
