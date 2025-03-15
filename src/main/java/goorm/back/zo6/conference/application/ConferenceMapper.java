@@ -10,6 +10,10 @@ public class ConferenceMapper {
         return new ConferenceResponse(
                 conference.getId(),
                 conference.getName(),
+                conference.getDescription(),
+                conference.getLocation(),
+                conference.getConferenceAt(),
+                conference.getCapacity(),
                 conference.getHasSessions()
         );
     }
@@ -18,15 +22,31 @@ public class ConferenceMapper {
         return new ConferenceDetailResponse(
                 conference.getId(),
                 conference.getName(),
+                conference.getDescription(),
+                conference.getLocation(),
+                conference.getConferenceAt(),
+                conference.getCapacity(),
                 conference.getHasSessions(),
                 conference.getSessions().stream()
-                        .map(this::toSessionResponse).toList()
+                        .map(this::toSessionDto).toList()
         );
     }
 
     public SessionResponse toSessionResponse(Session session) {
         return new SessionResponse(
                 session.getId(),
+                session.getName(),
+                session.getCapacity(),
+                session.getLocation(),
+                session.getTime(),
+                session.getSummary()
+        );
+    }
+
+    public SessionDto toSessionDto(Session session) {
+        return new SessionDto(
+                session.getId(),
+                session.getConference().getId(),
                 session.getName(),
                 session.getCapacity(),
                 session.getLocation(),

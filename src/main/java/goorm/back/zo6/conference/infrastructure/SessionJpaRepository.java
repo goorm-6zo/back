@@ -9,4 +9,5 @@ public interface SessionJpaRepository extends JpaRepository<Session, Long> {
     List<Session> findByConferenceId(Long conferenceId);
 
     Boolean existsByConferenceId(Long conferenceId);
+
 }

@@ -7,12 +7,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class ConferenceResponse {
-    private Long id;
+public class ConferenceCreateRequest {
     private String name;
     private String description;
     private String location;
-    private LocalDateTime conferenceAt;
     private Integer capacity;
+    private LocalDateTime conferenceAt;
     private Boolean hasSessions;
 }

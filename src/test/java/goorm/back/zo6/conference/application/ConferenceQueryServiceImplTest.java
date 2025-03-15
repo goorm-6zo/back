@@ -14,9 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,12 +41,15 @@ class ConferenceQueryServiceImplTest {
 
     private Conference testConference;
     private Session testSession;
+    private Conference testConferenceId;
 
     @BeforeEach
     void setUp() {
         testConference = ConferenceFixture.컨퍼런스();
-        testSession = SessionFixture.세션(testConference);
+        testConferenceId = ConferenceFixture.컨퍼런스_아이디포함();
+        testSession = SessionFixture.세션_아이디포함(testConferenceId);
         testConference.getSessions().add(testSession);
+        testConferenceId.getSessions().add(testSession);
     }
 
     @Test
@@ -58,6 +63,10 @@ class ConferenceQueryServiceImplTest {
                     return new ConferenceResponse(
                             conference.getId(),
                             conference.getName(),
+                            conference.getDescription(),
+                            conference.getLocation(),
+                            conference.getConferenceAt(),
+                            conference.getCapacity(),
                             conference.getHasSessions()
                     );
                 });
@@ -84,6 +93,10 @@ class ConferenceQueryServiceImplTest {
                     return new ConferenceDetailResponse(
                             conference.getId(),
                             conference.getName(),
+                            conference.getDescription(),
+                            conference.getLocation(),
+                            conference.getConferenceAt(),
+                            conference.getCapacity(),
                             conference.getHasSessions(),
                             List.of()
                     );
@@ -111,19 +124,79 @@ class ConferenceQueryServiceImplTest {
     }
 
     @Test
+    @DisplayName("Session -> SessionDto 매핑 테스트")
+    void toSessionDto_ShouldMapSessionToDtoProperly() {
+        // Given
+        Session session = new Session(
+                100L,
+                testConferenceId,
+                "테스트 컨퍼런스",
+                100,
+                "온라인",
+                LocalDateTime.of(2025, 3, 13, 11, 51, 21),
+                "컨퍼런스 내용"
+        );
+
+        when(conferenceMapper.toSessionDto(any(Session.class)))
+                .thenAnswer(invocation -> {
+                    Session sessionArg = invocation.getArgument(0);
+                    return new SessionDto(
+                            sessionArg.getId(),
+                            sessionArg.getConference().getId() == null ? null : sessionArg.getConference().getId(),
+                            sessionArg.getName(),
+                            sessionArg.getCapacity(),
+                            sessionArg.getLocation(),
+                            sessionArg.getTime(),
+                            sessionArg.getSummary()
+                    );
+                });
+
+        // When
+        SessionDto sessionDto = conferenceMapper.toSessionDto(session);
+
+        // Then
+        assertThat(sessionDto).isNotNull();
+        assertThat(sessionDto.getId()).isEqualTo(session.getId());
+        assertThat(sessionDto.getName()).isEqualTo(session.getName());
+        assertThat(sessionDto.getLocation()).isEqualTo(session.getLocation());
+        assertThat(sessionDto.getTime()).isEqualTo(session.getTime());
+        assertThat(sessionDto.getSummary()).isEqualTo(session.getSummary());
+    }
+
+    @Test
     @DisplayName("컨퍼런스의 세션 목록 조회 성공")
     void getSessionsByConferenceId_WhenValidConference_ReturnsSessions() {
-
+        // Given
         Long conferenceId = 1L;
-        when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
-        when(sessionRepository.findByConferenceId(conferenceId)).thenReturn(List.of(testSession));
 
-        List<Session> sessions = conferenceQueryServiceImpl.getSessionsByConferenceId(conferenceId);
+        // Mock Conference 및 Session 설정
+        testConferenceId.getSessions().add(testSession); // 세션 추가
+        when(conferenceRepository.findWithSessionsById(conferenceId))
+                .thenReturn(Optional.of(testConferenceId));
 
-        assertThat(sessions).hasSize(1);
-        assertThat(sessions.get(0).getName()).isEqualTo(testSession.getName());
+        // Mock Mapper 설정
+        when(conferenceMapper.toSessionDto(any(Session.class)))
+                .thenReturn(new SessionDto(
+                        testSession.getId(),
+                        testConferenceId.getId(),
+                        testSession.getName(),
+                        testSession.getCapacity(),
+                        testSession.getLocation(),
+                        testSession.getTime(),
+                        testSession.getSummary()
+                ));
 
-        verify(sessionRepository, times(1)).findByConferenceId(conferenceId);
+        // When
+        List<SessionDto> sessionDtos = conferenceQueryServiceImpl.getSessionsByConferenceIdDto(conferenceId);
+
+        // Then
+        assertThat(sessionDtos).hasSize(1); // ensure a single session is returned
+        assertThat(sessionDtos.get(0).getId()).isEqualTo(testSession.getId());
+        assertThat(sessionDtos.get(0).getName()).isEqualTo(testSession.getName());
+
+        // Mock 동작 검증
+        verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
+        verify(conferenceMapper, times(1)).toSessionDto(testSession);
     }
 
     @Test
@@ -207,5 +280,20 @@ class ConferenceQueryServiceImplTest {
         verify(sessionRepository, times(1)).findById(sessionId);
     }
 
+    @Test
+    @DisplayName("특정 컨퍼런스의 특정 세션 상세 조회 - 성공")
+    void getSessionDetail_WhenSessionBelongsToConference_ReturnsSession() {
+        Long conferenceId = 1L;
+        Long sessionId = 100L;
 
+        when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
+
+        Session result = conferenceQueryServiceImpl.getSessionDetail(conferenceId, sessionId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(sessionId);
+        verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
+        verify(sessionRepository, times(1)).findById(sessionId);
+    }
 }
