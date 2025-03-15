@@ -43,20 +43,20 @@ class RekognitionApiClientTest {
     void addFaceToCollection_Success() {
         // given
         Long userId = 1L;
-        String imageKey = "images/faces/1/face.jpg";
-        String bucketName = "test-bucket-name";
         String rekognitionFaceId = "rekognition-1234";
         Face face = Face.builder().faceId(rekognitionFaceId).build();
         FaceRecord faceRecord = FaceRecord.builder().face(face).build();
         IndexFacesResponse response = IndexFacesResponse.builder()
                 .faceRecords(faceRecord)
                 .build();
+        byte[] imageBytes = new byte[]{1, 2, 3};
+
 
         // Rekognition API 응답
         when(rekognitionClient.indexFaces(any(IndexFacesRequest.class))).thenReturn(response);
 
         // when
-        String result = rekognitionApiClient.addFaceToCollection(imageKey, userId, bucketName);
+        String result = rekognitionApiClient.addFaceToCollection(userId, imageBytes);
 
         // then
         assertEquals(rekognitionFaceId, result);
@@ -69,8 +69,7 @@ class RekognitionApiClientTest {
     void addFaceToCollection_WhenFaceUploadFails() {
         // given
         Long userId = 1L;
-        String imageKey = "images/faces/1/face.jpg";
-        String bucketName = "test-bucket-name";
+        byte[] imageBytes = new byte[]{1, 2, 3};
 
         // 얼굴을 감지하지 못한 응답 설정
         IndexFacesResponse response = IndexFacesResponse.builder()
@@ -81,7 +80,7 @@ class RekognitionApiClientTest {
 
         // when & then
         // 예외 발생 검증
-        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.addFaceToCollection(imageKey, userId, bucketName));
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.addFaceToCollection(userId, imageBytes));
 
         // API 호출 확인
         assertEquals(ErrorCode.FACE_UPLOAD_FAIL, exception.getErrorCode());
@@ -93,15 +92,14 @@ class RekognitionApiClientTest {
     void addFaceToCollection_WhenApiFails() {
         // given
         Long userId = 1L;
-        String imageKey = "images/faces/1/face.jpg";
-        String bucketName = "test-bucket-name";
+        byte[] imageBytes = new byte[]{1, 2, 3};
 
         doThrow(new CustomException(ErrorCode.REKOGNITION_API_FAILURE))
                 .when(rekognitionClient).indexFaces(any(IndexFacesRequest.class));
 
         // when & then
         // 예외 발생 검증
-        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.addFaceToCollection(imageKey, userId, bucketName));
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.addFaceToCollection(userId, imageBytes));
 
         // API 호출 확인
         assertEquals(ErrorCode.REKOGNITION_API_FAILURE, exception.getErrorCode());
