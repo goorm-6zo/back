@@ -36,7 +36,6 @@ public class AttendService {
         Attend attend = Attend.of(user.getId(), reservation.getId());
         attendRepository.save(attend);
 
-
     }
 
 
