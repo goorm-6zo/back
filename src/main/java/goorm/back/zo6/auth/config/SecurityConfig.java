@@ -46,7 +46,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
-                .requestMatchers("/api/v1/rekognition/authentication").permitAll()
+                .requestMatchers("/api/v1/face/authentication").permitAll()
+                .requestMatchers("/api/v1/attendance/subscribe").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -69,7 +70,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         //configuration.addAllowedOriginPattern(SERVER_URL);
-        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

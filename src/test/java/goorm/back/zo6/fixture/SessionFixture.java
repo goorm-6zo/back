@@ -26,4 +26,16 @@ public class SessionFixture {
                 .session(session)
                 .build();
     }
+
+    public static Session 세션_아이디포함(Conference conference) {
+        return Session.builder()
+                .id(100L)
+                .name("테스트 세션")
+                .conference(conference)
+                .capacity(100)
+                .location("온라인")
+                .time(LocalDateTime.now())
+                .summary("테스트 세션 요약")
+                .build();
+    }
 }

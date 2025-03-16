@@ -52,9 +52,30 @@ public class Session {
         this.summary = summary;
     }
 
+    public void updateSession(String name, Integer capacity, String location, LocalDateTime time, String summary) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("capacity cannot be negative");
+        }
+        if (time.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("The session time cannot be in the past");
+        }
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Session name cannot be empty");
+        }
+        if (location == null || location.isBlank()) {
+            throw new IllegalArgumentException("Session location cannot be empty");
+        }
+
+        this.name = name;
+        this.capacity = capacity;
+        this.location = location;
+        this.time = time;
+        this.summary = summary;
+    }
+
     public boolean isReservable() { return capacity > 0; }
 
-    public void reserveSeat() {
+    public void reservedSeat() {
         if (this.capacity <= 0) {
             throw new IllegalStateException("No available seats for this session");
         }

@@ -1,16 +1,13 @@
 package goorm.back.zo6.user.application;
 
-import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.user.dto.request.LoginRequest;
-import goorm.back.zo6.user.dto.request.SignUpRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
-import goorm.back.zo6.user.dto.response.SignUpResponse;
-import goorm.back.zo6.user.dto.response.UserResponse;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
+import goorm.back.zo6.user.dto.request.SignUpRequest;
+import goorm.back.zo6.user.dto.response.SignUpResponse;
+import goorm.back.zo6.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;

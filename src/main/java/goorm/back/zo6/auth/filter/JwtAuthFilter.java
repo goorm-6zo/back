@@ -88,7 +88,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Boolean isValid = (Boolean) request.getAttribute("isTokenValid");
         if(isValid != null) return isValid;
 
-        if (token == null || jwtUtil.validateToken(token)) {
+        if (token == null || !jwtUtil.validateToken(token)) {
             log.debug("token null");
             request.setAttribute("isTokenValid",false);
             return false;
