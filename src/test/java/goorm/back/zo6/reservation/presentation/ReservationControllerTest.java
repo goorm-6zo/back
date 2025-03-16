@@ -2,6 +2,7 @@ package goorm.back.zo6.reservation.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.conference.application.ConferenceQueryService;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
@@ -66,6 +67,9 @@ class ReservationControllerTest {
 
     @Autowired
     private SessionJpaRepository sessionJpaRepository;
+
+    @Autowired
+    private ConferenceQueryService conferenceQueryService;
 
     @BeforeEach
     void setup(RestDocumentationContextProvider restDocumentation) {

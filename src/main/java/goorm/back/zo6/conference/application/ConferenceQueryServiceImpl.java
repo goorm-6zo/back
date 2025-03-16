@@ -31,14 +31,28 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     }
 
     @Override
-    public List<Session> getSessionsByConferenceId(Long conferenceId) {
+    public List<SessionResponse> getSessionsByConferenceId(Long conferenceId) {
+        Conference conference = findConferenceOrThrow(conferenceId);
+        if (!conference.getHasSessions()) {
+            throw new IllegalArgumentException("This conference does not have any sessions.");
+        }
+
+        return conference.getSessions().stream()
+                .map(conferenceMapper::toSessionResponse)
+                .toList();
+    }
+
+    @Override
+    public List<SessionDto> getSessionsByConferenceIdDto(Long conferenceId) {
         Conference conference = findConferenceOrThrow(conferenceId);
 
         if (!conference.getHasSessions()) {
             throw new IllegalArgumentException("This conference does not have any sessions.");
         }
 
-        return sessionRepository.findByConferenceId(conferenceId);
+        return conference.getSessions().stream()
+                .map(conferenceMapper::toSessionDto)
+                .toList();
     }
 
     public Session getSessionById(Long sessionId) {
@@ -57,6 +71,17 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
         return sessions.stream()
                 .filter(session -> sessionIds.contains(session.getId())).
                 allMatch(Session::isReservable);
+    }
+
+    @Override
+    public Session getSessionDetail(Long conferenceId, Long sessionId) {
+        Conference conference = findConferenceOrThrow(conferenceId);
+
+        if (!conference.containsSession(sessionId)) {
+            throw new IllegalArgumentException("This session does not belong to this conference.");
+        }
+
+        return getSessionOrThrow(sessionId);
     }
 
     private Conference findConferenceOrThrow(Long conferenceId) {
