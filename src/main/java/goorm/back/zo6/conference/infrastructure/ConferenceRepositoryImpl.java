@@ -15,6 +15,11 @@ public class ConferenceRepositoryImpl implements ConferenceRepository {
     private final ConferenceJpaRepository conferenceJpaRepository;
 
     @Override
+    public Optional<Conference> findById(Long id) {
+        return conferenceJpaRepository.findById(id);
+    }
+
+    @Override
     public Optional<Conference> findWithSessionsById(Long conferenceId) {
         return conferenceJpaRepository.findWithSessionsById(conferenceId);
     }
@@ -22,5 +27,10 @@ public class ConferenceRepositoryImpl implements ConferenceRepository {
     @Override
     public List<Conference> findAll() {
         return conferenceJpaRepository.findAll();
+    }
+
+    @Override
+    public Conference save(Conference conference) {
+        return conferenceJpaRepository.save(conference);
     }
 }

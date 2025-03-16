@@ -10,9 +10,13 @@ public interface ConferenceQueryService {
 
     ConferenceDetailResponse getConference(Long conferenceId);
 
-    List<Session> getSessionsByConferenceId(Long conferenceId);
+    List<SessionResponse> getSessionsByConferenceId(Long conferenceId);
+
+    List<SessionDto> getSessionsByConferenceIdDto(Long conferenceId);
 
     boolean isSessionReservable(Long sessionId);
 
     boolean areSessionsReservable(Long conferenceId, List<Long> sessionId);
+
+    Session getSessionDetail(Long conferenceId, Long sessionId);
 }
