@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Map;
 
 @Tag(name = "Auth", description = "Authorization API")
@@ -33,13 +31,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    private final CookieUtil cookieUtil;
-
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "이메일과 비밀번호를 입력받아 JWT 토큰을 발급합니다.")
     public ResponseEntity<Map<String,String>> login(@RequestBody LoginRequest request) {
         LoginResponse loginResponse = authService.login(request);
-        ResponseCookie cookie = cookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), TOKEN_VALID_TIME);
+        ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), TOKEN_VALID_TIME);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -49,7 +45,7 @@ public class AuthController {
     @DeleteMapping("/logout")
     @Operation(summary = "로그아웃", description = "쿠키를 삭제하여 로그아웃합니다.")
     public ResponseEntity<Map<String, String>> logout(@AuthenticationPrincipal LoginUser loginUser){
-        ResponseCookie cookie = cookieUtil.deleteCookie(COOKIE_NAME);
+        ResponseCookie cookie = CookieUtil.deleteCookie(COOKIE_NAME);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of("message","로그아웃 성공!"));

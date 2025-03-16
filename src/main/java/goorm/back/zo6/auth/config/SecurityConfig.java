@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.exception.CustomAccessDeniedHandler;
 import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
-import goorm.back.zo6.auth.util.CookieUtil;
 import goorm.back.zo6.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,6 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
     private final ObjectMapper objectMapper;
 
     @Value("${server.url}")
@@ -57,7 +55,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // JWTFilter 추가
-        http.addFilterBefore(new JwtAuthFilter(jwtUtil, cookieUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthFilter(jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
         // Exception handler 추가
         http.exceptionHandling(exceptionHandling ->

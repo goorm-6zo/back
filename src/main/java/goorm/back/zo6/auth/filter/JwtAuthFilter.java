@@ -31,14 +31,12 @@ import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
     private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String encryptToken = cookieUtil.findToken(request);
-            String token = cookieUtil.getDecodedCookieValue(encryptToken);
+            String token = CookieUtil.findToken(request);
 
             if (!verifyToken(request, token)) {
                 filterChain.doFilter(request, response);
