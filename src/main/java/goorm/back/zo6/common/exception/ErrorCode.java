@@ -2,6 +2,7 @@ package goorm.back.zo6.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.http11.Http11InputBuffer;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 
@@ -71,6 +72,9 @@ public enum ErrorCode {
     // Encryption Error
     ENCRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST, "암호화 과정에서 에러가 발생했습니다."),
     DECRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST,"복호화 과정에서 에러가 발생했습니다."),
+
+    // Reservation Error
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND,"예매 내역을 찾을 수가 없습니다."),
     ;
 
     private final HttpStatus status;

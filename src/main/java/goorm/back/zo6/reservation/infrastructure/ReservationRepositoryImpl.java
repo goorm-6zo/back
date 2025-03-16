@@ -43,4 +43,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public List<Reservation> findAllByNameAndPhone(String name, String phone) {
         return reservationJpaRepository.findAllByNameAndPhone(name, phone);
     }
+
+    @Override
+    public Optional<Reservation> findByPhoneAndConferenceId(String phone, Long conferenceId) {
+        return reservationJpaRepository.findByPhoneAndConferenceId(phone, conferenceId);
+    }
+
 }

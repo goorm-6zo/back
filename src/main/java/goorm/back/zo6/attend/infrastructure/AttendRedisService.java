@@ -1,8 +1,8 @@
-package goorm.back.zo6.sse.infrastructure;
+package goorm.back.zo6.attend.infrastructure;
 
+import goorm.back.zo6.attend.dto.AttendKeys;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.dto.AttendanceKeys;
 import goorm.back.zo6.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +14,7 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class AttendanceService {
+public class AttendRedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final SseService sseService;
@@ -25,7 +25,7 @@ public class AttendanceService {
             throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
         }
 
-        AttendanceKeys keys = generateKeys(conferenceId, sessionId);
+        AttendKeys keys = generateKeys(conferenceId, sessionId);
 
         long count = processAttendance(keys, userId, timestamp);
 
@@ -33,7 +33,7 @@ public class AttendanceService {
     }
 
     // 참석 처리
-    private long processAttendance(AttendanceKeys keys, Long userId, long timestamp){
+    private long processAttendance(AttendKeys keys, Long userId, long timestamp){
         log.info("{} 참가", keys.isSession() ? "Session" : "Conference");
 
         Long added = redisTemplate.opsForSet().add(keys.attendanceKey(), userId.toString());
@@ -48,16 +48,16 @@ public class AttendanceService {
     }
 
     // Conference 및 Session 의 Redis 키를 생성
-    private AttendanceKeys generateKeys(Long conferenceId, Long sessionId){
+    private AttendKeys generateKeys(Long conferenceId, Long sessionId){
         if(sessionId == null){
-            return AttendanceKeys.builder()
+            return AttendKeys.builder()
                     .attendanceKey("conference:" + conferenceId)
                     .countKey("conference_count:" + conferenceId)
                     .isSession(false)
                     .build();
         }
 
-        return AttendanceKeys.builder()
+        return AttendKeys.builder()
                 .attendanceKey("conference:" + conferenceId + ":session:" + sessionId)
                 .countKey("conference:" + conferenceId + ":session_count:" + sessionId)
                 .isSession(true)

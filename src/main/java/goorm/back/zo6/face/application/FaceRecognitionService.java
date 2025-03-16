@@ -28,7 +28,7 @@ public class FaceRecognitionService {
     private final RekognitionApiClient rekognitionApiClient;
     private final FaceRepository faceRepository;
 
-    // 얼굴 이미지 저장, S3 저장 및 collection 저장
+    // 얼굴 데이터 collection 저장
     @Transactional
     public FaceResponse uploadUserFace(Long userId, MultipartFile faceImage){
         try {
@@ -46,10 +46,10 @@ public class FaceRecognitionService {
         }
     }
 
-    // 얼굴 이미지 삭제, s3 이미지 삭제, rekognition collection 이미지 삭제
+    // 얼굴 데이터 collection  삭제
     @Transactional
     public void deleteFaceImage(Long userId) {
-        Face face = faceRepository.findFaceIdByUserId(userId);
+        Face face = faceRepository.findFaceByUserId(userId);
         String rekognitionId = face.getRekognitionFaceId();
 
         // Rekognition Collection 에 저장된 이미지 삭제
@@ -80,7 +80,7 @@ public class FaceRecognitionService {
         }
     }
 
-    // 빠른 비교를 위해 rekognition collection 생성, 초기 1회 실행
+    // rekognition collection 생성, 초기 1회 실행
     public CollectionResponse createCollection(){
         String collectionArl = rekognitionApiClient.createCollection();
         return CollectionResponse.of(collectionArl);

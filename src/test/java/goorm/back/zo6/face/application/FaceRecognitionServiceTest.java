@@ -93,7 +93,7 @@ class FaceRecognitionServiceTest {
         String rekognitionFaceId = "rekog-12345";
         Face face = Face.of(rekognitionFaceId, userId);
 
-        when(faceRepository.findFaceIdByUserId(userId)).thenReturn(face);
+        when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
         doNothing().when(faceRepository).deleteByUserId(userId);
         doNothing().when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
 
@@ -101,7 +101,7 @@ class FaceRecognitionServiceTest {
         faceRecognitionService.deleteFaceImage(userId);
 
         // then
-        verify(faceRepository, times(1)).findFaceIdByUserId(userId);
+        verify(faceRepository, times(1)).findFaceByUserId(userId);
         verify(faceRepository, times(1)).deleteByUserId(userId);
         verify(rekognitionApiClient, times(1)).deleteFaceFromCollection(rekognitionFaceId);
     }
@@ -114,7 +114,7 @@ class FaceRecognitionServiceTest {
 
         // FaceRepository 에서 유저 얼굴 정보가 없을 경우 예외 발생하도록 설정
         doThrow(new CustomException(ErrorCode.FACE_NOT_FOUND))
-                .when(faceRepository).findFaceIdByUserId(userId);
+                .when(faceRepository).findFaceByUserId(userId);
 
         // when
         CustomException exception = assertThrows(CustomException.class, () -> faceRecognitionService.deleteFaceImage(userId));
@@ -122,7 +122,7 @@ class FaceRecognitionServiceTest {
         // then
         assertEquals(ErrorCode.FACE_NOT_FOUND, exception.getErrorCode());
         // FaceRepository 는 호출이 된다.
-        verify(faceRepository, times(1)).findFaceIdByUserId(userId);
+        verify(faceRepository, times(1)).findFaceByUserId(userId);
         // S3와 Rekognition API가 호출되지 않아야 함
         verifyNoInteractions(rekognitionApiClient);
     }
@@ -135,7 +135,7 @@ class FaceRecognitionServiceTest {
         String rekognitionFaceId = "rekog-12345";
         Face face = Face.of(rekognitionFaceId, userId);
 
-        when(faceRepository.findFaceIdByUserId(userId)).thenReturn(face);
+        when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
 
         // Rekognition 얼굴 삭제 실패 설정
         doThrow(new CustomException(ErrorCode.REKOGNITION_DELETE_FAILED))
