@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -260,46 +259,4 @@ class ConferenceQueryServiceImplTest {
         verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
         verify(sessionRepository, times(1)).findById(sessionId);
     }
-<<<<<<< HEAD
-
-    @Test
-    @DisplayName("세션 예약 가능 여부 조회 - 예약 불가능한 경우")
-    void isSessionReservable_WhenNotReservable_ReturnsFalse() {
-
-        Long sessionId = 1L;
-        testSession = Session.builder()
-                .conference(testConference)
-                .name("Non-Reservable Session")
-                .capacity(0)
-                .location("Offline")
-                .time(null)
-                .summary("This session is not reservable.")
-                .build();
-        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
-
-        boolean result = conferenceQueryServiceImpl.isSessionReservable(sessionId);
-
-        assertThat(result).isFalse();
-
-        verify(sessionRepository, times(1)).findById(sessionId);
-    }
-
-    @Test
-    @DisplayName("특정 컨퍼런스의 특정 세션 상세 조회 - 성공")
-    void getSessionDetail_WhenSessionBelongsToConference_ReturnsSession() {
-        Long conferenceId = 1L;
-        Long sessionId = 100L;
-
-        when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
-        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
-
-        Session result = conferenceQueryServiceImpl.getSessionDetail(conferenceId, sessionId);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(sessionId);
-        verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
-        verify(sessionRepository, times(1)).findById(sessionId);
-    }
-=======
->>>>>>> dev
 }
