@@ -43,6 +43,9 @@ public enum ErrorCode {
 
     // Session Error
     SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
+
+    // Reservation Error
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
     ;
 
     private final HttpStatus status;

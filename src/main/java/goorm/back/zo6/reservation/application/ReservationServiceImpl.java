@@ -1,13 +1,20 @@
 package goorm.back.zo6.reservation.application;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.reservation.domain.ReservationStatus;
+import goorm.back.zo6.user.domain.User;
+import goorm.back.zo6.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ConferenceJpaRepository conferenceJpaRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
@@ -72,19 +80,118 @@ public class ReservationServiceImpl implements ReservationService {
                 .conference(conference)
                 .name(reservationRequest.getName())
                 .phone(reservationRequest.getPhone())
+                .status(ReservationStatus.CONFIRMED)
                 .build();
     }
 
     @Override
     public List<ReservationResponse> getMyReservations() {
-        String userName = getCurrentUserName();
-        String userPhone = getCurrentUserPhone();
+        String currentUsername = getCurrentUserName();
 
-        List<Reservation> reservations = reservationRepository.findAllByNameAndPhone(userName, userPhone);
+        User user = userRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<Reservation> reservations = reservationRepository.findAllByUser(user);
 
         return reservations.stream()
                 .map(this::mapToReservationResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getMyConferenceIds() {
+        String name = getCurrentUserName();
+        String phone = getCurrentUserPhone();
+
+        return reservationRepository.findAllByNameAndPhone(name, phone).stream()
+                .filter(r -> r.getStatus() == ReservationStatus.CONFIRMED)
+                .map(r -> r.getConference().getId())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ConferenceSimpleResponse> getMyConferenceSimpleList() {
+        String currentUserName = getCurrentUserName();
+        User currentUser = userRepository.findByName(currentUserName).orElseThrow(() -> new UsernameNotFoundException("사용자 미존재: " + currentUserName));
+
+        List<Reservation> reservations = reservationRepository.findAllByUser(currentUser);
+
+        return reservations.stream()
+                .map(res -> new ConferenceSimpleResponse(
+                        res.getConference().getId(),
+                        res.getConference().getName(),
+                        res.getConference().getConferenceAt(),
+                        res.getConference().getLocation()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ReservationResponse getReservationDetailsById(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        String currentUser = getCurrentUserName();
+        String currentPhone = getCurrentUserPhone();
+
+        if (!reservation.getName().equals(currentUser) || !reservation.getPhone().equals(currentPhone)) {
+            throw new IllegalStateException("조회 권한이 없습니다.");
+        }
+
+        return mapToReservationResponse(reservation);
+    }
+
+    @Override
+    @Transactional
+    public ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest) {
+
+        validateRequest(reservationRequest);
+
+        Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId()).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+
+        Set<Session> validateSessions = validateSessionReservations(
+                conference,
+                reservationRequest.getSessionIds(),
+                reservationRequest.getName(),
+                reservationRequest.getPhone()
+        );
+
+        Reservation reservation = Reservation.builder()
+                .conference(conference)
+                .name(reservationRequest.getName())
+                .phone(reservationRequest.getPhone())
+                .status(ReservationStatus.TEMPORARY)
+                .user(null)
+                .build();
+
+        validateSessions.forEach(session -> reservation.addSession(session));
+
+        reservationRepository.save(reservation);
+
+        return mapToReservationResponse(reservation);
+    }
+
+    @Transactional
+    public void confirmUserReservationsAfterLogin(String name, String phone) {
+        List<Reservation> reservations = reservationRepository.findAllByNameAndPhone(name, phone);
+
+        reservations.stream()
+                .filter(reservation -> reservation.getStatus().equals(ReservationStatus.TEMPORARY))
+                .forEach(Reservation::confirmReservation);
+    }
+
+    @Transactional
+    public ReservationResponse linkBeservationWithUser(Long reservationId, String inputPhone, Long userId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+
+        if (!reservation.getPhone().equals(inputPhone) || reservation.getStatus() != ReservationStatus.TEMPORARY) {
+            throw new IllegalArgumentException("전화번호가 일치하지 않거나, 이미 연결된 예약입니다.");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다."));
+
+        reservation.linkUser(user);
+        reservation.confirm();
+
+        return mapToReservationResponse(reservation);
     }
 
     private String getCurrentUserName() {
@@ -92,19 +199,44 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private String getCurrentUserPhone() {
-        return "010-1234-5678"; // 테스트용 하드 코딩
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user.getPhone();
     }
 
     private ReservationResponse mapToReservationResponse(Reservation reservation) {
+        Conference conference = reservation.getConference();
+
+        List<ReservationResponse.SessionInfo> sessionInfos = reservation.getReservationSessions().stream()
+                .map(reservationSession -> {
+                    Session session = reservationSession.getSession();
+                    return ReservationResponse.SessionInfo.builder()
+                            .sessionId(session.getId())
+                            .conferenceId(reservation.getConference().getId())
+                            .sessionName(session.getName())
+                            .capacity(session.getCapacity())
+                            .location(session.getLocation())
+                            .time(session.getTime())
+                            .summary(session.getSummary())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        ReservationResponse.ConferenceInfo conferenceInfo = ReservationResponse.ConferenceInfo.builder()
+                .conferenceId(conference.getId())
+                .conferenceName(conference.getName())
+                .description(conference.getDescription())
+                .location(conference.getLocation())
+                .conferenceAt(conference.getConferenceAt())
+                .capacity(conference.getCapacity())
+                .hasSessions(conference.getHasSessions())
+                .build();
+
         return ReservationResponse.builder()
-                .success(true)
-                .message("Reservation successfully created")
-                .reservedConferenceId(reservation.getConference().getId())
-                .reservedSessionIds(
-                        reservation.getReservationSessions().stream()
-                                .map(rs -> rs.getSession().getId())
-                                .collect(Collectors.toList())
-                )
+                .reservationId(reservation.getId())
+                .conference(conferenceInfo)
+                .sessions(sessionInfos)
+                .status(reservation.getStatus())
                 .build();
     }
 }

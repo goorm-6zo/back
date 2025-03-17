@@ -4,6 +4,7 @@ import goorm.back.zo6.conference.application.ConferenceCreateRequest;
 import goorm.back.zo6.conference.application.ConferenceCreateService;
 import goorm.back.zo6.conference.application.ConferenceResponse;
 import goorm.back.zo6.conference.domain.Conference;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
