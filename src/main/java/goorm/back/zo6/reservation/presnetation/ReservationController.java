@@ -1,7 +1,6 @@
 package goorm.back.zo6.reservation.presnetation;
 
 import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
-import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.reservation.application.ReservationRequest;
 import goorm.back.zo6.reservation.application.ReservationResponse;
 import goorm.back.zo6.reservation.application.ReservationService;
@@ -50,13 +49,12 @@ public class ReservationController {
         return ResponseEntity.status(201).body(response);
     }
 
-    @PostMapping("/{reservationId}/link-user")
+    @PostMapping("/link-user")
     public ResponseEntity<ReservationResponse> linkUserToReservation(
-            @PathVariable Long reservationId,
             @RequestParam("phone") String inputPhone,
             @RequestParam("userId") Long userId
     ) {
-        ReservationResponse response = reservationService.linkBeservationWithUser(reservationId, inputPhone, userId);
+        ReservationResponse response = reservationService.linkReservationByPhoneAndUser(inputPhone, userId);
         return ResponseEntity.ok(response);
     }
 }

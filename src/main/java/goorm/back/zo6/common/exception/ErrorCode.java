@@ -64,6 +64,7 @@ public enum ErrorCode {
 
     // Reservation Error
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
+    RESERVATION_NOT_PHONE(HttpStatus.NOT_FOUND, "입력한 전화번호는 임시 예약이 없습니다"),
   
     // Event Error
     PAYLOAD_CONVERT_ERROR(HttpStatus.BAD_REQUEST, "이벤트 내용 변환 중 에러 발생"),

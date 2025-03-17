@@ -172,28 +172,32 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Transactional
+    @Override
+    public ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId) {
+        List<Reservation> reservations = reservationRepository.findAllByPhoneAndStatus(inputPhone, ReservationStatus.TEMPORARY);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (reservations.isEmpty()) {
+            throw new IllegalArgumentException("입력한 전화번호로 임시 예약이 없습니다.");
+        }
+        Reservation reservation = reservations.get(0);
+
+        reservation.linkUser(user);
+        reservation.confirm();
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        return mapToReservationResponse(savedReservation);
+    }
+
+    @Transactional
     public void confirmUserReservationsAfterLogin(String name, String phone) {
         List<Reservation> reservations = reservationRepository.findAllByNameAndPhone(name, phone);
 
         reservations.stream()
                 .filter(reservation -> reservation.getStatus().equals(ReservationStatus.TEMPORARY))
                 .forEach(Reservation::confirmReservation);
-    }
-
-    @Transactional
-    public ReservationResponse linkBeservationWithUser(Long reservationId, String inputPhone, Long userId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
-
-        if (!reservation.getPhone().equals(inputPhone) || reservation.getStatus() != ReservationStatus.TEMPORARY) {
-            throw new IllegalArgumentException("전화번호가 일치하지 않거나, 이미 연결된 예약입니다.");
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다."));
-
-        reservation.linkUser(user);
-        reservation.confirm();
-
-        return mapToReservationResponse(reservation);
     }
 
     private String getCurrentUserEmail() {

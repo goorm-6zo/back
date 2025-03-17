@@ -18,7 +18,7 @@ public interface ReservationService {
 
     ReservationResponse getReservationDetailsById(Long reservationId);
 
-    void confirmUserReservationsAfterLogin(String name, String phone);
+    ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId);
 
-    ReservationResponse linkBeservationWithUser(Long reservationId, String inputPhone, Long userId);
+    void confirmUserReservationsAfterLogin(String name, String phone);
 }
