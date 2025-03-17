@@ -38,4 +38,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public List<Reservation> findAllByNameAndPhone(String name, String phone) {
         return reservationJpaRepository.findAllByNameAndPhone(name, phone);
     }
+
+    @Override
+    public List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId) {
+        return reservationJpaRepository.findByConferenceIdAndUserId(conferenceId, userId);
+    }
 }

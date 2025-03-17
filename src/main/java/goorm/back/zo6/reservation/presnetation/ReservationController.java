@@ -1,6 +1,7 @@
 package goorm.back.zo6.reservation.presnetation;
 
 import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
+import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationRequest;
 import goorm.back.zo6.reservation.application.ReservationResponse;
 import goorm.back.zo6.reservation.application.ReservationService;
@@ -22,14 +23,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping("/create")
-    @Operation(summary = "예약 생성", description = "예약을 생성합니다.")
-    public ResponseEntity<ReservationResponse> createReservation(@Valid @RequestBody ReservationRequest request) {
-        ReservationResponse response = reservationService.createReservation(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping("/my")
     @Operation(summary = "내 예약 조회", description = "로그인한 사용자의 모든 예약을 조회합니다.")
     public ResponseEntity<List<ReservationResponse>> getMyReservations() {
@@ -42,6 +35,13 @@ public class ReservationController {
     public ResponseEntity<List<ConferenceSimpleResponse>> getMyConference() {
         List<ConferenceSimpleResponse> simpleResponses = reservationService.getMyConferenceSimpleList();
         return ResponseEntity.ok(simpleResponses);
+    }
+
+    @GetMapping("/my/conference/{conferenceId}")
+    @Operation(summary = "예약한 특정 컨퍼런스 상세 정보 조회", description = "예약한 특정 컨퍼런스와 세션들 상세 정보를 조회합니다.")
+    public ResponseEntity<ReservationConferenceDetailResponse> getReservedConferenceDetails(@PathVariable Long conferenceId) {
+        ReservationConferenceDetailResponse details = reservationService.getReservedConferenceDetails(conferenceId);
+        return ResponseEntity.ok(details);
     }
 
     @GetMapping("/{id}")
