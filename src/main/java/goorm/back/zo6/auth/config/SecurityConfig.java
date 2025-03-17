@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -46,6 +48,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
                 .requestMatchers("/api/v1/rekognition/authentication").permitAll()
                 .requestMatchers("/api/v1/reservation/temp").permitAll()
+                .requestMatchers("/api/v1/face/authentication").permitAll()
+                .requestMatchers("/api/v1/attendance/subscribe").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -53,7 +57,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // JWTFilter 추가
-        http.addFilterBefore(new JwtAuthFilter(jwtUtil,objectMapper), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthFilter(jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
         // Exception handler 추가
         http.exceptionHandling(exceptionHandling ->
@@ -67,7 +71,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        configuration.addAllowedOrigin(SERVER_URL);  // 특정 도메인 허용
+        //configuration.addAllowedOriginPattern(SERVER_URL);
+        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

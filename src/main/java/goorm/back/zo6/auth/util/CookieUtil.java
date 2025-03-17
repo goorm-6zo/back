@@ -5,26 +5,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 
 public class CookieUtil {
-    public static final int COOKIE_EXPIRATION_DELETE = 0;
 
     public static ResponseCookie createCookie(String name, String value, long cookieExpiration) {
         return ResponseCookie.from(name, value)
                 .maxAge(cookieExpiration)
                 .path("/")
-                .sameSite("Strict")
+                .sameSite("None")
+                .secure(true)
                 .httpOnly(true)
                 .build();
     }
 
-    public static Cookie findCookieByName(HttpServletRequest request, String name) {
+    public static ResponseCookie deleteCookie(String name){
+        return ResponseCookie.from(name, null)
+                .maxAge(0)
+                .path("/")
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
+                .build();
+    }
+
+    public static String findToken(HttpServletRequest request){
+        String token = null;
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
-                    return cookie;
-                }
+
+        if(cookies == null){
+            return null;
+        }
+
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("Authorization")){
+                token = cookie.getValue();
             }
         }
-        return null;
+        return token;
     }
+
 }

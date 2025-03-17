@@ -1,6 +1,7 @@
 package goorm.back.zo6.auth.presentation;
 
 import goorm.back.zo6.auth.application.AuthService;
+import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.auth.util.CookieUtil;
 import goorm.back.zo6.user.dto.request.LoginRequest;
 import goorm.back.zo6.user.dto.response.LoginResponse;
@@ -11,13 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Map;
 
 @Tag(name = "Auth", description = "Authorization API")
@@ -41,7 +38,17 @@ public class AuthController {
         ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), TOKEN_VALID_TIME);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE,cookie.toString())
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of("message","로그인 성공!"));
     }
+
+    @DeleteMapping("/logout")
+    @Operation(summary = "로그아웃", description = "쿠키를 삭제하여 로그아웃합니다.")
+    public ResponseEntity<Map<String, String>> logout(@AuthenticationPrincipal LoginUser loginUser){
+        ResponseCookie cookie = CookieUtil.deleteCookie(COOKIE_NAME);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(Map.of("message","로그아웃 성공!"));
+    }
+
 }

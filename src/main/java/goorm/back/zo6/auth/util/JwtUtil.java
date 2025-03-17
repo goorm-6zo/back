@@ -40,7 +40,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public  Long getUserId(String token) {
+    public Long getUserId(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build()
                 .parseClaimsJws(token).getBody().get("userId", Long.class);
     }
@@ -71,7 +71,7 @@ public class JwtUtil {
         try{
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build()
                     .parseClaimsJws(token);
-            return claims.getBody().getExpiration().before(new Date());
+            return !claims.getBody().getExpiration().before(new Date());
         }catch (SignatureException ex){
             throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
         }catch (MalformedJwtException ex){
