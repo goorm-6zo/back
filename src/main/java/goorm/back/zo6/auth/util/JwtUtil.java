@@ -40,7 +40,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public  Long getUserId(String token) {
+    public Long getUserId(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build()
                 .parseClaimsJws(token).getBody().get("userId", Long.class);
     }

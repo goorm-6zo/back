@@ -14,9 +14,5 @@ public interface ConferenceQueryService {
 
     List<SessionDto> getSessionsByConferenceIdDto(Long conferenceId);
 
-    boolean isSessionReservable(Long sessionId);
-
-    boolean areSessionsReservable(Long conferenceId, List<Long> sessionId);
-
     Session getSessionDetail(Long conferenceId, Long sessionId);
 }

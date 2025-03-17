@@ -2,6 +2,7 @@ package goorm.back.zo6.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 
 
@@ -61,11 +62,18 @@ public enum ErrorCode {
     // Session Error
     SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다."),
 
+    // Reservation Error
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
+  
     // Event Error
     PAYLOAD_CONVERT_ERROR(HttpStatus.BAD_REQUEST, "이벤트 내용 변환 중 에러 발생"),
 
     // Attendance Error
     MISSING_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "conferenceId 또는 sessionId 가 필요합니다."),
+
+    // Encryption Error
+    ENCRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST, "암호화 과정에서 에러가 발생했습니다."),
+    DECRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST,"복호화 과정에서 에러가 발생했습니다."),
     ;
 
     private final HttpStatus status;

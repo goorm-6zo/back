@@ -65,7 +65,6 @@ class AuthControllerTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
