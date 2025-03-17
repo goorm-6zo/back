@@ -41,7 +41,6 @@ class UserServiceTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -52,7 +51,6 @@ class UserServiceTest {
                 .name("홍길순")
                 .email(email)
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -76,7 +74,6 @@ class UserServiceTest {
         assertEquals("test@gmail.com", response.email());
         assertEquals("홍길순", response.name());
         assertEquals("01011112222", response.phone());
-        assertEquals("2000-10-20", response.birthDate());
         assertEquals("test@gmail.com", response.email());
         assertEquals(Role.USER, response.role());
         
@@ -102,7 +99,6 @@ class UserServiceTest {
         assertEquals("test@gmail.com", response.email());
         assertEquals("홍길순", response.name());
         assertEquals("01011112222", response.phone());
-        assertEquals("2000-10-20", response.birthDate());
         assertEquals("test@gmail.com", response.email());
         assertEquals(Role.USER, response.role());
 
@@ -114,14 +110,14 @@ class UserServiceTest {
     @DisplayName("회원가입 성공 시, SignUpResponse 를 반환한다.")
     void signUp_Success() {
         // given
-        SignUpRequest request = new SignUpRequest("홍길동","newuser@gmail.com", "1234",  "2000-01-01","01033334444");
+        SignUpRequest request = new SignUpRequest("홍길동","newuser@gmail.com", "1234", "01033334444");
 
         // 기존 이메일이 존재하지 않음
         when(userRepository.findByEmail(request.email())).thenReturn(Optional.empty());
         //  비밀번호 암호화
         when(passwordEncoder.encode(request.password())).thenReturn("encodedPassword");
         //  새로운 유저 저장 후 반환
-        User newUser = User.singUpUser(request.email(), request.name(), "encodedPassword", request.phone(), request.birth_date(), Role.of("USER"));
+        User newUser = User.singUpUser(request.email(), request.name(), "encodedPassword", request.phone(), Role.of("USER"));
         ReflectionTestUtils.setField(newUser,"id",1L);
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
@@ -146,7 +142,7 @@ class UserServiceTest {
     @DisplayName("이미 존재하는 이메일로 회원가입 시 예외 발생")
     void signUp_Fail_UserAlreadyExists() {
         // given
-        SignUpRequest request = new SignUpRequest("홍길동","exist@gmail.com", "1234",  "2000-01-01","01033334444");
+        SignUpRequest request = new SignUpRequest("홍길동","exist@gmail.com", "1234", "01033334444");
 
         // 이미 존재하는 유저
         when(userRepository.findByEmail(request.email())).thenReturn(Optional.of(User.builder().build()));

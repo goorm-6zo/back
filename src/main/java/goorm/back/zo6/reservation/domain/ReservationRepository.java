@@ -1,5 +1,6 @@
 package goorm.back.zo6.reservation.domain;
 
+import goorm.back.zo6.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Optional;
 
 public interface ReservationRepository {
     Optional<Reservation> findById(Long id);
+
+    List<Reservation> findAllByUser(User user);
 
     Reservation save(Reservation reservation);
 

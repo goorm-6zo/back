@@ -3,7 +3,6 @@ package goorm.back.zo6.user.domain;
 import goorm.back.zo6.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -33,9 +32,6 @@ public class User extends BaseEntity {
     @Column(name = "phone", unique = true)
     private String phone;
 
-    @Column(name = "birth_date")
-    private String birthDate;
-
     @Column(name = "is_deleted")
     @Builder.Default
     private Boolean isDeleted = false;
@@ -44,13 +40,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static User singUpUser(String email, String name, String password, String phone, String birthDate, Role role){
+    public static User singUpUser(String email, String name, String password, String phone, Role role) {
         return User.builder()
                 .email(email)
                 .name(name)
                 .password(Password.from(password))
                 .phone(phone)
-                .birthDate(birthDate)
                 .role(role)
                 .build();
     }

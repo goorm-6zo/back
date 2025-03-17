@@ -60,20 +60,6 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     }
 
     @Override
-    public boolean isSessionReservable(Long sessionId) {
-        Session session = getSessionById(sessionId);
-        return session.isReservable();
-    }
-
-    @Override
-    public boolean areSessionsReservable(Long conferenceId, List<Long> sessionIds) {
-        List<Session> sessions = sessionRepository.findByConferenceId(conferenceId);
-        return sessions.stream()
-                .filter(session -> sessionIds.contains(session.getId())).
-                allMatch(Session::isReservable);
-    }
-
-    @Override
     public Session getSessionDetail(Long conferenceId, Long sessionId) {
         Conference conference = findConferenceOrThrow(conferenceId);
 

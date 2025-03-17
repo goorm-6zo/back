@@ -2,6 +2,7 @@ package goorm.back.zo6.reservation.infrastructure;
 
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public Optional<Reservation> findById(Long id) {
         return reservationJpaRepository.findById(id);
     }
+
+    @Override
+    public List<Reservation> findAllByUser(User user) { return reservationJpaRepository.findAllByUser(user); }
 
     @Override
     public Reservation save(Reservation reservation) {

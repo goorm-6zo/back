@@ -22,7 +22,7 @@ public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
 
     @Query("""
     SELECT c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions,
-           CASE WHEN MAX(a.id) IS NOT NULL THEN true ELSE false END,
+           CASE WHEN MAX(a.id) IS NOT NULL THEN true ELSE false END, 
            s.id, s.name, s.capacity, s.location, s.time, s.summary,
            CASE WHEN MAX(a.sessionId) IS NOT NULL THEN true ELSE false END
     FROM Reservation r
@@ -35,6 +35,7 @@ public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
         AND (a.sessionId = s.id OR a.sessionId IS NULL) 
     WHERE r.phone = (SELECT u.phone FROM User u WHERE u.id = :userId) 
       AND r.conference.id = :conferenceId
+      AND r.status = 'CONFIRMED'
     GROUP BY c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions, 
              s.id, s.name, s.capacity, s.location, s.time, s.summary
 """)

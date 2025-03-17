@@ -1,6 +1,7 @@
 package goorm.back.zo6.reservation.infrastructure;
 
 import goorm.back.zo6.reservation.domain.Reservation;
+import goorm.back.zo6.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
     List<Reservation> findAllByNameAndPhone(String name, String phone);
 
     Optional<Reservation> findByPhoneAndConferenceId(String phone, Long conferenceId);
+
+    List<Reservation> findAllByUser(User user);
+
 }
