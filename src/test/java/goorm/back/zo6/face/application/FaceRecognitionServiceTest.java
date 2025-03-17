@@ -10,7 +10,7 @@ import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
-import goorm.back.zo6.face.infrastructure.event.AttendanceEvent;
+import goorm.back.zo6.attend.domain.AttendEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -163,7 +163,7 @@ class FaceRecognitionServiceTest {
         MockedStatic<Events> mockEvents = mockStatic(Events.class);
 
         // 정상적인 파일 변환 설정
-        mockEvents.when(()-> Events.raise(any(AttendanceEvent.class))).thenAnswer(invocation -> null);
+        mockEvents.when(()-> Events.raise(any(AttendEvent.class))).thenAnswer(invocation -> null);
         when(uploadedFile.getBytes()).thenReturn(new byte[]{1, 2, 3});
         ByteBuffer imageBytes = ByteBuffer.wrap(new byte[]{1, 2, 3});
 

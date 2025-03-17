@@ -10,7 +10,7 @@ import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
-import goorm.back.zo6.face.infrastructure.event.AttendanceEvent;
+import goorm.back.zo6.attend.domain.AttendEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public class FaceRecognitionService {
             log.info("유저 {} 얼굴정보 확인, 유사도 : {}", response.userId(), response.similarity());
 
             // 얼굴 인증 후 참가 이벤트 발생
-            Events.raise(new AttendanceEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
+            Events.raise(new AttendEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
             return FaceAuthResultResponse.of(response.userId(), response.similarity());
 
         } catch (IOException e) {

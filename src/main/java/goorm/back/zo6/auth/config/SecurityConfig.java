@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
                 .requestMatchers("/api/v1/face/authentication").permitAll()
-                .requestMatchers("/api/v1/attendance/subscribe").permitAll()
+                .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
