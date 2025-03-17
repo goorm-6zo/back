@@ -41,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
         validateRequest(reservationRequest);
 
         Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId())
-                .orElseThrow(() -> new IllegalArgumentException("Conference not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
 
         Set<Session> reservedSessions = validateSessionReservations(
                 conference,
@@ -59,11 +59,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     private void validateRequest(ReservationRequest reservationRequest) {
         if (reservationRequest.getConferenceId() == null || reservationRequest.getName() == null || reservationRequest.getPhone() == null) {
-            throw new IllegalArgumentException("Invalid ReservationRequest Required fields are missing");
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
         }
     }
 
     private Set<Session> validateSessionReservations(Conference conference, List<Long> sessionIds, String name, String phone) {
+
+        if (!conference.getHasSessions() && !sessionIds.isEmpty()) {
+            throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
+        }
 
         if (!sessionIds.isEmpty()) {
             conference.validateSessionOwnership(Set.copyOf(sessionIds));
@@ -99,18 +103,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Long> getMyConferenceIds() {
-        String name = getCurrentUserName();
-        String phone = getCurrentUserPhone();
-
-        return reservationRepository.findAllByNameAndPhone(name, phone).stream()
-                .filter(r -> r.getStatus() == ReservationStatus.CONFIRMED)
-                .map(r -> r.getConference().getId())
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<ConferenceSimpleResponse> getMyConferenceSimpleList() {
         User currentUser = userRepository.findByEmail(getCurrentUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -129,7 +121,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse getReservationDetailsById(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         String currentUser = getCurrentUserName();
         String currentPhone = getCurrentUserPhone();
@@ -179,7 +171,7 @@ public class ReservationServiceImpl implements ReservationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (reservations.isEmpty()) {
-            throw new IllegalArgumentException("입력한 전화번호로 임시 예약이 없습니다.");
+            throw new CustomException(ErrorCode.RESERVATION_NOT_PHONE);
         }
         Reservation reservation = reservations.get(0);
 
