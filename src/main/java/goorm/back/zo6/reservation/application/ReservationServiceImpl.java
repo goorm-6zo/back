@@ -13,11 +13,13 @@ import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,14 +88,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationResponse> getMyReservations() {
-        String currentUsername = getCurrentUserName();
-
-        User user = userRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(getCurrentUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         List<Reservation> reservations = reservationRepository.findAllByUser(user);
 
         return reservations.stream()
                 .map(this::mapToReservationResponse)
+                .sorted(Comparator.comparing((ReservationResponse res) -> res.getConference().getConferenceAt()).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -111,8 +112,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ConferenceSimpleResponse> getMyConferenceSimpleList() {
-        String currentUserName = getCurrentUserName();
-        User currentUser = userRepository.findByName(currentUserName).orElseThrow(() -> new UsernameNotFoundException("사용자 미존재: " + currentUserName));
+        User currentUser = userRepository.findByEmail(getCurrentUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         List<Reservation> reservations = reservationRepository.findAllByUser(currentUser);
 
@@ -121,7 +121,9 @@ public class ReservationServiceImpl implements ReservationService {
                         res.getConference().getId(),
                         res.getConference().getName(),
                         res.getConference().getConferenceAt(),
-                        res.getConference().getLocation()))
+                        res.getConference().getLocation()
+                ))
+                .sorted(Comparator.comparing(ConferenceSimpleResponse::getConferenceAt).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -192,6 +194,11 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.confirm();
 
         return mapToReservationResponse(reservation);
+    }
+
+    private String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
     private String getCurrentUserName() {
