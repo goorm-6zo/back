@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.application;
 
+import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.ConferenceRepository;
 import goorm.back.zo6.conference.domain.Session;
@@ -117,7 +118,7 @@ class ConferenceQueryServiceImplTest {
         Long invalidConferenceId = 999L;
         when(conferenceRepository.findWithSessionsById(invalidConferenceId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> conferenceQueryServiceImpl.getConference(invalidConferenceId));
+        assertThrows(CustomException.class, () -> conferenceQueryServiceImpl.getConference(invalidConferenceId));
 
         verify(conferenceRepository, times(1)).findWithSessionsById(invalidConferenceId);
     }
@@ -210,7 +211,7 @@ class ConferenceQueryServiceImplTest {
                 .build();
         when(conferenceRepository.findWithSessionsById(conferenceId)).thenReturn(Optional.of(testConference));
 
-        assertThrows(IllegalArgumentException.class, () -> conferenceQueryServiceImpl.getSessionsByConferenceId(conferenceId));
+        assertThrows(CustomException.class, () -> conferenceQueryServiceImpl.getSessionsByConferenceId(conferenceId));
 
         verify(conferenceRepository, times(1)).findWithSessionsById(conferenceId);
         verifyNoInteractions(sessionRepository);
@@ -238,7 +239,7 @@ class ConferenceQueryServiceImplTest {
         Long invalidSessionId = 999L;
         when(sessionRepository.findById(invalidSessionId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> conferenceQueryServiceImpl.getSessionById(invalidSessionId));
+        assertThrows(CustomException.class, () -> conferenceQueryServiceImpl.getSessionById(invalidSessionId));
 
         verify(sessionRepository, times(1)).findById(invalidSessionId);
     }

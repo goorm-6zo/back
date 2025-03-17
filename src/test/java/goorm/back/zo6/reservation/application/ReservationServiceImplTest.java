@@ -1,5 +1,6 @@
 package goorm.back.zo6.reservation.application;
 
+import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
@@ -105,7 +106,7 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("This conference does not have all the sessions", exception.getMessage());
 
@@ -126,7 +127,7 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conferenceId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("Conference not found", exception.getMessage());
         verify(conferenceJpaRepository, times(1)).findById(conferenceId);
@@ -150,7 +151,7 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
         assertEquals("This conference does not have all the sessions", exception.getMessage());
     }
@@ -172,16 +173,6 @@ class ReservationServiceImplTest {
             field.set(conference, id);
         } catch (Exception e) {
             throw new RuntimeException("Failed to set conference id: ", e);
-        }
-    }
-
-    private void setSessionCapacity(Session session, int capacity) {
-        try {
-            var field = Session.class.getDeclaredField("capacity");
-            field.setAccessible(true);
-            field.set(session, capacity);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set session capacity: ", e);
         }
     }
 }
