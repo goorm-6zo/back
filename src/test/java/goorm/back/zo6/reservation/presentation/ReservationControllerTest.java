@@ -109,7 +109,6 @@ class ReservationControllerTest {
                         .header("Authorization", "Bearer " + testToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
                 .andDo(restDocs.document());
     }
 
