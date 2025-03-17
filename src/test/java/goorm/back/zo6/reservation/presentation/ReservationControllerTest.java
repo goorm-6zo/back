@@ -113,30 +113,6 @@ class ReservationControllerTest {
                 .andDo(restDocs.document());
     }
 
-    /* 조회는 카카오로그인 후에 테스트 코드 작성 예정..
-    @Test
-    void getMyReservations_Success() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("testUser", null, List.of(new SimpleGrantedAuthority("ROLE_USER")))
-        );
-
-        Conference conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-        Reservation reservation = Reservation.builder()
-                .conference(conference)
-                .name("홍길동")
-                .phone("01012345678")
-                .build();
-        reservationRepository.save(reservation);
-
-        mockMvc.perform(get("/api/v1/reservation/my")
-                        .header("Authorization", "Bearer " + testToken)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(1))
-                .andExpect(jsonPath("$[0].reservedConferenceId").value(conference.getId()))
-                .andDo(restDocs.document());
-    } */
-
     private String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
