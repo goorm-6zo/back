@@ -1,7 +1,6 @@
 package goorm.back.zo6.attend.infrastructure;
 
 import goorm.back.zo6.attend.domain.Attend;
-import goorm.back.zo6.attend.dto.AttendInfoResponse;
 import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
