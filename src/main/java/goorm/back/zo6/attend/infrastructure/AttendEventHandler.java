@@ -16,7 +16,8 @@ public class AttendEventHandler {
     @EventListener(AttendEvent.class)
     public void handle(AttendEvent event){
         boolean alreadyAttend = attendRedisService.saveUserAttendance(event.getConferenceId(), event.getSessionId(), event.getUserId(), event.getTimeStamp());
-        if(!alreadyAttend)
+        if(!alreadyAttend) {
             attendService.registerAttend(event.getUserId(), event.getConferenceId(), event.getSessionId());
+        }
     }
 }

@@ -39,13 +39,15 @@ public class AttendRedisService {
         log.info("{} 참가", keys.isSession() ? "Session" : "Conference");
 
         Long added = redisTemplate.opsForSet().add(keys.attendanceKey(), userId.toString());
-        boolean alreadyAttend = false;
+        log.info("added 값 : {}", added);
+        boolean alreadyAttend = true;
 
-        if(added != null && added > 0){
+        if(added > 0){
+            alreadyAttend = false;
             redisTemplate.opsForValue().increment(keys.countKey());
-            alreadyAttend = true;
         }
 
+        log.info("alreadyAttend 값 : {}", alreadyAttend);
         redisTemplate.expire(keys.attendanceKey(), Duration.ofSeconds(timestamp));
 
         String countStr = redisTemplate.opsForValue().get(keys.countKey());
