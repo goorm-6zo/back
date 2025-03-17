@@ -108,7 +108,7 @@ class ReservationServiceImplTest {
 
         CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("This conference does not have all the sessions", exception.getMessage());
+        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
 
         verify(conferenceJpaRepository, times(1)).findById(conference.getId());
         verify(reservationRepository, never()).save(any(Reservation.class));
@@ -129,7 +129,7 @@ class ReservationServiceImplTest {
 
         CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("Conference not found", exception.getMessage());
+        assertEquals("존재하지 않는 컨퍼런스입니다.", exception.getMessage());
         verify(conferenceJpaRepository, times(1)).findById(conferenceId);
         verifyNoInteractions(reservationRepository);
     }
@@ -153,7 +153,7 @@ class ReservationServiceImplTest {
 
         CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("This conference does not have all the sessions", exception.getMessage());
+        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
     }
 
     private void setSessionId(Session session, Long id) {

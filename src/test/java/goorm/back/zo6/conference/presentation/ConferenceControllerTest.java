@@ -107,7 +107,7 @@ class ConferenceControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()))
-                .andExpect(jsonPath("$.message").value("Conference not found."));
+                .andExpect(jsonPath("$.message").value("존재하지 않는 컨퍼런스입니다."));
     }
 
     @Test
