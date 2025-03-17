@@ -245,42 +245,6 @@ class ConferenceQueryServiceImplTest {
     }
 
     @Test
-    @DisplayName("세션 예약 가능 여부 조회 - 가능한 경우")
-    void isSessionReservable_WhenReservable_ReturnsTrue() {
-
-        Long sessionId = 1L;
-        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
-
-        boolean result = conferenceQueryServiceImpl.isSessionReservable(sessionId);
-
-        assertThat(result).isTrue();
-
-        verify(sessionRepository, times(1)).findById(sessionId);
-    }
-
-    @Test
-    @DisplayName("세션 예약 가능 여부 조회 - 예약 불가능한 경우")
-    void isSessionReservable_WhenNotReservable_ReturnsFalse() {
-
-        Long sessionId = 1L;
-        testSession = Session.builder()
-                .conference(testConference)
-                .name("Non-Reservable Session")
-                .capacity(0)
-                .location("Offline")
-                .time(null)
-                .summary("This session is not reservable.")
-                .build();
-        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
-
-        boolean result = conferenceQueryServiceImpl.isSessionReservable(sessionId);
-
-        assertThat(result).isFalse();
-
-        verify(sessionRepository, times(1)).findById(sessionId);
-    }
-
-    @Test
     @DisplayName("특정 컨퍼런스의 특정 세션 상세 조회 - 성공")
     void getSessionDetail_WhenSessionBelongsToConference_ReturnsSession() {
         Long conferenceId = 1L;

@@ -32,16 +32,4 @@ public class ConferenceController {
         Session session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
         return ResponseEntity.ok(SessionDto.fromEntity(session));
     }
-
-    @GetMapping("/sessions/{sessionId}/reservable")
-    public ResponseEntity<Boolean> isSessionReservable(@PathVariable Long sessionId) {
-        Boolean reservable = conferenceQueryService.isSessionReservable(sessionId);
-        return ResponseEntity.ok(reservable);
-    }
-
-    @GetMapping("/{conferenceId}/sessions/reservable")
-    public ResponseEntity<Boolean> areSessionsReservable(@PathVariable Long conferenceId, @RequestParam List<Long> sessionId) {
-        boolean allReservable = conferenceQueryService.areSessionsReservable(conferenceId, sessionId);
-        return ResponseEntity.ok(allReservable);
-    }
 }

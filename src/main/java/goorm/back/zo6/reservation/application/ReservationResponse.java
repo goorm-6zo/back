@@ -1,25 +1,46 @@
 package goorm.back.zo6.reservation.application;
 
-import lombok.Builder;
-import lombok.Getter;
+import goorm.back.zo6.conference.domain.Conference;
+import goorm.back.zo6.conference.domain.Session;
+import goorm.back.zo6.reservation.domain.ReservationStatus;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ReservationResponse {
-    private boolean success;
+    private Long reservationId;
+    private ConferenceInfo conference;
+    private List<SessionInfo> sessions;
+    private ReservationStatus status;
 
-    private String message;
-
-    private List<Long> reservedSessionIds;
-
-    private Long reservedConferenceId;
-
+    @Data
     @Builder
-    public ReservationResponse(boolean success, String message, List<Long> reservedSessionIds, Long reservedConferenceId) {
-        this.success = success;
-        this.message = message;
-        this.reservedSessionIds = reservedSessionIds;
-        this.reservedConferenceId = reservedConferenceId;
+    public static class ConferenceInfo {
+        private Long conferenceId;
+        private String conferenceName;
+        private String description;
+        private String location;
+        private LocalDateTime conferenceAt;
+        private Integer capacity;
+        private Boolean hasSessions;
+    }
+
+    @Data
+    @Builder
+    public static class SessionInfo {
+        private Long sessionId;
+        private Long conferenceId;
+        private String sessionName;
+        private Integer capacity;
+        private String location;
+        private LocalDateTime time;
+        private String summary;
     }
 }
