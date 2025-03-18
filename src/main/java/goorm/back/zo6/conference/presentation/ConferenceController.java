@@ -17,6 +17,7 @@ import java.util.List;
 public class ConferenceController {
 
     private final ConferenceQueryService conferenceQueryService;
+    private final SessionService sessionService;
 
     @GetMapping
     @Operation(summary = "모든 컨퍼런스 조회", description = "등록된 모든 컨퍼런스 목록을 조회합니다.")

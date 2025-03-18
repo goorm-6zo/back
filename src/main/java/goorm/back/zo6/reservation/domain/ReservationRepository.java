@@ -15,8 +15,5 @@ public interface ReservationRepository {
     List<Reservation> findAllByPhoneAndStatus(String phone, ReservationStatus status);
 
     List<Reservation> findAllByNameAndPhone(String name, String phone);
-
-    Optional<Reservation> findByPhoneAndConferenceId(String phone, Long conferenceId);
-
 }
 
