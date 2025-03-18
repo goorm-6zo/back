@@ -3,11 +3,13 @@ package goorm.back.zo6.reservation.application;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.reservation.domain.ReservationSession;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -134,6 +137,42 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public ReservationConferenceDetailResponse getReservedConferenceDetails(Long conferneceId) {
+        String currentUserEmail = getCurrentUserEmail();
+        User currentUser = userRepository.findByEmail(currentUserEmail).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Conference conference = conferenceJpaRepository.findById(conferneceId).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+
+        List<Reservation> reservations = reservationRepository.findByConferenceIdAndUserId(conferneceId, currentUser.getId());
+
+        if (reservations.isEmpty()) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
+
+        Set<SessionDto> reservedSessions = reservations.stream()
+                .flatMap(reservation -> reservation.getReservationSessions().stream())
+                .map(ReservationSession::getSession)
+                .map(session -> SessionDto.builder()
+                        .id(session.getId())
+                        .name(session.getName())
+                        .capacity(session.getCapacity())
+                        .location(session.getLocation())
+                        .time(session.getTime())
+                        .summary(session.getSummary())
+                        .build())
+                .collect(Collectors.toSet());
+
+        return ReservationConferenceDetailResponse.builder()
+                .conferenceId(conference.getId())
+                .conferenceName(conference.getName())
+                .conferenceLocation(conference.getLocation())
+                .conferenceAt(conference.getConferenceAt())
+                .conferenceDescription(conference.getDescription())
+                .sessions(new ArrayList<>(reservedSessions))
+                .build();
+    }
+
+    @Override
     @Transactional
     public ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest) {
 
@@ -181,15 +220,6 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return mapToReservationResponse(savedReservation);
-    }
-
-    @Transactional
-    public void confirmUserReservationsAfterLogin(String name, String phone) {
-        List<Reservation> reservations = reservationRepository.findAllByNameAndPhone(name, phone);
-
-        reservations.stream()
-                .filter(reservation -> reservation.getStatus().equals(ReservationStatus.TEMPORARY))
-                .forEach(Reservation::confirmReservation);
     }
 
     private String getCurrentUserEmail() {

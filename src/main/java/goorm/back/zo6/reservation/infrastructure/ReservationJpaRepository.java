@@ -15,4 +15,6 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
 
     List<Reservation> findAllByUser(User user);
 
+    List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId);
+
 }
