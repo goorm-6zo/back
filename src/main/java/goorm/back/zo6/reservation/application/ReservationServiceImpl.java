@@ -3,11 +3,13 @@ package goorm.back.zo6.reservation.application;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.reservation.domain.ReservationSession;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
         validateRequest(reservationRequest);
 
         Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId())
-                .orElseThrow(() -> new IllegalArgumentException("Conference not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
 
         Set<Session> reservedSessions = validateSessionReservations(
                 conference,
@@ -59,11 +62,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     private void validateRequest(ReservationRequest reservationRequest) {
         if (reservationRequest.getConferenceId() == null || reservationRequest.getName() == null || reservationRequest.getPhone() == null) {
-            throw new IllegalArgumentException("Invalid ReservationRequest Required fields are missing");
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
         }
     }
 
     private Set<Session> validateSessionReservations(Conference conference, List<Long> sessionIds, String name, String phone) {
+
+        if (!conference.getHasSessions() && !sessionIds.isEmpty()) {
+            throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
+        }
 
         if (!sessionIds.isEmpty()) {
             conference.validateSessionOwnership(Set.copyOf(sessionIds));
@@ -99,18 +106,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Long> getMyConferenceIds() {
-        String name = getCurrentUserName();
-        String phone = getCurrentUserPhone();
-
-        return reservationRepository.findAllByNameAndPhone(name, phone).stream()
-                .filter(r -> r.getStatus() == ReservationStatus.CONFIRMED)
-                .map(r -> r.getConference().getId())
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<ConferenceSimpleResponse> getMyConferenceSimpleList() {
         User currentUser = userRepository.findByEmail(getCurrentUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -129,7 +124,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse getReservationDetailsById(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         String currentUser = getCurrentUserName();
         String currentPhone = getCurrentUserPhone();
@@ -139,6 +134,42 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return mapToReservationResponse(reservation);
+    }
+
+    @Override
+    public ReservationConferenceDetailResponse getReservedConferenceDetails(Long conferneceId) {
+        String currentUserEmail = getCurrentUserEmail();
+        User currentUser = userRepository.findByEmail(currentUserEmail).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Conference conference = conferenceJpaRepository.findById(conferneceId).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+
+        List<Reservation> reservations = reservationRepository.findByConferenceIdAndUserId(conferneceId, currentUser.getId());
+
+        if (reservations.isEmpty()) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
+
+        Set<SessionDto> reservedSessions = reservations.stream()
+                .flatMap(reservation -> reservation.getReservationSessions().stream())
+                .map(ReservationSession::getSession)
+                .map(session -> SessionDto.builder()
+                        .id(session.getId())
+                        .name(session.getName())
+                        .capacity(session.getCapacity())
+                        .location(session.getLocation())
+                        .time(session.getTime())
+                        .summary(session.getSummary())
+                        .build())
+                .collect(Collectors.toSet());
+
+        return ReservationConferenceDetailResponse.builder()
+                .conferenceId(conference.getId())
+                .conferenceName(conference.getName())
+                .conferenceLocation(conference.getLocation())
+                .conferenceAt(conference.getConferenceAt())
+                .conferenceDescription(conference.getDescription())
+                .sessions(new ArrayList<>(reservedSessions))
+                .build();
     }
 
     @Override
@@ -172,28 +203,23 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Transactional
-    public void confirmUserReservationsAfterLogin(String name, String phone) {
-        List<Reservation> reservations = reservationRepository.findAllByNameAndPhone(name, phone);
+    @Override
+    public ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId) {
+        List<Reservation> reservations = reservationRepository.findAllByPhoneAndStatus(inputPhone, ReservationStatus.TEMPORARY);
 
-        reservations.stream()
-                .filter(reservation -> reservation.getStatus().equals(ReservationStatus.TEMPORARY))
-                .forEach(Reservation::confirmReservation);
-    }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    @Transactional
-    public ReservationResponse linkBeservationWithUser(Long reservationId, String inputPhone, Long userId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
-
-        if (!reservation.getPhone().equals(inputPhone) || reservation.getStatus() != ReservationStatus.TEMPORARY) {
-            throw new IllegalArgumentException("전화번호가 일치하지 않거나, 이미 연결된 예약입니다.");
+        if (reservations.isEmpty()) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_PHONE);
         }
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다."));
+        Reservation reservation = reservations.get(0);
 
         reservation.linkUser(user);
         reservation.confirm();
 
-        return mapToReservationResponse(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        return mapToReservationResponse(savedReservation);
     }
 
     private String getCurrentUserEmail() {

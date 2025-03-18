@@ -1,5 +1,7 @@
 package goorm.back.zo6.conference.application;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.domain.SessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     @Transactional
     public SessionResponse updateSession(Long sessionId, String name, Integer capacity, String location, LocalDateTime time, String summary) {
-        Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found."));
+        Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
 
         session.updateSession(name, capacity, location, time, summary);
 

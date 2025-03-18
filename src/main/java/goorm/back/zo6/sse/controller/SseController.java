@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-@Tag(name = "[Attendance] Attendance API", description = "Attendance API")
+@Tag(name = "[Sse] Sse API", description = "Sse API")
 @RestController
-@RequestMapping("/api/v1/attendance")
+@RequestMapping("/api/v1/sse")
 @RequiredArgsConstructor
-public class AttendanceController {
+public class SseController {
 
     private final SseService sseService;
 

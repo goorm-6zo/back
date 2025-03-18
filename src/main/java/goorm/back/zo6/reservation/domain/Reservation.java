@@ -1,5 +1,7 @@
 package goorm.back.zo6.reservation.domain;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.user.domain.User;
@@ -57,25 +59,21 @@ public class Reservation {
 
     public void linkUser(User user) {
         if (this.user != null) {
-            throw new IllegalStateException("이미 사용자와 연결되어 있습니다.");
+            throw new CustomException(ErrorCode.ALREADY_LINKED_USER);
         }
         this.user = user;
     }
 
-    public boolean isPhoneMatched(String inputPhone) {
-        return this.phone.equals(inputPhone);
-    }
-
     public void confirm() {
         if (this.status != ReservationStatus.TEMPORARY) {
-            throw new IllegalStateException("임시 상태의 예약만 확정 가능합니다.");
+            throw new CustomException(ErrorCode.INVALID_RESERVATION_STATUS);
         }
         this.status = ReservationStatus.CONFIRMED;
     }
 
     public void confirmReservation() {
         if (this.status == ReservationStatus.CONFIRMED) {
-            throw new IllegalStateException("이미 확정된 예약입니다.");
+            throw new CustomException(ErrorCode.RESERVATION_ALREADY_CONFIRMED);
         }
         this.status = ReservationStatus.CONFIRMED;
     }

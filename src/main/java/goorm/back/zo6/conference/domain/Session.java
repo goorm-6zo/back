@@ -1,5 +1,7 @@
 package goorm.back.zo6.conference.domain;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +44,7 @@ public class Session {
 
     public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime time, String summary) {
         if (conference == null) {
-            throw new IllegalArgumentException("conferenceId must not be null");
+            throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
         this.conference = conference;
         this.name = name;
@@ -54,16 +56,16 @@ public class Session {
 
     public void updateSession(String name, Integer capacity, String location, LocalDateTime time, String summary) {
         if (capacity < 0) {
-            throw new IllegalArgumentException("capacity cannot be negative");
+            throw new CustomException(ErrorCode.INVALID_SESSION_CAPACITY);
         }
         if (time.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("The session time cannot be in the past");
+            throw new CustomException(ErrorCode.INVALID_SESSION_TIME);
         }
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Session name cannot be empty");
+            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
         }
         if (location == null || location.isBlank()) {
-            throw new IllegalArgumentException("Session location cannot be empty");
+            throw new CustomException(ErrorCode.INVALID_SESSION_LOCATION);
         }
 
         this.name = name;
@@ -75,16 +77,10 @@ public class Session {
 
     public boolean isReservable() { return capacity > 0; }
 
-    public void reservedSeat() {
-        if (this.capacity <= 0) {
-            throw new IllegalStateException("No available seats for this session");
-        }
-        this.capacity--;
-    }
 
     public void setConference(Conference conference) {
         if (conference == null) {
-            throw new IllegalArgumentException("conferenceId must not be null");
+            throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
         this.conference = conference;
     }
