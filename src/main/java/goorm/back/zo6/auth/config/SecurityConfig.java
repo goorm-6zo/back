@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -49,7 +51,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/rekognition/authentication").permitAll()
                 .requestMatchers("/api/v1/reservation/temp").permitAll()
                 .requestMatchers("/api/v1/face/authentication").permitAll()
-                .requestMatchers("/api/v1/attendance/subscribe").permitAll()
+                .requestMatchers("/api/v1/sse/subscribe").permitAll()
+                .requestMatchers("/api/v1/admin/signup").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -80,4 +83,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
