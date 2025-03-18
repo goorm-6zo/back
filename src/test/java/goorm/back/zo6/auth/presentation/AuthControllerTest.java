@@ -1,6 +1,5 @@
 package goorm.back.zo6.auth.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.application.AuthService;
 import goorm.back.zo6.auth.util.JwtUtil;
@@ -28,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -77,7 +74,6 @@ class AuthControllerTest {
         userJpaRepository.deleteAllInBatch();
     }
 
-
     @Test
     @DisplayName("유저가 로그인을 성공적으로 완료하여 토큰을 발급받습니다.")
     void loginTest_Success() throws Exception {
@@ -93,7 +89,8 @@ class AuthControllerTest {
                         status().isOk(),
                         header().exists(HttpHeaders.SET_COOKIE),
                         header().string(HttpHeaders.SET_COOKIE, Matchers.containsString("Authorization=")),
-                        jsonPath("$.message").value("로그인 성공!")
+                        jsonPath("$.accessToken").exists(),
+                        jsonPath("$.role").value("USER")
                 );
     }
 
