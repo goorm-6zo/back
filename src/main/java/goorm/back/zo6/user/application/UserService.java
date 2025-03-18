@@ -34,7 +34,19 @@ public class UserService {
                     throw new CustomException(ErrorCode.USER_ALREADY_EXISTS);
                 });
 
-        User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), request.birth_date(), Role.of("USER")));
+        User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), Role.of("USER")));
+
+        return SignUpResponse.from(user);
+    }
+
+    @Transactional
+    public SignUpResponse adminSignUp(SignUpRequest request){
+        userRepository.findByEmail(request.email())
+                .ifPresent(user -> {
+                    throw new CustomException(ErrorCode.USER_ALREADY_EXISTS);
+                });
+
+        User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), Role.of("ADMIN")));
 
         return SignUpResponse.from(user);
     }

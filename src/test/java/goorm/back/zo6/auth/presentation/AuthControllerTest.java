@@ -1,6 +1,5 @@
 package goorm.back.zo6.auth.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.application.AuthService;
 import goorm.back.zo6.auth.util.JwtUtil;
@@ -28,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,7 +62,6 @@ class AuthControllerTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
@@ -77,7 +73,6 @@ class AuthControllerTest {
     void tearDown() {
         userJpaRepository.deleteAllInBatch();
     }
-
 
     @Test
     @DisplayName("유저가 로그인을 성공적으로 완료하여 토큰을 발급받습니다.")
@@ -94,7 +89,8 @@ class AuthControllerTest {
                         status().isOk(),
                         header().exists(HttpHeaders.SET_COOKIE),
                         header().string(HttpHeaders.SET_COOKIE, Matchers.containsString("Authorization=")),
-                        jsonPath("$.message").value("로그인 성공!")
+                        jsonPath("$.accessToken").exists(),
+                        jsonPath("$.role").value("USER")
                 );
     }
 

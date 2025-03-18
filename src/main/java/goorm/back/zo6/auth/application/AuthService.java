@@ -25,6 +25,6 @@ public class AuthService {
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_MATCH_LOGIN_INFO));
 
         String accessToken = jwtUtil.createAccessToken(user.getId(),user.getEmail(), user.getName(),user.getRole());
-        return LoginResponse.builder().accessToken(accessToken).build();
+        return LoginResponse.builder().accessToken(accessToken).role(String.valueOf(user.getRole())).build();
     }
 }

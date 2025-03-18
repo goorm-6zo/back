@@ -1,9 +1,7 @@
 package goorm.back.zo6.user.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.util.JwtUtil;
-import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.user.application.UserService;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -64,7 +61,6 @@ class UserControllerTest {
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
-                .birthDate("2000-10-20")
                 .role(Role.of("USER"))
                 .build();
         userJpaRepository.saveAndFlush(testUser);
@@ -123,7 +119,7 @@ class UserControllerTest {
     @DisplayName("유저 회원가입 성공 테스트")
     void signUpTest() throws Exception {
         // given
-        SignUpRequest request = new SignUpRequest("홍길동","test@naver.com","4321", "2000-10-10","010-1234-5678");
+        SignUpRequest request = new SignUpRequest("홍길동","test@naver.com","4321", "010-1234-5678");
 
         // when & then
         mockMvc.perform(post("/api/v1/users/signup")

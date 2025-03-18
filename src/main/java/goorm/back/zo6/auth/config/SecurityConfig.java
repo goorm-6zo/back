@@ -5,11 +5,11 @@ import goorm.back.zo6.auth.exception.CustomAccessDeniedHandler;
 import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
-import goorm.back.zo6.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -47,9 +48,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
+                .requestMatchers("/api/v1/rekognition/authentication").permitAll()
+                .requestMatchers("/api/v1/reservation/temp").permitAll()
                 .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/attendance/subscribe").permitAll()
-                .requestMatchers("/api/v1/notice/**").hasRole(Role.ADMIN.getRoleName())
+                .requestMatchers("/api/v1/admin/signup").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
