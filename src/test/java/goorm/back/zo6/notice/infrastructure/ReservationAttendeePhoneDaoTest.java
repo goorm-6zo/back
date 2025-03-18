@@ -9,6 +9,7 @@ import goorm.back.zo6.fixture.ConferenceFixture;
 import goorm.back.zo6.fixture.SessionFixture;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationSession;
+import goorm.back.zo6.reservation.domain.ReservationStatus;
 import goorm.back.zo6.reservation.infrastructure.ReservationJpaRepository;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
@@ -52,11 +53,11 @@ public class ReservationAttendeePhoneDaoTest {
     public void getAllAttendeeTest(){
         Conference conference = ConferenceFixture.컨퍼런스();
         conferenceRepository.save(conference);
-        Reservation reservation1 = Reservation.builder().conference(conference).name("참가자1").phone("010-0000-0001").build();
-        Reservation reservation2 = Reservation.builder().conference(conference).name("참가자2").phone("010-0000-0002").build();
-        Reservation reservation3 = Reservation.builder().conference(conference).name("참가자3").phone("010-0000-0003").build();
-        Reservation reservation4 = Reservation.builder().conference(conference).name("참가자4").phone("010-0000-0004").build();
-        Reservation reservation5 = Reservation.builder().conference(conference).name("참가자5").phone("010-0000-0005").build();
+        Reservation reservation1 = Reservation.builder().conference(conference).name("참가자1").phone("010-0000-0001").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation2 = Reservation.builder().conference(conference).name("참가자2").phone("010-0000-0002").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation3 = Reservation.builder().conference(conference).name("참가자3").phone("010-0000-0003").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation4 = Reservation.builder().conference(conference).name("참가자4").phone("010-0000-0004").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation5 = Reservation.builder().conference(conference).name("참가자5").phone("010-0000-0005").status(ReservationStatus.CONFIRMED).build();
         reservationRepository.saveAll(List.of(reservation1,reservation2,reservation3,reservation4,reservation5));
         List<String> phones = reservationAttendeePhoneDao.getPhoneConferenceAttendee(conference.getId());
         Assertions.assertAll(
@@ -78,11 +79,11 @@ public class ReservationAttendeePhoneDaoTest {
         Session session = SessionFixture.세션(conference);
         sessionRepository.save(session);
         conference.addSession(session);
-        Reservation reservation1 = Reservation.builder().conference(conference).name("참가자1").phone("010-0000-0001").build();
-        Reservation reservation2 = Reservation.builder().conference(conference).name("참가자2").phone("010-0000-0002").build();
-        Reservation reservation3 = Reservation.builder().conference(conference).name("참가자3").phone("010-0000-0003").build();
-        Reservation reservation4 = Reservation.builder().conference(conference).name("참가자4").phone("010-0000-0004").build();
-        Reservation reservation5 = Reservation.builder().conference(conference).name("참가자5").phone("010-0000-0005").build();
+        Reservation reservation1 = Reservation.builder().conference(conference).name("참가자1").phone("010-0000-0001").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation2 = Reservation.builder().conference(conference).name("참가자2").phone("010-0000-0002").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation3 = Reservation.builder().conference(conference).name("참가자3").phone("010-0000-0003").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation4 = Reservation.builder().conference(conference).name("참가자4").phone("010-0000-0004").status(ReservationStatus.CONFIRMED).build();
+        Reservation reservation5 = Reservation.builder().conference(conference).name("참가자5").phone("010-0000-0005").status(ReservationStatus.CONFIRMED).build();
         reservationRepository.saveAll(List.of(reservation1,reservation2,reservation3,reservation4,reservation5));
         reservation1.addSession(session);
         reservation2.addSession(session);
