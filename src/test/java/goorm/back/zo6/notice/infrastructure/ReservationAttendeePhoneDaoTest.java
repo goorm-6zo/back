@@ -104,7 +104,6 @@ public class ReservationAttendeePhoneDaoTest {
                 .name("유저1")
                 .email("test1@gmail.com")
                 .phone("010111122221")
-                .birthDate("2000-10-20")
                 .role(Role.of("USER"))
                 .build();
 
@@ -112,14 +111,12 @@ public class ReservationAttendeePhoneDaoTest {
                 .name("유저2")
                 .email("test2@gmail.com")
                 .phone("010111122222")
-                .birthDate("2000-10-20")
                 .role(Role.of("USER"))
                 .build();
         User user3 = User.builder()
                 .name("유저3")
                 .email("test3@gmail.com")
                 .phone("010111122223")
-                .birthDate("2000-10-20")
                 .role(Role.of("USER"))
                 .build();
 
