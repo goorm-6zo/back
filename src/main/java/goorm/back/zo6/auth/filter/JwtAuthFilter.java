@@ -16,11 +16,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import static goorm.back.zo6.common.exception.ErrorCode.UNKNOWN_TOKEN_ERROR;
 
@@ -63,7 +67,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private static void setSecuritySession(User user){
         LoginUser loginUser = new LoginUser(user);
         log.info("SessionLoginUser : {}", loginUser.getUsername());
-        Authentication authToken = new UsernamePasswordAuthenticationToken(loginUser,null, null);
+
+        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().getRoleSecurity()));
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(loginUser,null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 

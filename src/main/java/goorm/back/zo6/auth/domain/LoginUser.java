@@ -2,7 +2,6 @@ package goorm.back.zo6.auth.domain;
 
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
