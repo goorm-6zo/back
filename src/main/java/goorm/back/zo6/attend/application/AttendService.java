@@ -2,17 +2,12 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
-import goorm.back.zo6.attend.dto.AttendInfoResponse;
 import goorm.back.zo6.attend.dto.AttendResponse;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
 import goorm.back.zo6.attend.dto.SessionInfoDto;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.conference.domain.Conference;
-import goorm.back.zo6.conference.domain.Session;
-import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
-import goorm.back.zo6.reservation.domain.ReservationSession;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import jakarta.persistence.Tuple;
@@ -22,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,45 +33,49 @@ public class AttendService {
     public AttendResponse registerAttend(Long userId, Long conferenceId, Long sessionId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Reservation reservation = reservationRepository.findByPhoneAndConferenceId(user.getPhone(), conferenceId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+        // Reservation & 관련 데이터 조회 (phone 기반)
+        List<Tuple> results = attendRepository.findAttendData(user.getPhone(), conferenceId, sessionId);
 
-        Set<ReservationSession> reservationSessions = reservation.getReservationSessions();
-        Optional<ReservationSession> reservationSession = reservationSessions.stream()
-                .filter(session -> session.getSession().getId().equals(sessionId))
-                .findFirst();
+        Tuple result = results.get(0);
 
-        Long reservationSessionId = reservationSession.map(ReservationSession::getId).orElse(null);
-        Long validSessionId = reservationSessionId == null? null: reservationSession.get().getSession().getId();
-        Attend attend = Attend.of(user.getId(), reservation.getId(), reservationSessionId,reservation.getId(), validSessionId);
+        // 필요한 데이터만 가져오기
+        Long reservationId = result.get(0, Long.class);
+        Long reservationSessionId = result.get(1, Long.class);
+        Long validConferenceId = result.get(2, Long.class);
+        Long validSessionId = result.get(3, Long.class); // session이 없을 경우 null 허용
+
+        // Attend 객체 생성 및 저장
+        Attend attend = Attend.of(user.getId(), reservationId, reservationSessionId, validConferenceId, validSessionId);
         attend = attendRepository.save(attend);
 
         return AttendResponse.from(attend);
     }
 
-    public List<ConferenceInfoDto> findAllByToken(Long userId, Long conferenceId) {
+    public ConferenceInfoDto findAllByToken(Long userId, Long conferenceId) {
         List<Tuple> results = attendRepository.findAttendInfoByUserAndConference(userId, conferenceId);
 
-        // 컨퍼런스를 Map에 저장하여 중복 제거
-        Map<Long, ConferenceInfoDto> conferenceMap = new HashMap<>();
+        if (results.isEmpty()) {
+            return null; // 데이터가 없으면 null 반환 (또는 Optional 사용)
+        }
 
+        Tuple firstTuple = results.get(0); // 첫 번째 결과를 가져옴
+        Long conferenceIdFromDb = firstTuple.get(0, Long.class);
+        boolean isConferenceAttended = firstTuple.get(7, Boolean.class);
+
+        ConferenceInfoDto conferenceInfo = new ConferenceInfoDto(
+                conferenceIdFromDb,
+                firstTuple.get(1, String.class),
+                firstTuple.get(2, String.class),
+                firstTuple.get(3, String.class),
+                firstTuple.get(4, LocalDateTime.class),
+                firstTuple.get(5, Integer.class),
+                firstTuple.get(6, Boolean.class),
+                isConferenceAttended,
+                new ArrayList<>() // 세션 리스트 초기화
+        );
+
+        // 세션 정보 추가
         results.forEach(tuple -> {
-            Long conferenceIdFromDb = tuple.get(0, Long.class);
-            boolean isConferenceAttended = tuple.get(7, Boolean.class);
-
-            ConferenceInfoDto conferenceInfo = conferenceMap.getOrDefault(conferenceIdFromDb, new ConferenceInfoDto(
-                    conferenceIdFromDb,
-                    tuple.get(1, String.class),
-                    tuple.get(2, String.class),
-                    tuple.get(3, String.class),
-                    tuple.get(4, LocalDateTime.class),
-                    tuple.get(5, Integer.class),
-                    tuple.get(6, Boolean.class),
-                    isConferenceAttended,
-                    new ArrayList<>()
-            ));
-
-            // 세션 정보 추가
             if (tuple.get(8, Long.class) != null) {
                 SessionInfoDto sessionInfo = new SessionInfoDto(
                         tuple.get(8, Long.class), // s.id
@@ -89,15 +88,8 @@ public class AttendService {
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }
-
-            // 중복 방지를 위해 Map에 저장
-            conferenceMap.put(conferenceIdFromDb, conferenceInfo);
         });
 
-        return new ArrayList<>(conferenceMap.values());
-    }
-
-    public void deleteByToken(Long userId, Long reservationId, Long reservationSessionId) {
-        attendRepository.deleteByUserIdAndReservationIdAndReservationSessionId(userId, reservationId, reservationSessionId);
+        return conferenceInfo;
     }
 }

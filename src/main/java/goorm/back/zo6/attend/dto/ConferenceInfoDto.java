@@ -20,6 +20,5 @@ public class ConferenceInfoDto {
     private Integer capacity;
     private Boolean hasSessions;
     private boolean isAttend;
-    private List<SessionInfoDto> sessions = new ArrayList<>(); // ✅ 세션 리스트 추가
-
+    private List<SessionInfoDto> sessions;
 }

@@ -3,21 +3,28 @@ package goorm.back.zo6.attend.infrastructure;
 import goorm.back.zo6.attend.domain.Attend;
 import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
-    @Modifying
-    @Query("DELETE FROM Attend a WHERE a.userId = :userId AND a.reservationId = :reservationId AND " +
-            "(a.reservationSessionId = :reservationSessionId OR (:reservationSessionId IS NULL AND a.reservationSessionId IS NULL))")
-    void deleteByUserIdAndReservationIdAndReservationSessionId(@Param("userId") Long userId,
-                                                   @Param("reservationId") Long reservationId,
-                                                   @Param("reservationSessionId") Long reservationSessionId);
 
-    List<Attend> findByUserIdAndConferenceId(Long userId, Long conferenceId);
+    @Query("""
+    SELECT r.id, 
+           COALESCE(rs.id, NULL), 
+           r.conference.id, 
+           COALESCE(s.id, NULL)
+    FROM Reservation r
+    LEFT JOIN r.reservationSessions rs ON (:sessionId IS NOT NULL)
+    LEFT JOIN rs.session s ON (:sessionId IS NOT NULL)
+    WHERE r.phone = :phone
+    AND r.conference.id = :conferenceId
+    AND (:sessionId IS NULL OR s.id = :sessionId)
+""")
+    List<Tuple> findAttendData(@Param("phone") String phone,
+                               @Param("conferenceId") Long conferenceId,
+                               @Param("sessionId") Long sessionId);
 
     @Query("""
     SELECT c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions,

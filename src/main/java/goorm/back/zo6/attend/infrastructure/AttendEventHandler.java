@@ -1,7 +1,6 @@
 package goorm.back.zo6.attend.infrastructure;
 
 import goorm.back.zo6.attend.application.AttendService;
-import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,21 +20,12 @@ public class AttendRepositoryImpl implements AttendRepository {
     }
 
     @Override
-    public void deleteByUserIdAndReservationIdAndReservationSessionId(Long userId, Long reservationId, Long reservationSessionId) {
-        attendJpaRepository.deleteByUserIdAndReservationIdAndReservationSessionId(userId, reservationId, reservationSessionId);
-    }
-    @Override
-    public List<Attend> findByUserId(Long userId) {
-        return null;
-    }
-
-    @Override
-    public List<Attend> findByUserIdAndReservationId(Long userId, Long reservationId) {
-        return attendJpaRepository.findByUserIdAndConferenceId(userId,reservationId);
-    }
-
-    @Override
     public List<Tuple> findAttendInfoByUserAndConference(Long userId, Long conferenceId) {
         return attendJpaRepository.findAttendInfoByUserAndConference(userId,conferenceId);
+    }
+
+    @Override
+    public List<Tuple> findAttendData(String phone, Long conferenceId, Long sessionId) {
+        return attendJpaRepository.findAttendData(phone, conferenceId, sessionId);
     }
 }
