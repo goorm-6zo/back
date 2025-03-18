@@ -1,5 +1,7 @@
 package goorm.back.zo6.conference.application;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.ConferenceRepository;
 import goorm.back.zo6.conference.domain.Session;
@@ -34,7 +36,7 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     public List<SessionResponse> getSessionsByConferenceId(Long conferenceId) {
         Conference conference = findConferenceOrThrow(conferenceId);
         if (!conference.getHasSessions()) {
-            throw new IllegalArgumentException("This conference does not have any sessions.");
+            throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
         }
 
         return conference.getSessions().stream()
@@ -47,7 +49,7 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
         Conference conference = findConferenceOrThrow(conferenceId);
 
         if (!conference.getHasSessions()) {
-            throw new IllegalArgumentException("This conference does not have any sessions.");
+            throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
         }
 
         return conference.getSessions().stream()
@@ -56,7 +58,7 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     }
 
     public Session getSessionById(Long sessionId) {
-        return sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found."));
+        return sessionRepository.findById(sessionId).orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
     }
 
     @Override
@@ -64,7 +66,7 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
         Conference conference = findConferenceOrThrow(conferenceId);
 
         if (!conference.containsSession(sessionId)) {
-            throw new IllegalArgumentException("This session does not belong to this conference.");
+            throw new CustomException(ErrorCode.SESSION_NOT_BELONG_TO_CONFERENCE);
         }
 
         return getSessionOrThrow(sessionId);
@@ -72,11 +74,11 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
 
     private Conference findConferenceOrThrow(Long conferenceId) {
         return conferenceRepository.findWithSessionsById(conferenceId)
-                .orElseThrow(() -> new IllegalArgumentException("Conference not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
     }
 
     private Session getSessionOrThrow(Long sessionId) {
         return sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("Session not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
     }
 }

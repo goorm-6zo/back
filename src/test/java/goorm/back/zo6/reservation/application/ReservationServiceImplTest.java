@@ -1,5 +1,6 @@
 package goorm.back.zo6.reservation.application;
 
+import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
@@ -8,21 +9,15 @@ import goorm.back.zo6.fixture.SessionFixture;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
-import goorm.back.zo6.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -111,9 +106,9 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("This conference does not have all the sessions", exception.getMessage());
+        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
 
         verify(conferenceJpaRepository, times(1)).findById(conference.getId());
         verify(reservationRepository, never()).save(any(Reservation.class));
@@ -132,9 +127,9 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conferenceId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("Conference not found", exception.getMessage());
+        assertEquals("존재하지 않는 컨퍼런스입니다.", exception.getMessage());
         verify(conferenceJpaRepository, times(1)).findById(conferenceId);
         verifyNoInteractions(reservationRepository);
     }
@@ -156,9 +151,9 @@ class ReservationServiceImplTest {
 
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
 
-        assertEquals("This conference does not have all the sessions", exception.getMessage());
+        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
     }
 
     private void setSessionId(Session session, Long id) {
@@ -178,16 +173,6 @@ class ReservationServiceImplTest {
             field.set(conference, id);
         } catch (Exception e) {
             throw new RuntimeException("Failed to set conference id: ", e);
-        }
-    }
-
-    private void setSessionCapacity(Session session, int capacity) {
-        try {
-            var field = Session.class.getDeclaredField("capacity");
-            field.setAccessible(true);
-            field.set(session, capacity);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set session capacity: ", e);
         }
     }
 }

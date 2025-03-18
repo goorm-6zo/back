@@ -12,8 +12,6 @@ public interface ReservationService {
 
     ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest);
 
-    List<Long> getMyConferenceIds();
-
     List<ConferenceSimpleResponse> getMyConferenceSimpleList();
 
     ReservationResponse getReservationDetailsById(Long reservationId);

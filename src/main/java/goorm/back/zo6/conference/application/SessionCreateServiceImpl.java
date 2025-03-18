@@ -1,5 +1,7 @@
 package goorm.back.zo6.conference.application;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.ConferenceRepository;
 import goorm.back.zo6.conference.domain.Session;
@@ -19,7 +21,7 @@ public class SessionCreateServiceImpl implements SessionCreateService {
     @Override
     @Transactional
     public SessionResponse createSession(SessionCreateRequest request) {
-        Conference conference = conferenceRepository.findById(request.getConferenceId()).orElseThrow(() -> new IllegalArgumentException("Conference not found with ID: " + request.getConferenceId()));
+        Conference conference = conferenceRepository.findById(request.getConferenceId()).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
         Session session = Session.builder()
                 .name(request.getName())
                 .capacity(request.getCapacity())
