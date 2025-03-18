@@ -5,6 +5,7 @@ import goorm.back.zo6.auth.exception.CustomAccessDeniedHandler;
 import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,6 +54,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
+                .requestMatchers("/api/v1/notice/**").hasRole(Role.ADMIN.getRoleName())
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS

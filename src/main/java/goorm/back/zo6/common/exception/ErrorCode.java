@@ -75,6 +75,9 @@ public enum ErrorCode {
     // Encryption Error
     ENCRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST, "암호화 과정에서 에러가 발생했습니다."),
     DECRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST,"복호화 과정에서 에러가 발생했습니다."),
+
+    // Notice Error
+    TARGET_ERROR(HttpStatus.BAD_REQUEST,"메시지 전송 타켓이 잘못되었습니다.")
     ;
 
     private final HttpStatus status;
