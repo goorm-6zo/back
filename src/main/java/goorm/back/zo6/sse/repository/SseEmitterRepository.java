@@ -25,6 +25,4 @@ public class SseEmitterRepository implements EmitterRepository {
     public SseEmitter findEmitterByKey(String eventKey) {
         return emitters.get(eventKey);
     }
-
-
 }

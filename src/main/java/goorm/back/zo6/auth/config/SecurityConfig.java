@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/rekognition/authentication").permitAll()
                 .requestMatchers("/api/v1/reservation/temp").permitAll()
                 .requestMatchers("/api/v1/face/authentication").permitAll()
-                .requestMatchers("/api/v1/attendance/subscribe").permitAll()
+                .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
                 .anyRequest().authenticated());
 
@@ -83,4 +83,3 @@ public class SecurityConfig {
         return source;
     }
 }
-

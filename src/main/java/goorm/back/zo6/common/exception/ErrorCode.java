@@ -2,6 +2,7 @@ package goorm.back.zo6.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.http11.Http11InputBuffer;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 

@@ -22,7 +22,7 @@ public class FaceRepositoryImpl implements FaceRepository {
     }
 
     @Override
-    public Face findFaceIdByUserId(Long userId) {
+    public Face findFaceByUserId(Long userId) {
         return faceJpaRepository.findFaceByUserId(userId).orElseThrow(()-> new CustomException(ErrorCode.FACE_NOT_FOUND));
     }
 }
