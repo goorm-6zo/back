@@ -25,7 +25,6 @@ import java.util.List;
 @Log4j2
 @Transactional(readOnly = true)
 public class AttendService {
-    private final ReservationRepository reservationRepository;
     private final AttendRepository attendRepository;
     private final UserRepository userRepository;
 
