@@ -17,6 +17,9 @@ public class SessionFixture {
                 .location("온라인")
                 .time(LocalDateTime.now())
                 .summary("테스트 세션 요약")
+                .speakerName("발표자")
+                .speakerOrganization("발표자 소속")
+                .isActive(true)
                 .build();
     }
 
@@ -36,6 +39,9 @@ public class SessionFixture {
                 .location("온라인")
                 .time(LocalDateTime.now())
                 .summary("테스트 세션 요약")
+                .speakerName("발표자")
+                .speakerOrganization("발표자 소속")
+                .isActive(true)
                 .build();
     }
 }

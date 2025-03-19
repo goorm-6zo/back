@@ -39,7 +39,10 @@ public class ConferenceMapper {
                 session.getCapacity(),
                 session.getLocation(),
                 session.getTime(),
-                session.getSummary()
+                session.getSummary(),
+                session.getSpeakerName(),
+                session.getSpeakerOrganization(),
+                session.isActive()
         );
     }
 
@@ -51,7 +54,10 @@ public class ConferenceMapper {
                 session.getCapacity(),
                 session.getLocation(),
                 session.getTime(),
-                session.getSummary()
+                session.getSummary(),
+                session.getSpeakerName(),
+                session.getSpeakerOrganization(),
+                session.isActive()
         );
     }
 }

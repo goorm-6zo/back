@@ -28,11 +28,14 @@ public class SessionCreateServiceImpl implements SessionCreateService {
                 .location(request.getLocation())
                 .time(request.getTime())
                 .summary(request.getSummary())
+                .speakerName(request.getSpeakerName())
+                .speakerOrganization(request.getSpeakerOrganization())
+                .isActive(true)
                 .conference(conference)
                 .build();
 
         Session savedSession = sessionRepository.save(session);
 
-        return new SessionResponse(savedSession.getId(), savedSession.getName(), savedSession.getCapacity(), savedSession.getLocation(), savedSession.getTime(), savedSession.getSummary());
+        return new SessionResponse(savedSession.getId(), savedSession.getName(), savedSession.getCapacity(), savedSession.getLocation(), savedSession.getTime(), savedSession.getSummary(), savedSession.getSpeakerName(), savedSession.getSpeakerOrganization(), savedSession.isActive());
     }
 }

@@ -102,7 +102,7 @@ class AttendControllerTest {
         testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").build();
         conferenceJpaRepository.saveAllAndFlush(List.of(testConferenceA, testConferenceB, testConferenceC));
 
-        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(LocalDateTime.now()).build();
+        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(LocalDateTime.now()).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
         sessionJpaRepository.saveAndFlush(testSession);
 
         testReservationA = Reservation.builder().name("컨퍼런스 예매").status(ReservationStatus.CONFIRMED).phone("010-1111-2222").user(testUser).conference(testConferenceA).build();

@@ -29,4 +29,9 @@ public class SessionRepositoryImpl implements SessionRepository {
         sessionJpaRepository.save(session);
         return session;
     }
+
+    @Override
+    public List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId) {
+        return sessionJpaRepository.findByConferenceIdAndIsActiveTrue(conferenceId);
+    }
 }

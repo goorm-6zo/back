@@ -20,6 +20,10 @@ public class SessionDto {
     private String location;
     private LocalDateTime time;
     private String summary;
+    private String speakerName;
+    private String speakerOrganization;
+    private boolean isActive;
+
 
     public static SessionDto fromEntity(Session session) {
         return new SessionDto(
@@ -28,6 +32,10 @@ public class SessionDto {
                 session.getName(), session.getCapacity(),
                 session.getLocation(),
                 session.getTime(),
-                session.getSummary());
+                session.getSummary(),
+                session.getSpeakerName(),
+                session.getSpeakerOrganization(),
+                session.isActive()
+        );
     }
 }

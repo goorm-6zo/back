@@ -29,7 +29,10 @@ public class SessionUpdateController {
                 request.getCapacity(),
                 request.getLocation(),
                 request.getTime(),
-                request.getSummary()
+                request.getSummary(),
+                request.getSpeakerName(),
+                request.getSpeakerOrganization(),
+                request.isActive()
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
