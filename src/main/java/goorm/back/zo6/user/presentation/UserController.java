@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping
     @Operation(summary = "토큰 유저 조회", description = "유저 토큰으로 유저를 조회합니다.")
     public ResponseEntity<UserResponse> findByToken(@AuthenticationPrincipal LoginUser loginUser){
-        String email = loginUser.user().getEmail();
+        String email = loginUser.getUsername();
         return ResponseEntity.ok().body(userService.findByToken(email));
     }
 
@@ -43,7 +43,7 @@ public class UserController {
     @DeleteMapping
     @Operation(summary = "유저 탈퇴", description = "유저 토큰으로 유저를 논리 탈퇴합니다.")
     public ResponseEntity<Map<String,String>> delete(@AuthenticationPrincipal LoginUser loginUser) {
-        String email = loginUser.user().getEmail();
+        String email = loginUser.getUsername();
         userService.delete(email);
         return ResponseEntity.ok().body(Map.of("message","성공적으로 회원 탈퇴하였습니다."));
     }

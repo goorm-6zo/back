@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,7 +42,9 @@ class AttendServiceTest {
         Long conferenceId = 1L;
         Long reservationId = 1L;
 
-        User mockUser = User.builder().id(userId).email("test@email").name("홍길순").phone(phone).isDeleted(false).build();
+        User mockUser = User.builder().email("test@email").name("홍길순").phone(phone).build();
+        ReflectionTestUtils.setField(mockUser,"id",1L);
+
         Tuple mockTuple = createRegisterTuple(reservationId, null, conferenceId, null);
         List<Tuple> mockResults = Collections.singletonList(mockTuple);
         Attend mockAttend = Attend.of(userId, reservationId, null, conferenceId, null);
@@ -70,7 +73,9 @@ class AttendServiceTest {
         Long reservationId = 1L;
         Long reservationSessionId = 2L;
 
-        User mockUser = User.builder().id(userId).email("test@email").name("홍길순").phone(phone).isDeleted(false).build();
+        User mockUser = User.builder().email("test@email").name("홍길순").phone(phone).build();
+        ReflectionTestUtils.setField(mockUser,"id",1L);
+
         Tuple mockTuple = createRegisterTuple(reservationId, reservationSessionId, conferenceId, sessionId);
         List<Tuple> mockResults = Collections.singletonList(mockTuple);
         Attend mockAttend = Attend.of(userId, reservationId, reservationSessionId, conferenceId, sessionId);

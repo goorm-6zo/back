@@ -6,6 +6,7 @@ import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.user.domain.Role;
+import goorm.back.zo6.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -77,7 +78,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         //configuration.addAllowedOriginPattern(SERVER_URL);
-        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

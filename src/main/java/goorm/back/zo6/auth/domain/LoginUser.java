@@ -7,19 +7,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public record LoginUser(User user) implements UserDetails {
+public record LoginUser(Long id, String email, String name, String role) implements UserDetails {
 
+    public Long getId(){return id; }
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return email;
     }
 
     public String getName() {
-        return user.getName();
+        return name;
     }
 
     public Role getRole() {
-        return user.getRole();
+        return Role.of(role);
     }
 
     @Override
