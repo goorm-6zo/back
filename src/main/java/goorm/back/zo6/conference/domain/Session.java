@@ -49,7 +49,7 @@ public class Session {
     private String speakerOrganization;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive;
 
     public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization) {
         if (conference == null) {
