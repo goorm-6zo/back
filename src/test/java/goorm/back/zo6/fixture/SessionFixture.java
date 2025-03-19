@@ -17,6 +17,9 @@ public class SessionFixture {
                 .location("온라인")
                 .time(LocalDateTime.now())
                 .summary("테스트 세션 요약")
+                .speakerName("발표자")
+                .speakerOrganization("발표자 소속")
+                .isActive(true)
                 .build();
     }
 
@@ -29,13 +32,16 @@ public class SessionFixture {
 
     public static Session 세션_아이디포함(Conference conference) {
         return Session.builder()
-                .id(100L)
+                .id(1L)
                 .name("테스트 세션")
                 .conference(conference)
                 .capacity(100)
                 .location("온라인")
                 .time(LocalDateTime.now())
                 .summary("테스트 세션 요약")
+                .speakerName("발표자")
+                .speakerOrganization("발표자 소속")
+                .isActive(true)
                 .build();
     }
 }

@@ -36,14 +36,16 @@ class UserServiceTest {
     private User testUser;
 
     private User createTestUserByUserId(Long userId) {
-        return User.builder()
-                .id(userId)
+        User user = User.builder()
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
+        ReflectionTestUtils.setField(user,"id",userId);
+
+        return user;
     }
 
     private User createTestUserByEmail(String email) {
@@ -57,7 +59,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저 ID로 조회 시 정상적으로 UserResponse 를 반환한다.")
+    @DisplayName("유저 ID로 조회- 정상적으로 UserResponse 를 반환 성공")
     void findById_Success() {
         // given
         Long userId = 1L;
@@ -82,7 +84,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저 토큰으로 조회 시 정상적으로 UserResponse 를 반환한다.")
+    @DisplayName("유저 토큰으로 조회 - 정상적으로 UserResponse 를 반환 성공")
     void findByToken_Success() {
         // given
         String email = "test@gmail.com";
@@ -107,7 +109,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 성공 시, SignUpResponse 를 반환한다.")
+    @DisplayName("회원가입 - SignUpResponse 를 반환 성공")
     void signUp_Success() {
         // given
         SignUpRequest request = new SignUpRequest("홍길동","newuser@gmail.com", "1234", "01033334444");
@@ -139,8 +141,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 이메일로 회원가입 시 예외 발생")
-    void signUp_Fail_UserAlreadyExists() {
+    @DisplayName("회원가입 - 이미 존재하는 계정으로 회원가입 예외 발생 실패")
+    void signUp_UserAlreadyExistsFails() {
         // given
         SignUpRequest request = new SignUpRequest("홍길동","exist@gmail.com", "1234", "01033334444");
 
@@ -160,7 +162,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저가 정상적으로 논리 회원 탈퇴(삭제) 된다.")
+    @DisplayName("유저 탈퇴 - 논리 삭제 정상적으로 성공")
     void deleteUser_Success() {
         //given
         Long userId = 1L;
@@ -181,8 +183,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 유저 회원 탈퇴(삭제) 시 예외 발생")
-    void deleteUser_NotFound_Fail() {
+    @DisplayName("유저 탈퇴 - 존재하지 않는 유저 회원 탈퇴(삭제) 시 예외 발생 실패")
+    void deleteUser_NotFoundFails() {
         //given
         String nonExistentEmail = "nonexistent@gmail.com";
 

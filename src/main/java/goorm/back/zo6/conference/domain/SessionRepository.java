@@ -8,5 +8,7 @@ public interface SessionRepository {
 
     Optional<Session> findById(Long id);
 
+    List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId);
+
     Session save(Session session);
 }

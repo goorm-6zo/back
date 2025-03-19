@@ -2,12 +2,10 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
-import goorm.back.zo6.attend.dto.AttendResponse;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
 import goorm.back.zo6.attend.dto.SessionInfoDto;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.reservation.domain.ReservationRepository;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import jakarta.persistence.Tuple;
@@ -25,12 +23,11 @@ import java.util.List;
 @Log4j2
 @Transactional(readOnly = true)
 public class AttendService {
-    private final ReservationRepository reservationRepository;
     private final AttendRepository attendRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public AttendResponse registerAttend(Long userId, Long conferenceId, Long sessionId) {
+    public void registerAttend(Long userId, Long conferenceId, Long sessionId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // Reservation & 관련 데이터 조회 (phone 기반)
@@ -46,9 +43,7 @@ public class AttendService {
 
         // Attend 객체 생성 및 저장
         Attend attend = Attend.of(user.getId(), reservationId, reservationSessionId, validConferenceId, validSessionId);
-        attend = attendRepository.save(attend);
-
-        return AttendResponse.from(attend);
+        attendRepository.save(attend);
     }
 
     public ConferenceInfoDto findAllByToken(Long userId, Long conferenceId) {
@@ -84,7 +79,10 @@ public class AttendService {
                         tuple.get(11, String.class), // s.location
                         tuple.get(12, LocalDateTime.class), // s.time
                         tuple.get(13, String.class), // s.summary
-                        tuple.get(14, Boolean.class) // 세션 참석 여부
+                        tuple.get(14, String.class), // s.speakerName
+                        tuple.get(15, String.class), // s.speakerOrganization
+                        tuple.get(16, Boolean.class), // s.isActive
+                        tuple.get(17, Boolean.class) // 세션 참석 여부
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }

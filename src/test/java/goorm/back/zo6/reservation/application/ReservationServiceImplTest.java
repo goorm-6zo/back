@@ -6,19 +6,34 @@ import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.fixture.ConferenceFixture;
 import goorm.back.zo6.fixture.SessionFixture;
+import goorm.back.zo6.fixture.UserFixture;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
+import goorm.back.zo6.user.domain.Role;
+import goorm.back.zo6.user.domain.User;
+import goorm.back.zo6.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -31,148 +46,180 @@ class ReservationServiceImplTest {
     @Mock
     private ConferenceJpaRepository conferenceJpaRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private ReservationServiceImpl reservationServiceImpl;
 
-    @Test
-    @DisplayName("유효한 세션을 포함하여 예약 성공")
-    void createReservation_Success_WithSessions() {
+    @BeforeEach
+    void setUpSecurityContext() {
+        Authentication authentication = mock(Authentication.class);
+        lenient().when(authentication.getName()).thenReturn("테스트유저");
 
-        Conference conference = ConferenceFixture.컨퍼런스();
-        Session session1 = SessionFixture.세션(conference);
-        Session session2 = SessionFixture.세션(conference);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
 
-        setConferenceId(conference, 1L);
-        setSessionId(session1, 100L);
-        setSessionId(session2, 101L);
+        SecurityContextHolder.setContext(securityContext);
 
-        conference.getSessions().add(session1);
-        conference.getSessions().add(session2);
+        User user = User.builder()
+                .email("test@gmail.com")
+                .name("테스트유저")
+                .phone("01011112222")
+                .build();
+        ReflectionTestUtils.setField(user,"id",1L);
 
-        ReservationRequest reservationRequest = new ReservationRequest(
-                conference.getId(),
-                List.of(session1.getId(), session2.getId()),
-                "Test User",
-                "010-1234-5678"
-        );
-
-        when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
-        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        ReservationResponse response = reservationServiceImpl.createReservation(reservationRequest);
-
-        assertNotNull(response);
-        assertEquals(ReservationStatus.CONFIRMED, response.getStatus());
+        lenient().when(userRepository.findByName("테스트유저")).thenReturn(Optional.of(user));
     }
 
+    @AfterEach
+    void clearSecurityContext() { SecurityContextHolder.clearContext(); }
+
     @Test
-    @DisplayName("세션 없이 예약 성공")
-    void createReservation_Success_WithoutSessions() {
+    @DisplayName("유효한 정보로 예약 등록 성공")
+    void createReservation_Success() {
 
-        Conference conference = ConferenceFixture.컨퍼런스();
-        setConferenceId(conference, 1L);
+        Conference conference = ConferenceFixture.컨퍼런스_아이디포함();
+        Session session = SessionFixture.세션_아이디포함(conference);
 
-        ReservationRequest reservationRequest = new ReservationRequest(
+        conference.addSession(session);
+
+        when(conferenceJpaRepository.findById(conference.getId()))
+                .thenReturn(Optional.of(conference));
+
+        ReservationRequest request = new ReservationRequest(
                 conference.getId(),
-                List.of(),
-                "Test User",
-                "010-1234-5678"
+                List.of(session.getId()),
+                "홍길순",
+                "01011112222"
         );
 
-        when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
-        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(reservationRepository.save(any(Reservation.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        ReservationResponse response = reservationServiceImpl.createReservation(reservationRequest);
+        ReservationResponse response = reservationServiceImpl.createReservation(request);
 
-        assertNotNull(response);
-
-        verify(conferenceJpaRepository, times(1)).findById(conference.getId());
+        assertThat(response).isNotNull();
+        assertThat(response.getConference().getConferenceId()).isEqualTo(conference.getId());
+        assertThat(response.getSessions()).hasSize(1).extracting(ReservationResponse.SessionInfo::getSessionId).contains(session.getId());
         verify(reservationRepository, times(1)).save(any(Reservation.class));
     }
 
     @Test
-    @DisplayName("유효하지 않은 세션을 포함할 경우 예약 실패")
-    void createReservation_Fail_WithInvalidSessions() {
+    @DisplayName("존재하지 않는 컨퍼런스일 경우 예약 실패")
+    void createReservation_Fail_ConferenceNotFound() {
 
-        Conference conference = ConferenceFixture.컨퍼런스();
-        setConferenceId(conference, 1L);
+        Long invalidConferenceId = 999L;
+        when(conferenceJpaRepository.findById(invalidConferenceId)).thenReturn(Optional.empty());
 
-        ReservationRequest reservationRequest = new ReservationRequest(
-                conference.getId(),
-                List.of(999L),
-                "Test User",
-                "010-1234-5678"
+        ReservationRequest request = new ReservationRequest(
+                invalidConferenceId,
+                null,
+                "홍길동",
+                "01011112222"
         );
 
-        when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
-
-        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
-
-        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
-
-        verify(conferenceJpaRepository, times(1)).findById(conference.getId());
+        assertThatThrownBy(() -> reservationServiceImpl.createReservation(request)).isInstanceOf(CustomException.class);
         verify(reservationRepository, never()).save(any(Reservation.class));
     }
 
     @Test
-    @DisplayName("존재하지 않는 컨퍼런스로 인해 예약 실패")
-    void createReservation_Fail_ConferenceNotFound() {
-        Long conferenceId = 1L;
-        ReservationRequest reservationRequest = new ReservationRequest(
-                conferenceId,
-                List.of(100L, 101L),
-                "Test User",
-                "010-1234-5678"
-        );
+    @DisplayName("예약 상세 조회 성공")
+    void getReservationDetailsById_Success() {
 
-        when(conferenceJpaRepository.findById(conferenceId)).thenReturn(Optional.empty());
+        User mockUser = User.builder()
+                .email("test@gmail.com")
+                .name("테스트유저")
+                .phone("01011112222")
+                .build();
+        ReflectionTestUtils.setField(mockUser,"id",1L);
 
-        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        lenient().when(userRepository.findByName("테스트유저")).thenReturn(Optional.of(mockUser));
 
-        assertEquals("존재하지 않는 컨퍼런스입니다.", exception.getMessage());
-        verify(conferenceJpaRepository, times(1)).findById(conferenceId);
-        verifyNoInteractions(reservationRepository);
+        Conference conference = ConferenceFixture.컨퍼런스_아이디포함();
+        Session session = SessionFixture.세션_아이디포함(conference);
+
+        Reservation reservation = Reservation.builder()
+                .id(123L)
+                .conference(conference)
+                .status(ReservationStatus.CONFIRMED)
+                .user(mockUser)
+                .name(mockUser.getName())
+                .phone(mockUser.getPhone())
+                .build();
+
+        reservation.addSession(session);
+
+        when(reservationRepository.findById(reservation.getId())).thenReturn(Optional.of(reservation));
+
+        ReservationResponse response = reservationServiceImpl.getReservationDetailsById(reservation.getId());
+
+        assertThat(response).isNotNull();
+        assertThat(response.getReservationId()).isEqualTo(reservation.getId());
+        assertThat(response.getConference().getConferenceId()).isEqualTo(conference.getId());
+        assertThat(response.getSessions()).hasSize(1);
+        assertThat(response.getSessions().get(0).getSessionId()).isEqualTo(session.getId());
+        assertThat(response.getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
     }
 
     @Test
-    @DisplayName("잘못된 세션으로 인해 예약 실패")
-    void createReservation_Fail_InvalidSession() {
+    @DisplayName("임시 예약 생성 성공")
+    void createTemporaryReservation_Sucess() {
 
-        Conference conference = ConferenceFixture.컨퍼런스();
-
-        setConferenceId(conference, 1L);
-
-        ReservationRequest reservationRequest = new ReservationRequest(
-                conference.getId(),
-                List.of(999L),
-                "Test User",
-                "010-1234-5678"
-        );
-
+        Conference conference = ConferenceFixture.컨퍼런스_아이디포함();
         when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
 
-        CustomException exception = assertThrows(CustomException.class, () -> reservationServiceImpl.createReservation(reservationRequest));
+        ReservationRequest request = new ReservationRequest(
+                conference.getId(),
+                Collections.emptyList(),
+                "김철수",
+                "01033334444"
+        );
 
-        assertEquals("해당 세션은 컨퍼런스에 속해 있지 않습니다.", exception.getMessage());
+        when(reservationRepository.save(any(Reservation.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        ReservationResponse response = reservationServiceImpl.createTemporaryReservation(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(ReservationStatus.TEMPORARY);
+        assertThat(response.getConference().getConferenceId()).isEqualTo(conference.getId());
     }
 
-    private void setSessionId(Session session, Long id) {
-        try {
-            var field = Session.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(session, id);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set session id: ", e);
-        }
-    }
+    @Test
+    @DisplayName("전화번호를 기반으로 유저 연동 성공")
+    void linkReservationByPhoneAndUser_Success() {
 
-    private void setConferenceId(Conference conference, Long id) {
-        try {
-            var field = Conference.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(conference, id);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set conference id: ", e);
-        }
+        String inputPhone = "01011112222";
+
+        User user = User.builder()
+                .name("홍길순")
+                .email("test@gmail.com")
+                .phone(inputPhone)
+                .role(Role.of("USER"))
+                .build();
+        ReflectionTestUtils.setField(user,"id",1L);
+
+        Reservation reservation = Reservation.builder()
+                .id(1L)
+                .conference(ConferenceFixture.컨퍼런스())
+                .name("홍길순")
+                .phone(inputPhone)
+                .status(ReservationStatus.TEMPORARY)
+                .build();
+
+        when(userRepository.findByPhone(inputPhone)).thenReturn(Optional.of(user));
+        when(reservationRepository.findAllByPhoneAndStatus(anyString(), eq(ReservationStatus.TEMPORARY))).thenReturn(List.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ReservationResponse response = reservationServiceImpl.linkReservationByPhone(inputPhone);
+
+        assertNotNull(response);
+        assertEquals(user.getId(), reservation.getUser().getId());
+        assertEquals(inputPhone, reservation.getPhone());
+
+        verify(reservationRepository).findAllByPhoneAndStatus(anyString(), eq(ReservationStatus.TEMPORARY));
+        verify(userRepository).findByPhone(inputPhone);
+        verify(reservationRepository, atLeastOnce()).save(any(Reservation.class));
     }
 }

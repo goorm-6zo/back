@@ -19,11 +19,11 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     @Transactional
-    public SessionResponse updateSession(Long sessionId, String name, Integer capacity, String location, LocalDateTime time, String summary) {
+    public SessionResponse updateSession(Long sessionId, String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization, boolean isActive) {
         Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
 
-        session.updateSession(name, capacity, location, time, summary);
+        session.updateSession(name, capacity, location, time, summary, speakerName, speakerOrganization, isActive);
 
-        return new SessionResponse(session.getId(), session.getName(), session.getCapacity(), session.getLocation(), session.getTime(), session.getSummary());
+        return new SessionResponse(session.getId(), session.getName(), session.getCapacity(), session.getLocation(), session.getTime(), session.getSummary(), session.getSpeakerName(), session.getSpeakerOrganization(), session.isActive());
     }
 }

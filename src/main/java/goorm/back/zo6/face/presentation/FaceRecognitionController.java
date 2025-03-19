@@ -26,7 +26,7 @@ public class FaceRecognitionController {
     @Operation(summary = "얼굴 이미지 업로드 요청", description = "유저의 얼굴 이미지를 collection 에 저장합니다.")
     public ResponseEntity<FaceResponse> getUploadPreSignedUrl(@AuthenticationPrincipal LoginUser loginUser,
                                                               @RequestParam("faceImage") MultipartFile faceImage) {
-        Long userId = loginUser.user().getId();
+        Long userId = loginUser.getId();
         FaceResponse response = rekognitionService.uploadUserFace(userId, faceImage);
         return ResponseEntity.ok(response);
     }
@@ -35,7 +35,7 @@ public class FaceRecognitionController {
     @DeleteMapping(value = "/delete")
     @Operation(summary = "얼굴 이미지 삭제", description = "유저의 얼굴 이미지를 삭제합니다.")
     public ResponseEntity<Map<String, String>> deleteFaceImage(@AuthenticationPrincipal LoginUser loginUser) {
-        Long userId = loginUser.user().getId();
+        Long userId = loginUser.getId();
         rekognitionService.deleteFaceImage(userId);
         return ResponseEntity.ok(Map.of("message", "얼굴 이미지 삭제 완료"));
     }

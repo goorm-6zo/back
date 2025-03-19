@@ -72,11 +72,11 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
         }
 
-        if (!sessionIds.isEmpty()) {
+        if (sessionIds != null && !sessionIds.isEmpty()) {
             conference.validateSessionOwnership(Set.copyOf(sessionIds));
         }
 
-        if (sessionIds.isEmpty()) { return Set.of(); }
+        if (sessionIds != null && sessionIds.isEmpty()) { return Set.of(); }
 
         return conference.getSessions().stream()
                 .filter(session -> sessionIds.contains(session.getId()))
@@ -204,14 +204,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId) {
+    public ReservationResponse linkReservationByPhone(String inputPhone) {
         List<Reservation> reservations = reservationRepository.findAllByPhoneAndStatus(inputPhone, ReservationStatus.TEMPORARY);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByPhone(inputPhone).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (reservations.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_PHONE);
         }
+
         Reservation reservation = reservations.get(0);
 
         reservation.linkUser(user);
