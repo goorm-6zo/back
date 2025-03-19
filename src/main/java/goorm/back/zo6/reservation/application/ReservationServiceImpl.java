@@ -72,11 +72,11 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CustomException(ErrorCode.CONFERENCE_HAS_NO_SESSION);
         }
 
-        if (!sessionIds.isEmpty()) {
+        if (sessionIds != null && !sessionIds.isEmpty()) {
             conference.validateSessionOwnership(Set.copyOf(sessionIds));
         }
 
-        if (sessionIds.isEmpty()) { return Set.of(); }
+        if (sessionIds != null && sessionIds.isEmpty()) { return Set.of(); }
 
         return conference.getSessions().stream()
                 .filter(session -> sessionIds.contains(session.getId()))
@@ -212,6 +212,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservations.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_PHONE);
         }
+
         Reservation reservation = reservations.get(0);
 
         reservation.linkUser(user);
