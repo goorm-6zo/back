@@ -24,13 +24,14 @@ public class AuthService {
                 .filter(m -> passwordEncoder.matches(loginRequest.password(),m.getPassword().getValue()))
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_MATCH_LOGIN_INFO));
 
-        String accessToken = jwtUtil.createAccessToken(user.getId(),user.getEmail(), user.getName(),user.getRole());
+        String accessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .phone(user.getPhone())
                 .role(user.getRole())
                 .build();
     }
