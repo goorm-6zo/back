@@ -7,7 +7,7 @@ import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.LoginRequest;
+import goorm.back.zo6.auth.dto.request.LoginRequest;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;

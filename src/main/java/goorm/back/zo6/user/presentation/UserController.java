@@ -7,9 +7,11 @@ import goorm.back.zo6.user.dto.response.SignUpResponse;
 import goorm.back.zo6.user.dto.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -36,7 +38,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "유저를 등록합니다.")
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest request) {
+    public ResponseEntity<SignUpResponse> signUp(@Validated @RequestBody SignUpRequest request) {
         return ResponseEntity.ok().body(userService.signUp(request));
     }
 
