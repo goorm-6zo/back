@@ -10,8 +10,6 @@ public record UserResponse(
     String email,
     String name,
     String phone,
-    String birthDate,
-    Boolean isDeleted,
     Role role
 )
 {
@@ -21,7 +19,6 @@ public record UserResponse(
                 .email(user.getEmail())
                 .name(user.getName())
                 .phone(user.getPhone())
-                .isDeleted(user.getIsDeleted())
                 .role(user.getRole())
                 .build();
     }
