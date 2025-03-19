@@ -75,8 +75,8 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("유저가 로그인을 성공적으로 완료하여 토큰을 발급받습니다.")
-    void loginTest_Success() throws Exception {
+    @DisplayName("유저 로그인 - 토큰을 발급받는다. 성공")
+    void login_Success() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "1234");
         String requestBody = objectMapper.writeValueAsString(loginRequest);
@@ -95,8 +95,49 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("잘못된 비밀번호로 로그인을 시도하면 400 BadRequest 가 반환됩니다.")
-    void loginTest_Fail_WrongPassword() throws Exception {
+    @DisplayName("유저 로그인  - 이메일이 비어있을 때 실패")
+    void login_EmailBlankFails() throws Exception {
+        // given
+        LoginRequest loginRequest = new LoginRequest("", "1234");
+        String requestBody = objectMapper.writeValueAsString(loginRequest);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("email"),
+                        jsonPath("$.validationErrors[0].message").value("이메일을 입력해 주세요.")
+                );
+    }
+
+    @Test
+    @DisplayName("유저 로그인 - 비밀번호가 비어있을 때 실패")
+    void login_PasswordBlankFails() throws Exception {
+        // given
+        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "");
+        String requestBody = objectMapper.writeValueAsString(loginRequest);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("password"),
+                        jsonPath("$.validationErrors[0].message").value("비밀번호를 입력해 주세요.")
+                );
+    }
+
+
+    @Test
+    @DisplayName("로그인 - 잘못된 비밀번호로 로그인을 시도하면 400 BadRequest 가 반환 실패")
+    void loginTest_WrongPasswordFails() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "wrongpassword");
         String requestBody = objectMapper.writeValueAsString(loginRequest);
@@ -113,8 +154,8 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 이메일로 로그인을 시도하면 400 BadRequest 가 반환됩니다.")
-    void loginTest_Fail_NonExistentEmail() throws Exception {
+    @DisplayName("로그인 - 존재하지 않는 이메일로 로그인을 시도하면 400 BadRequest 가 반환 실패")
+    void login_NonExistentEmailFails() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("nonexistent@gmail.com", "1234");
         String requestBody = objectMapper.writeValueAsString(loginRequest);

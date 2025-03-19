@@ -11,7 +11,7 @@ public record SignUpRequest(
         @NotBlank(message = "이메일을 입력해 주세요.")
         String email,
         @Schema(description = "비밀번호", example = "12345")
-        @NotBlank(message = "비밀번호를 입력해 주세요")
+        @NotBlank(message = "비밀번호를 입력해 주세요.")
         String password,
         @Schema(description = "전화 번호", example = "01011112222")
         @NotBlank(message = "전화 번호를 입력해 주세요.")
