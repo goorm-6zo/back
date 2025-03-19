@@ -84,7 +84,10 @@ public class AttendService {
                         tuple.get(11, String.class), // s.location
                         tuple.get(12, LocalDateTime.class), // s.time
                         tuple.get(13, String.class), // s.summary
-                        tuple.get(14, Boolean.class) // 세션 참석 여부
+                        tuple.get(14,String.class), // s.speakerName
+                        tuple.get(15,String.class), // s.speakerOrganization
+                        tuple.get(16,Boolean.class), // s.isActive
+                        tuple.get(17, Boolean.class) // 세션 참석 여부
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }
