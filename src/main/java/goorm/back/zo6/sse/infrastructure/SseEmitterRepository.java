@@ -1,4 +1,4 @@
-package goorm.back.zo6.sse.repository;
+package goorm.back.zo6.sse.infrastructure;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -39,13 +40,14 @@ class AuthServiceTest {
     @BeforeEach
     void setUp(){
         testUser = User.builder()
-                .id(1L)
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
+        ReflectionTestUtils.setField(testUser,"id",1L);
+
     }
 
 

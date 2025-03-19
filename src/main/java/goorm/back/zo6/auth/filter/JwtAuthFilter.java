@@ -8,6 +8,7 @@ import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
+import goorm.back.zo6.user.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,8 +48,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            User user = getUser(token);
-            setSecuritySession(user);
+            LoginUser loginUser = getUser(token);
+            setSecuritySession(loginUser);
             filterChain.doFilter(request, response);
 
         }catch (CustomException e){
@@ -64,29 +65,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private static void setSecuritySession(User user){
-        LoginUser loginUser = new LoginUser(user);
+    private static void setSecuritySession(LoginUser loginUser){
         log.info("SessionLoginUser : {}", loginUser.getUsername());
 
-        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().getRoleSecurity()));
+        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(loginUser.getRole().getRoleSecurity()));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(loginUser,null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
-    private User getUser(String token){
+    private LoginUser getUser(String token){
         Long userId = jwtUtil.getUserId(token);
         String email = jwtUtil.getUsername(token);
         String name = jwtUtil.getName(token);
         String role = jwtUtil.getRole(token);
 
         log.info("getUser username: ", email);
-        return User.builder()
-                .id(userId)
-                .email(email)
-                .name(name)
-                .role(Role.of(role))
-                .build();
+        return new LoginUser(userId, email, name, role);
     }
 
     private boolean verifyToken(HttpServletRequest request,String token) throws IOException, ServletException {

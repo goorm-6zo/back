@@ -24,7 +24,7 @@ import java.util.Map;
 public class AuthController {
 
     @Value("${cookie.valid-time}")
-    private long TOKEN_VALID_TIME;
+    private long COOKIE_VALID_TIME;
 
     @Value("${cookie.name}")
     private String COOKIE_NAME;
@@ -35,7 +35,7 @@ public class AuthController {
     @Operation(summary = "로그인", description = "이메일과 비밀번호를 입력받아 JWT 토큰을 발급합니다.")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResponse loginResponse = authService.login(request);
-        ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), TOKEN_VALID_TIME);
+        ResponseCookie cookie = CookieUtil.createCookie(COOKIE_NAME, loginResponse.accessToken(), COOKIE_VALID_TIME);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())

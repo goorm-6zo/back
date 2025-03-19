@@ -1,8 +1,8 @@
-package goorm.back.zo6.sse.service;
+package goorm.back.zo6.sse.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.repository.EmitterRepository;
+import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -61,13 +61,13 @@ public class SseService {
                         .reconnectTime(RECONNECTION_TIMEOUT)
                         .data(count));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomException(ErrorCode.SSE_CONNECTION_FAILED);
             }
         }
     }
 
     // SSE 연결이 종료되거나, 타임아웃되거나, 오류가 발생할 때 적절한 처리를 수행하도록 Emitter에 핸들러를 등록
-    private void registerEmitterHandler(String eventId, SseEmitter sseEmitter){
+    void registerEmitterHandler(String eventId, SseEmitter sseEmitter){
         /*  SSE 연결이 정상적으로 종료되었을 때
            - 사용자가 브라우저를 닫거나 SSE 구독을 취소할 때
            - 서버에서 sseEmitter.complete()을 호출했을 때

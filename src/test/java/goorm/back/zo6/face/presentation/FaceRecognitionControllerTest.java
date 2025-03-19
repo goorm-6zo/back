@@ -206,7 +206,6 @@ class FaceRecognitionControllerTest {
     @DisplayName("Rekognition Collection 생성 - 쿠키가 없을 때 실패")
     void createCollection_WhenCookieNone_Fails() throws Exception{
         // given
-
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/face/collection")
                         .contentType(MediaType.APPLICATION_JSON))

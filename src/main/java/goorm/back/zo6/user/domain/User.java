@@ -7,10 +7,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Builder
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 빌더 유도
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @SQLDelete(sql = "UPDATE  users SET is_deleted = true WHERE user_id = ?") // soft delete
 @SQLRestriction("is_deleted = false")
@@ -33,13 +31,21 @@ public class User extends BaseEntity {
     private String phone;
 
     @Column(name = "is_deleted")
-    @Builder.Default
     private Boolean isDeleted = false;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder
+    private User(String email, String name, Password password, String phone, Role role) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.role = role;
+        this.isDeleted = false;
+    }
     public static User singUpUser(String email, String name, String password, String phone, Role role) {
         return User.builder()
                 .email(email)

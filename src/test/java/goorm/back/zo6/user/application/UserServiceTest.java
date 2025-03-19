@@ -36,14 +36,16 @@ class UserServiceTest {
     private User testUser;
 
     private User createTestUserByUserId(Long userId) {
-        return User.builder()
-                .id(userId)
+        User user = User.builder()
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone("01011112222")
                 .password(Password.from(passwordEncoder.encode("1234")))
                 .role(Role.of("USER"))
                 .build();
+        ReflectionTestUtils.setField(user,"id",userId);
+
+        return user;
     }
 
     private User createTestUserByEmail(String email) {

@@ -4,7 +4,7 @@ import goorm.back.zo6.attend.dto.AttendInfo;
 import goorm.back.zo6.attend.dto.AttendKeys;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.service.SseService;
+import goorm.back.zo6.sse.application.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;

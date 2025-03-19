@@ -1,6 +1,6 @@
-package goorm.back.zo6.sse.controller;
+package goorm.back.zo6.sse.presentation;
 
-import goorm.back.zo6.sse.service.SseService;
+import goorm.back.zo6.sse.application.SseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
