@@ -1,6 +1,6 @@
-package goorm.back.zo6.sse.controller;
+package goorm.back.zo6.sse.presentation;
 
-import goorm.back.zo6.sse.repository.EmitterRepository;
+import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

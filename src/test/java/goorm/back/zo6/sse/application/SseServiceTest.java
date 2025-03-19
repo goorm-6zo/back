@@ -1,8 +1,8 @@
-package goorm.back.zo6.sse.service;
+package goorm.back.zo6.sse.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.repository.EmitterRepository;
+import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;

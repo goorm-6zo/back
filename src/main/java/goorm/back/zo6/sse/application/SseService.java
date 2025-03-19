@@ -1,8 +1,8 @@
-package goorm.back.zo6.sse.service;
+package goorm.back.zo6.sse.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.repository.EmitterRepository;
+import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
