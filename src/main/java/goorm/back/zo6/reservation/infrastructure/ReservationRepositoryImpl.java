@@ -2,6 +2,7 @@ package goorm.back.zo6.reservation.infrastructure;
 
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.reservation.domain.ReservationStatus;
 import goorm.back.zo6.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,16 +15,6 @@ import java.util.Optional;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final ReservationJpaRepository reservationJpaRepository;
-
-    @Override
-    public Boolean existsByConferenceId(Long conferenceId) {
-        return reservationJpaRepository.existsReservationByConferenceId(conferenceId);
-    }
-
-    @Override
-    public Boolean existsByConferenceIdAndNameAndPhone(Long conferenceId, String name, String phone) {
-        return reservationJpaRepository.existsByConferenceIdAndNameAndPhone(conferenceId, name, phone);
-    }
 
     @Override
     public Optional<Reservation> findById(Long id) {
@@ -39,8 +30,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByNameAndPhone(String name, String phone) {
-        return reservationJpaRepository.findByNameAndPhone(name, phone);
+    public List<Reservation> findAllByPhoneAndStatus(String phone, ReservationStatus status) {
+        return reservationJpaRepository.findAllByPhoneAndStatus(phone, status);
     }
 
     @Override
@@ -49,8 +40,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByPhoneAndConferenceId(String phone, Long conferenceId) {
-        return reservationJpaRepository.findByPhoneAndConferenceId(phone, conferenceId);
+    public List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId) {
+        return reservationJpaRepository.findByConferenceIdAndUserId(conferenceId, userId);
     }
-
 }

@@ -1,5 +1,7 @@
 package goorm.back.zo6.conference.domain;
 
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,18 +53,13 @@ public class Conference {
         this.sessions.add(session);
     }
 
-    public void removeSession(Session session) {
-        this.sessions.remove(session);
-        session.setConference(null);
-    }
-
     public Boolean containsSession(Long sessionId) {
         return this.sessions.stream().anyMatch(session -> session.getId().equals(sessionId));
     }
 
     public void validateSessionOwnership(Set<Long> sessionIds) {
         if (!hasSessions) {
-            throw new IllegalStateException("This conference does not have sessions");
+            throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
 
         Set<Long> existingSessionIds = this.sessions.stream()
@@ -70,32 +67,7 @@ public class Conference {
                 .collect(Collectors.toSet());
 
         if (!existingSessionIds.containsAll(sessionIds)) {
-            throw new IllegalStateException("This conference does not have all the sessions");
+            throw new CustomException(ErrorCode.SESSION_NOT_BELONG_TO_CONFERENCE);
         }
-    }
-
-    public Set<Long> getSessionIds() {
-        return this.sessions.stream()
-                .map(Session::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public boolean hasReservablesSessions() {
-        return this.sessions.stream()
-                .anyMatch(Session::isReservable);
-    }
-
-    public boolean isReservableWithoutSessions() {
-        return !hasSessions || !hasReservablesSessions();
-    }
-
-    public void validateCapacity(int currentParticipantCount) {
-        if (currentParticipantCount > capacity) {
-            throw new IllegalStateException("Conference capacity exceeded. Max capacity: " + capacity);
-        }
-    }
-
-    public boolean canAccommodate(int currentParticipantCount) {
-        return currentParticipantCount < capacity;
     }
 }

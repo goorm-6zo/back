@@ -20,7 +20,17 @@ public class ConferenceDetailResponse {
     private List<SessionDto> sessions;
 
     public static ConferenceDetailResponse fromEntity(Conference conference) {
-        return new ConferenceDetailResponse(conference.getId(), conference.getName(), conference.getDescription(), conference.getLocation(), conference.getConferenceAt(), conference.getCapacity(), conference.getHasSessions(), conference.getSessions().stream().map(SessionDto::fromEntity).toList()
+        return new ConferenceDetailResponse(
+                conference.getId(),
+                conference.getName(),
+                conference.getDescription(),
+                conference.getLocation(),
+                conference.getConferenceAt(),
+                conference.getCapacity(),
+                conference.getHasSessions(),
+                conference.getSessions().stream()
+                        .map(SessionDto::fromEntity)
+                        .toList()
         );
     }
 }

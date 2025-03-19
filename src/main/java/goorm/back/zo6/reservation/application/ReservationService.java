@@ -12,13 +12,11 @@ public interface ReservationService {
 
     ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest);
 
-    List<Long> getMyConferenceIds();
-
     List<ConferenceSimpleResponse> getMyConferenceSimpleList();
 
     ReservationResponse getReservationDetailsById(Long reservationId);
 
-    void confirmUserReservationsAfterLogin(String name, String phone);
+    ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId);
 
-    ReservationResponse linkBeservationWithUser(Long reservationId, String inputPhone, Long userId);
+    ReservationConferenceDetailResponse getReservedConferenceDetails(Long conferenceId);
 }
