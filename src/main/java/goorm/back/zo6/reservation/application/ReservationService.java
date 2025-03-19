@@ -16,7 +16,7 @@ public interface ReservationService {
 
     ReservationResponse getReservationDetailsById(Long reservationId);
 
-    ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId);
+    ReservationResponse linkReservationByPhone(String inputPhone);
 
     ReservationConferenceDetailResponse getReservedConferenceDetails(Long conferenceId);
 }
