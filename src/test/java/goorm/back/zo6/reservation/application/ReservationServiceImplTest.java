@@ -31,6 +31,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -187,11 +189,13 @@ class ReservationServiceImplTest {
     @DisplayName("전화번호를 기반으로 유저 연동 성공")
     void linkReservationByPhoneAndUser_Success() {
 
+        String inputPhone = "01011112222";
+
         User user = User.builder()
                 .id(1L)
                 .name("홍길순")
                 .email("test@gmail.com")
-                .phone("01011112222")
+                .phone(inputPhone)
                 .role(Role.of("USER"))
                 .build();
 
@@ -199,22 +203,22 @@ class ReservationServiceImplTest {
                 .id(1L)
                 .conference(ConferenceFixture.컨퍼런스())
                 .name("홍길순")
-                .phone("01011112222")
+                .phone(inputPhone)
                 .status(ReservationStatus.TEMPORARY)
                 .build();
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findByPhone(inputPhone)).thenReturn(Optional.of(user));
         when(reservationRepository.findAllByPhoneAndStatus(anyString(), eq(ReservationStatus.TEMPORARY))).thenReturn(List.of(reservation));
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ReservationResponse response = reservationServiceImpl.linkReservationByPhoneAndUser("01011112222", 1L);
+        ReservationResponse response = reservationServiceImpl.linkReservationByPhone(inputPhone);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getReservationId()).isEqualTo(reservation.getId());
-        assertThat(reservation.getUser()).isEqualTo(user);
+        assertNotNull(response);
+        assertEquals(user.getId(), reservation.getUser().getId());
+        assertEquals(inputPhone, reservation.getPhone());
 
         verify(reservationRepository).findAllByPhoneAndStatus(anyString(), eq(ReservationStatus.TEMPORARY));
-        verify(userRepository).findById(anyLong());
+        verify(userRepository).findByPhone(inputPhone);
         verify(reservationRepository, atLeastOnce()).save(any(Reservation.class));
     }
 }

@@ -1,6 +1,7 @@
 package goorm.back.zo6.reservation.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
@@ -16,6 +17,7 @@ import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.infrastructure.ReservationJpaRepository;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,15 +88,20 @@ class ReservationControllerTest {
     @Autowired
     private ReservationJpaRepository reservationJpaRepository;
 
+    @Autowired
+    JwtAuthFilter jwtAuthFilter;
+
     @BeforeEach
     void setup(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(documentationConfiguration(restDocumentation))
+                .addFilters(jwtAuthFilter)
                 .alwaysDo(restDocs)
                 .build();
 
         testUser = userJpaRepository.save(UserFixture.유저());
         testToken = generateTestToken(testUser);
+        System.out.println("testToken : " + testToken);
 
         testConference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
         Session session = sessionJpaRepository.save(SessionFixture.세션(testConference));
@@ -108,8 +115,8 @@ class ReservationControllerTest {
                 )
         );
 
-        System.out.println("testReservation : " + testReservation.getId());
-        System.out.println("testUser : " + testUser.getId());
+        System.out.println("testReservation : " + testReservation.getName());
+        System.out.println("testUser : " + testUser.getName());
         System.out.println(testConference.getId());
 
         Authentication auth = new UsernamePasswordAuthenticationToken(

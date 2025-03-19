@@ -204,10 +204,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public ReservationResponse linkReservationByPhoneAndUser(String inputPhone, Long userId) {
+    public ReservationResponse linkReservationByPhone(String inputPhone) {
         List<Reservation> reservations = reservationRepository.findAllByPhoneAndStatus(inputPhone, ReservationStatus.TEMPORARY);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByPhone(inputPhone).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (reservations.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_PHONE);
