@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AttendController {
     private final AttendService attendService;
-    @GetMapping()
-    @Operation(summary = "유저의 행사 참가 내역을 확인", description = "유저의 행사 참가 내역을 조회합니다.")
+    @GetMapping
+    @Operation(summary = "유저의 행사 참가 내역 조회", description = "유저의 행사 참가 내역을 조회합니다.")
     public ResponseEntity<ConferenceInfoDto> findByToken(@AuthenticationPrincipal LoginUser loginUser,
                                                                 @RequestParam("conferenceId")Long conferenceId){
-        Long userId = loginUser.user().getId();
+        Long userId = loginUser.getId();
         ConferenceInfoDto attendResponses = attendService.findAllByToken(userId,conferenceId);
         return ResponseEntity.ok(attendResponses);
     }

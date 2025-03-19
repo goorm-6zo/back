@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,11 +63,11 @@ class ReservationServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
 
         User user = User.builder()
-                .id(1L)
                 .email("test@gmail.com")
                 .name("테스트유저")
                 .phone("01011112222")
                 .build();
+        ReflectionTestUtils.setField(user,"id",1L);
 
         lenient().when(userRepository.findByName("테스트유저")).thenReturn(Optional.of(user));
     }
@@ -127,11 +128,11 @@ class ReservationServiceImplTest {
     void getReservationDetailsById_Success() {
 
         User mockUser = User.builder()
-                .id(1L)
                 .email("test@gmail.com")
                 .name("테스트유저")
                 .phone("01011112222")
                 .build();
+        ReflectionTestUtils.setField(mockUser,"id",1L);
 
         lenient().when(userRepository.findByName("테스트유저")).thenReturn(Optional.of(mockUser));
 
@@ -192,12 +193,12 @@ class ReservationServiceImplTest {
         String inputPhone = "01011112222";
 
         User user = User.builder()
-                .id(1L)
                 .name("홍길순")
                 .email("test@gmail.com")
                 .phone(inputPhone)
                 .role(Role.of("USER"))
                 .build();
+        ReflectionTestUtils.setField(user,"id",1L);
 
         Reservation reservation = Reservation.builder()
                 .id(1L)

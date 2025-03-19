@@ -10,6 +10,7 @@ public record UserResponse(
     String email,
     String name,
     String phone,
+    Boolean isDeleted,
     Role role
 )
 {
