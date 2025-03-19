@@ -78,7 +78,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         //configuration.addAllowedOriginPattern(SERVER_URL);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
