@@ -21,7 +21,7 @@ public class AttendRedisService {
     private final SseService sseService;
 
     // 유저 참석 확인
-    public boolean saveUserAttendance(Long conferenceId, Long sessionId, Long userId, long timestamp){
+    public AttendInfo saveUserAttendance(Long conferenceId, Long sessionId, Long userId, long timestamp){
         if(conferenceId == null){
             throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
         }
@@ -30,8 +30,7 @@ public class AttendRedisService {
 
         AttendInfo attendInfo = processAttendance(keys, userId, timestamp);
 
-        sseService.sendAttendanceCount(conferenceId, sessionId, attendInfo.attendCount());
-        return attendInfo.alreadyAttended();
+        return attendInfo;
     }
 
     // 참석 처리

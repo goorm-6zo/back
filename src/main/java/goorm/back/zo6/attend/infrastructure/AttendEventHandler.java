@@ -2,6 +2,8 @@ package goorm.back.zo6.attend.infrastructure;
 
 import goorm.back.zo6.attend.application.AttendService;
 import goorm.back.zo6.attend.domain.AttendEvent;
+import goorm.back.zo6.attend.dto.AttendInfo;
+import goorm.back.zo6.sse.application.SseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,19 @@ import org.springframework.stereotype.Service;
 public class AttendEventHandler {
     private final AttendRedisService attendRedisService;
     private final AttendService attendService;
+    private final SseService sseService;
 
     @EventListener(AttendEvent.class)
     public void handle(AttendEvent event){
-        boolean alreadyAttend = attendRedisService.saveUserAttendance(event.getConferenceId(), event.getSessionId(), event.getUserId(), event.getTimeStamp());
-        if(!alreadyAttend) {
-            attendService.registerAttend(event.getUserId(), event.getConferenceId(), event.getSessionId());
+        Long conferenceId = event.getConferenceId();
+        Long sessionId = event.getSessionId();
+        Long userId = event.getUserId();
+
+        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, event.getTimeStamp());
+        sseService.sendAttendanceCount(conferenceId, sessionId, attendInfo.attendCount());
+
+        if(!attendInfo.alreadyAttended()) {
+            attendService.registerAttend(userId, conferenceId, sessionId);
         }
     }
 }
