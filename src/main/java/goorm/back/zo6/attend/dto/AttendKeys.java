@@ -1,9 +1,9 @@
-package goorm.back.zo6.sse.dto;
+package goorm.back.zo6.attend.dto;
 
 import lombok.Builder;
 
 @Builder
-public record AttendanceKeys(
+public record AttendKeys(
         String attendanceKey,
         String countKey,
         boolean isSession
