@@ -2,11 +2,13 @@ package goorm.back.zo6.conference.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class SessionResponse {
     private Long id;
     private String name;
@@ -14,4 +16,9 @@ public class SessionResponse {
     private String location;
     private LocalDateTime time;
     private String summary;
+    private String speakerName;
+    private String speakerOrganization;
+    private boolean isActive;
+
+
 }

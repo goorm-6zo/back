@@ -148,6 +148,9 @@ class ConferenceControllerTest {
                 .andExpect(jsonPath("$.capacity").value(savedSession.getCapacity()))
                 .andExpect(jsonPath("$.location").value(savedSession.getLocation()))
                 .andExpect(jsonPath("$.summary").value(savedSession.getSummary()))
+                .andExpect(jsonPath("$.speakerName").value(savedSession.getSpeakerName()))
+                .andExpect(jsonPath("$.speakerOrganization").value(savedSession.getSpeakerOrganization()))
+                .andExpect(jsonPath("$.active").value(savedSession.isActive()))
                 .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("conferenceId").description("조회할 컨퍼런스 ID"),
@@ -160,10 +163,12 @@ class ConferenceControllerTest {
                                 fieldWithPath("capacity").description("세션 수용 가능 인원"),
                                 fieldWithPath("location").description("세션 장소"),
                                 fieldWithPath("time").description("세션 일정"),
-                                fieldWithPath("summary").description("세션 요약")
+                                fieldWithPath("summary").description("세션 요약"),
+                                fieldWithPath("speakerName").description("발표자"),
+                                fieldWithPath("speakerOrganization").description("발표자 소속"),
+                                fieldWithPath("active").description("활성화")
                         )
                 ));
-
     }
 
     private String generateTestToken(User user) {

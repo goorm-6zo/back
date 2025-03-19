@@ -8,6 +8,8 @@ import java.util.List;
 public interface SessionJpaRepository extends JpaRepository<Session, Long> {
     List<Session> findByConferenceId(Long conferenceId);
 
+    List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId);
+
     Boolean existsByConferenceId(Long conferenceId);
 
 }

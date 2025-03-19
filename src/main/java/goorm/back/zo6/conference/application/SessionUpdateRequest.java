@@ -13,4 +13,7 @@ public class SessionUpdateRequest {
     private String location;
     private LocalDateTime time;
     private String summary;
+    private String speakerName;
+    private String speakerOrganization;
+    private boolean isActive;
 }

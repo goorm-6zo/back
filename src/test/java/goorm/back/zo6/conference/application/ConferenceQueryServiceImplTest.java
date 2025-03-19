@@ -99,7 +99,10 @@ class ConferenceQueryServiceImplTest {
                 session.getCapacity(),
                 session.getLocation(),
                 session.getTime(),
-                session.getSummary()
+                session.getSummary(),
+                session.getSpeakerName(),
+                session.getSpeakerOrganization(),
+                session.isActive()
         );
 
         given(conferenceRepository.findWithSessionsById(conference.getId()))
