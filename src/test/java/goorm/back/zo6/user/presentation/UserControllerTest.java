@@ -114,8 +114,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("유저 회원가입 성공 테스트")
-    void signUpTest() throws Exception {
+    @DisplayName("유저 회원가입 - 성공")
+    void signUp_Success() throws Exception {
         // given
         SignUpRequest request = new SignUpRequest("홍길동","test@naver.com","4321", "010-1234-5678");
 
@@ -132,6 +132,82 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value(request.name()));
     }
 
+    @Test
+    @DisplayName("유저 회원가입 - 이름이 비어있을 때 실패")
+    void signUp_NameBlankFails() throws Exception {
+        // given
+        SignUpRequest request = new SignUpRequest("", "test@naver.com", "4321", "01012345678");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/users/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("name"),
+                        jsonPath("$.validationErrors[0].message").value("이름을 입력해 주세요.")
+                );
+    }
+
+    @Test
+    @DisplayName("유저 회원가입 - 이메일이 비어있을 때 실패")
+    void signUp_EmailBlankFails() throws Exception {
+        // given
+        SignUpRequest request = new SignUpRequest("홍길동", "", "4321", "01012345678");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/users/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("email"),
+                        jsonPath("$.validationErrors[0].message").value("이메일을 입력해 주세요.")
+                );
+    }
+
+    @Test
+    @DisplayName("유저 회원가입 - 비밀번호가 비어있을 때 실패")
+    void signUp_PasswordBlankFails() throws Exception {
+        // given
+        SignUpRequest request = new SignUpRequest("홍길동", "test@naver.com", "", "01012345678");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/users/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("password"),
+                        jsonPath("$.validationErrors[0].message").value("비밀번호를 입력해 주세요.")
+                );
+    }
+
+    @Test
+    @DisplayName("유저 회원가입 - 전화번호가 비어있을 때 실패")
+    void signUp_PhoneBlankFails() throws Exception {
+        // given
+        SignUpRequest request = new SignUpRequest("홍길동", "test@naver.com", "4321", "");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/users/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.message").value("잘못된 요청입니다."),
+                        jsonPath("$.validationErrors[0].field").value("phone"),
+                        jsonPath("$.validationErrors[0].message").value("전화 번호를 입력해 주세요.")
+                );
+    }
+    
     @Test
     @DisplayName("토큰 기반 유저 회원 탈퇴 성공 테스트.")
     void deleteUser_Success() throws Exception {

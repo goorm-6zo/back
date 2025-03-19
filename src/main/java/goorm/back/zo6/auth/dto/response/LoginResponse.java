@@ -1,4 +1,4 @@
-package goorm.back.zo6.user.dto.response;
+package goorm.back.zo6.auth.dto.response;
 
 import goorm.back.zo6.user.domain.Role;
 import lombok.Builder;

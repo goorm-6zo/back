@@ -1,9 +1,6 @@
 package goorm.back.zo6.attend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,7 +10,7 @@ import lombok.*;
 @Builder
 @Table(name = "attend")
 public class Attend {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     private Long userId;

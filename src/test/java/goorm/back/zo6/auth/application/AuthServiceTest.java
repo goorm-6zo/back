@@ -7,8 +7,8 @@ import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
-import goorm.back.zo6.user.dto.request.LoginRequest;
-import goorm.back.zo6.user.dto.response.LoginResponse;
+import goorm.back.zo6.auth.dto.request.LoginRequest;
+import goorm.back.zo6.auth.dto.response.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,10 +49,9 @@ class AuthServiceTest {
         ReflectionTestUtils.setField(testUser,"id",1L);
 
     }
-
-
+    
     @Test
-    @DisplayName("로그인 성공 시, accessToken 이 발급된다.")
+    @DisplayName("로그인 -  accessToken 발급 성공")
     void login_Success(){
         // given
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "1234");
@@ -77,8 +76,8 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 이메일로 로그인 시 예외 발생")
-    void login_Fail_UserNotFound() {
+    @DisplayName("로그인 - 존재하지 않는 계정 로그인 실패")
+    void login_UserNotFoundFails() {
         // given
         LoginRequest loginRequest = new LoginRequest("nonexistent@gmail.com", "1234");
 
@@ -97,8 +96,8 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("비밀번호가 일치하지 않을 경우 예외 발생")
-    void login_Fail_InvalidPassword() {
+    @DisplayName("로그인 - 비밀번호가 일치하지 않을 경우 예외 발생 실패")
+    void login_InvalidPasswordFails() {
         // given
         LoginRequest loginRequest = new LoginRequest("test@gmail.com", "wrongPassword");
 
