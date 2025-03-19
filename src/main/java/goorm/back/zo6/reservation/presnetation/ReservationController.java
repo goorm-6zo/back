@@ -59,12 +59,11 @@ public class ReservationController {
     }
 
     @PostMapping("/link-user")
-    @Operation(summary = "예약과 사용자 연결", description = "특정 예약(reservationId)의 사용자를 연결합니다. 전화번호(phone)를 통해 사용자를 검증합니다.")
+    @Operation(summary = "예약과 사용자 연결", description = "전화번호(phone)를 통해 사용자를 검증합니다.")
     public ResponseEntity<ReservationResponse> linkUserToReservation(
-            @RequestParam("phone") String inputPhone,
-            @RequestParam("userId") Long userId
+            @RequestParam("phone") String inputPhone
     ) {
-        ReservationResponse response = reservationService.linkReservationByPhoneAndUser(inputPhone, userId);
+        ReservationResponse response = reservationService.linkReservationByPhone(inputPhone);
         return ResponseEntity.ok(response);
     }
 }

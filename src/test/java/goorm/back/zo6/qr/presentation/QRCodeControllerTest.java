@@ -41,13 +41,25 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 public class QRCodeControllerTest {
 
-    @Autowired private WebApplicationContext context;
+    @Autowired
+    private WebApplicationContext context;
+
     private MockMvc mockMvc;
-    @Autowired private UserJpaRepository userJpaRepository;
-    @Autowired private ConferenceJpaRepository conferenceJpaRepository;
-    @Autowired private SessionJpaRepository sessionJpaRepository;
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private RestDocumentationResultHandler restDocs;
+
+    @Autowired
+    private UserJpaRepository userJpaRepository;
+
+    @Autowired
+    private ConferenceJpaRepository conferenceJpaRepository;
+
+    @Autowired
+    private SessionJpaRepository sessionJpaRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private RestDocumentationResultHandler restDocs;
 
     private String testToken;
     private Long conferenceId;

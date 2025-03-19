@@ -29,7 +29,7 @@ public class SessionFixture {
 
     public static Session 세션_아이디포함(Conference conference) {
         return Session.builder()
-                .id(100L)
+                .id(1L)
                 .name("테스트 세션")
                 .conference(conference)
                 .capacity(100)

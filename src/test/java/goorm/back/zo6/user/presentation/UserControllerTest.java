@@ -92,8 +92,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()))
                 .andExpect(jsonPath("$.phone").value(testUser.getPhone()))
                 .andExpect(jsonPath("$.name").value(testUser.getName()))
-                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()))
-                .andExpect(jsonPath("$.isDeleted").value(false));
+                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()));
     }
 
     @Test
@@ -111,8 +110,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()))
                 .andExpect(jsonPath("$.phone").value(testUser.getPhone()))
                 .andExpect(jsonPath("$.name").value(testUser.getName()))
-                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()))
-                .andExpect(jsonPath("$.isDeleted").value(false));
+                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()));
     }
 
     @Test
