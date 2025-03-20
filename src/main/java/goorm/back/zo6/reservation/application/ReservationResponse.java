@@ -35,6 +35,8 @@ public class ReservationResponse {
         private Integer capacity;
 
         private Boolean hasSessions;
+
+        private String imageUrl;
     }
 
     @Data
@@ -55,5 +57,11 @@ public class ReservationResponse {
         private LocalDateTime time;
 
         private String summary;
+
+        private String speaker;
+
+        private String speakerOrganization;
+
+        private String imageUrl;
     }
 }

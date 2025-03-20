@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService {
 
+    private static final String S3_BASE_URL = "https://maskpass-bucket.s3.ap-northeast-2.amazonaws.com/";
+
     private final ReservationRepository reservationRepository;
     private final ConferenceJpaRepository conferenceJpaRepository;
     private final UserRepository userRepository;
@@ -116,8 +118,8 @@ public class ReservationServiceImpl implements ReservationService {
                         res.getConference().getId(),
                         res.getConference().getName(),
                         res.getConference().getConferenceAt(),
-                        res.getConference().getLocation(),
-                        res.getConference().getImageKey()
+                        res.getConference().getImageKey(),
+                        res.getConference().getLocation()
                 ))
                 .sorted(Comparator.comparing(ConferenceSimpleResponse::getConferenceAt).reversed())
                 .collect(Collectors.toList());
@@ -253,6 +255,9 @@ public class ReservationServiceImpl implements ReservationService {
                             .location(session.getLocation())
                             .time(session.getTime())
                             .summary(session.getSummary())
+                            .speaker(session.getSpeakerName())
+                            .speakerOrganization(session.getSpeakerOrganization())
+                            .imageUrl(session.getSpeakerImageKey())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -265,6 +270,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .conferenceAt(conference.getConferenceAt())
                 .capacity(conference.getCapacity())
                 .hasSessions(conference.getHasSessions())
+                .imageUrl(S3_BASE_URL + reservation.getConference().getImageKey())
                 .build();
 
         return ReservationResponse.builder()
