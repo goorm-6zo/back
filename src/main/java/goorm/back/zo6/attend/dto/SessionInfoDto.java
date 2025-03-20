@@ -14,7 +14,8 @@ public class SessionInfoDto {
     private String name;
     private Integer capacity;
     private String location;
-    private LocalDateTime time;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String summary;
     private String speakerName;
     private String speakerOrganization;

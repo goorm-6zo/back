@@ -23,7 +23,10 @@ public class ConferenceDetailResponse {
     private String location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime conferenceAt;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     private Integer capacity;
 
@@ -41,7 +44,8 @@ public class ConferenceDetailResponse {
                 conference.getName(),
                 conference.getDescription(),
                 conference.getLocation(),
-                conference.getConferenceAt(),
+                conference.getStartTime(),
+                conference.getEndTime(),
                 conference.getCapacity(),
                 conference.getImageKey(),
                 conference.getIsActive(),

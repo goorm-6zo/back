@@ -26,7 +26,8 @@ public class SessionCreateServiceImpl implements SessionCreateService {
                 .name(request.getName())
                 .capacity(request.getCapacity())
                 .location(request.getLocation())
-                .time(request.getTime())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
                 .summary(request.getSummary())
                 .speakerName(request.getSpeakerName())
                 .speakerOrganization(request.getSpeakerOrganization())
@@ -37,6 +38,17 @@ public class SessionCreateServiceImpl implements SessionCreateService {
 
         Session savedSession = sessionRepository.save(session);
 
-        return new SessionResponse(savedSession.getId(), savedSession.getName(), savedSession.getCapacity(), savedSession.getLocation(), savedSession.getTime(), savedSession.getSummary(), savedSession.getSpeakerName(), savedSession.getSpeakerOrganization(), savedSession.isActive(), savedSession.getSpeakerImageKey());
+        return new SessionResponse(
+                savedSession.getId(),
+                savedSession.getName(),
+                savedSession.getCapacity(),
+                savedSession.getLocation(),
+                savedSession.getStartTime(),
+                savedSession.getEndTime(),
+                savedSession.getSummary(),
+                savedSession.getSpeakerName(),
+                savedSession.getSpeakerOrganization(),
+                savedSession.isActive(),
+                savedSession.getSpeakerImageKey());
     }
 }
