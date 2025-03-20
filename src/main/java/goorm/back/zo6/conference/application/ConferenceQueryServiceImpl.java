@@ -72,6 +72,21 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
         return getSessionOrThrow(sessionId);
     }
 
+    @Override
+    public boolean getSessionStatus(Long conferenceId, Long sessionId) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
+        return session.isActive();
+    }
+
+    @Override
+    public void updateSessionStatus(Long conferenceId, Long sessionId, boolean newStatus) {
+        Session session = sessionRepository.findByConferenceIdAndSessionId(conferenceId, sessionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUNT));
+        session.updateActive(newStatus);
+        sessionRepository.save(session);
+    }
+
     private Conference findConferenceOrThrow(Long conferenceId) {
         return conferenceRepository.findWithSessionsById(conferenceId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
