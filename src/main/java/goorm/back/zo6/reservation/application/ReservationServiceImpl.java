@@ -103,7 +103,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservations.stream()
                 .map(this::mapToReservationResponse)
-                .sorted(Comparator.comparing((ReservationResponse res) -> res.getConference().getConferenceAt()).reversed())
+                .sorted(Comparator.comparing((ReservationResponse res) -> res.getConference().getStartTime()).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -117,11 +117,12 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(res -> new ConferenceSimpleResponse(
                         res.getConference().getId(),
                         res.getConference().getName(),
-                        res.getConference().getConferenceAt(),
+                        res.getConference().getStartTime(),
+                        res.getConference().getEndTime(),
                         res.getConference().getImageKey(),
                         res.getConference().getLocation()
                 ))
-                .sorted(Comparator.comparing(ConferenceSimpleResponse::getConferenceAt).reversed())
+                .sorted(Comparator.comparing(ConferenceSimpleResponse::getStartTime).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -157,11 +158,17 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(ReservationSession::getSession)
                 .map(session -> SessionDto.builder()
                         .id(session.getId())
+                        .conferenceId(session.getConference().getId())
                         .name(session.getName())
                         .capacity(session.getCapacity())
                         .location(session.getLocation())
-                        .time(session.getTime())
+                        .startTime(session.getStartTime())
+                        .endTime(session.getEndTime())
                         .summary(session.getSummary())
+                        .speakerName(session.getSpeakerName())
+                        .speakerOrganization(session.getSpeakerOrganization())
+                        .speakerImage(session.getSpeakerImageKey())
+                        .isActive(true)
                         .build())
                 .collect(Collectors.toSet());
 
@@ -169,7 +176,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .conferenceId(conference.getId())
                 .conferenceName(conference.getName())
                 .conferenceLocation(conference.getLocation())
-                .conferenceAt(conference.getConferenceAt())
+                .startTime(conference.getStartTime())
+                .endTime(conference.getEndTime())
                 .conferenceDescription(conference.getDescription())
                 .sessions(new ArrayList<>(reservedSessions))
                 .build();
@@ -253,7 +261,8 @@ public class ReservationServiceImpl implements ReservationService {
                             .sessionName(session.getName())
                             .capacity(session.getCapacity())
                             .location(session.getLocation())
-                            .time(session.getTime())
+                            .startTime(session.getStartTime())
+                            .endTime(session.getEndTime())
                             .summary(session.getSummary())
                             .speaker(session.getSpeakerName())
                             .speakerOrganization(session.getSpeakerOrganization())
@@ -267,7 +276,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .conferenceName(conference.getName())
                 .description(conference.getDescription())
                 .location(conference.getLocation())
-                .conferenceAt(conference.getConferenceAt())
+                .startTime(conference.getStartTime())
+                .endTime(conference.getEndTime())
                 .capacity(conference.getCapacity())
                 .hasSessions(conference.getHasSessions())
                 .imageUrl(S3_BASE_URL + reservation.getConference().getImageKey())

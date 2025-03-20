@@ -25,7 +25,10 @@ public class SessionDto {
     private String location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     private String summary;
 
@@ -44,7 +47,8 @@ public class SessionDto {
                 session.getConference() != null ? session.getConference().getId() : null,
                 session.getName(), session.getCapacity(),
                 session.getLocation(),
-                session.getTime(),
+                session.getStartTime(),
+                session.getEndTime(),
                 session.getSummary(),
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),

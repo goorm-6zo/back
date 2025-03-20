@@ -36,8 +36,11 @@ public class Session {
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "time", nullable = false)
-    private LocalDateTime time;
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
 
     @Column(name = "summary", nullable = false)
     private String summary;
@@ -54,15 +57,19 @@ public class Session {
     @Column(name = "speaker_image_key")
     private String speakerImageKey;
 
-    public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization) {
+    public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime startTime, LocalDateTime endTime, String summary, String speakerName, String speakerOrganization) {
         if (conference == null) {
             throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
+        }
+        if (startTime == null || endTime == null || endTime.isBefore(startTime) || endTime.isEqual(startTime)) {
+            throw new CustomException(ErrorCode.INVALID_SESSION_TIME);
         }
         this.conference = conference;
         this.name = name;
         this.capacity = capacity;
         this.location = location;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.summary = summary;
         this.speakerName = speakerName;
         this.speakerOrganization = speakerOrganization;

@@ -21,7 +21,10 @@ public class ConferenceCreateRequest {
     private Integer capacity;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime conferenceAt;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     private String imageUrl;
 
