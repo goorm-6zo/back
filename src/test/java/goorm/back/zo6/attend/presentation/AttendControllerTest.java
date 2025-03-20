@@ -1,5 +1,6 @@
 package goorm.back.zo6.attend.presentation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.attend.application.AttendService;
 import goorm.back.zo6.attend.domain.Attend;
@@ -92,17 +93,21 @@ class AttendControllerTest {
     private Attend testAttendB;
     private String accessToken;
 
+    private  LocalDateTime localDateTime;
+
     @BeforeEach
     void setUp() {
+        localDateTime = LocalDateTime.now();
+
         testUser = User.builder().name("홍길순").email("test@gmail.com").phone("010-1111-2222").password(Password.from(passwordEncoder.encode("1234"))).role(Role.of("USER")).build();
         userJpaRepository.saveAndFlush(testUser);
 
-        testConferenceA = Conference.builder().name("컨퍼런스A").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스A").hasSessions(true).location("서울 법성포A").build();
-        testConferenceB = Conference.builder().name("컨퍼런스B").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스B").hasSessions(false).location("서울 법성포B").build();
-        testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").build();
+        testConferenceA = Conference.builder().name("컨퍼런스A").capacity(10).conferenceAt(localDateTime).description("좋은 컨퍼런스A").hasSessions(true).location("서울 법성포A").build();
+        testConferenceB = Conference.builder().name("컨퍼런스B").capacity(10).conferenceAt(localDateTime).description("좋은 컨퍼런스B").hasSessions(false).location("서울 법성포B").build();
+        testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).conferenceAt(localDateTime).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").build();
         conferenceJpaRepository.saveAllAndFlush(List.of(testConferenceA, testConferenceB, testConferenceC));
 
-        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(LocalDateTime.now()).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
+        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(localDateTime).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
         sessionJpaRepository.saveAndFlush(testSession);
 
         testReservationA = Reservation.builder().name("컨퍼런스 예매").status(ReservationStatus.CONFIRMED).phone("010-1111-2222").user(testUser).conference(testConferenceA).build();
@@ -134,18 +139,26 @@ class AttendControllerTest {
                         .param("conferenceId", String.valueOf(testConferenceA.getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testConferenceA.getId()))
-                .andExpect(jsonPath("$.name").value("컨퍼런스A")) // 컨퍼런스 이름 검증
-                .andExpect(jsonPath("$.location").value("서울 법성포A")) // 위치 검증
-                .andExpect(jsonPath("$.capacity").value(10)) // 정원 검증
-                .andExpect(jsonPath("$.description").value("좋은 컨퍼런스A")) // 설명 검증
-                .andExpect(jsonPath("$.hasSessions").value(true)) // 세션 존재 여부 검증
-                .andExpect(jsonPath("$.sessions[0].id").value(testSession.getId())) // 첫 번째 세션 ID 검증
-                .andExpect(jsonPath("$.sessions[0].name").value("세션")) // 첫 번째 세션 이름 검증
-                .andExpect(jsonPath("$.sessions[0].location").value("서울 법성포 떡잎마을")) // 첫 번째 세션 위치 검증
-                .andExpect(jsonPath("$.sessions[0].summary").value("좋은 세션")) // 첫 번째 세션 설명 검증
-                .andExpect(jsonPath("$.sessions[0].attend").value(true)) // 첫 번째 세션 참석 여부 검증
-                .andExpect(jsonPath("$.attend").value(true)) // 컨퍼런스 참석 여부 검증
+                .andExpectAll(
+                        jsonPath("$.id").value(1),
+                        jsonPath("$.name").value("컨퍼런스A"),
+                        jsonPath("$.description").value("좋은 컨퍼런스A"),
+                        jsonPath("$.location").value("서울 법성포A"),
+                        jsonPath("$.capacity").value(10),
+                        jsonPath("$.hasSessions").value(true),
+                        jsonPath("$.attend").value(true)
+                )
+                .andExpectAll(
+                        jsonPath("$.sessions[0].id").value(1),
+                        jsonPath("$.sessions[0].name").value("세션"),
+                        jsonPath("$.sessions[0].capacity").value(10),
+                        jsonPath("$.sessions[0].location").value("서울 법성포 떡잎마을"),
+                        jsonPath("$.sessions[0].summary").value("좋은 세션"),
+                        jsonPath("$.sessions[0].speakerName").value("발표자"),
+                        jsonPath("$.sessions[0].speakerOrganization").value("발표자 소속"),
+                        jsonPath("$.sessions[0].active").value(true),
+                        jsonPath("$.sessions[0].attend").value(true)
+                )
                 .andDo(print());
     }
 

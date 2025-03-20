@@ -28,6 +28,7 @@ public class AttendService {
 
     @Transactional
     public void registerAttend(Long userId, Long conferenceId, Long sessionId) {
+        log.info("참석 정보 rdb 저장, userId : {}, conferenceId : {} ,sessionId : {}",userId,conferenceId,sessionId);
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // Reservation & 관련 데이터 조회 (phone 기반)
@@ -44,6 +45,7 @@ public class AttendService {
         // Attend 객체 생성 및 저장
         Attend attend = Attend.of(user.getId(), reservationId, reservationSessionId, validConferenceId, validSessionId);
         attendRepository.save(attend);
+        log.info("참석 정보 rdb 저장 완료, userId : {}, conferenceId : {} ,sessionId : {}",attend.getUserId(),attend.getConferenceId(),attend.getSessionId());
     }
 
     public ConferenceInfoDto findAllByToken(Long userId, Long conferenceId) {
