@@ -25,13 +25,11 @@ public class AttendEventHandler {
         Long sessionId = event.getSessionId();
         Long userId = event.getUserId();
 
-        log.info("참석 이벤트 리스너 클래스 - 메서드들 호출 전 : {}", Thread.currentThread().getName());
         AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, event.getTimeStamp());
         sseService.sendAttendanceCount(conferenceId, sessionId, attendInfo.attendCount());
 
         if(!attendInfo.alreadyAttended()) {
             attendService.registerAttend(userId, conferenceId, sessionId);
         }
-        log.info("참석 이벤트 리스너 클래스 - 메서드들 호출 후 : {}", Thread.currentThread().getName());
     }
 }
