@@ -31,11 +31,12 @@ public class SessionCreateServiceImpl implements SessionCreateService {
                 .speakerName(request.getSpeakerName())
                 .speakerOrganization(request.getSpeakerOrganization())
                 .isActive(true)
+                .speakerImageKey(request.getSpeakerImage())
                 .conference(conference)
                 .build();
 
         Session savedSession = sessionRepository.save(session);
 
-        return new SessionResponse(savedSession.getId(), savedSession.getName(), savedSession.getCapacity(), savedSession.getLocation(), savedSession.getTime(), savedSession.getSummary(), savedSession.getSpeakerName(), savedSession.getSpeakerOrganization(), savedSession.isActive());
+        return new SessionResponse(savedSession.getId(), savedSession.getName(), savedSession.getCapacity(), savedSession.getLocation(), savedSession.getTime(), savedSession.getSummary(), savedSession.getSpeakerName(), savedSession.getSpeakerOrganization(), savedSession.isActive(), savedSession.getSpeakerImageKey());
     }
 }

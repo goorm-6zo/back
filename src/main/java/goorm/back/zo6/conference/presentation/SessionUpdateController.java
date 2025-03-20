@@ -20,20 +20,13 @@ public class SessionUpdateController {
 
     private final SessionService sessionService;
 
-    @PutMapping("/{sessionId}")
-    @Operation(summary = "세션 정보 수정", description = "세션의 정보를 수정합니다.")
-    public ResponseEntity<SessionResponse> updateSession(@PathVariable Long sessionId, @Valid @RequestBody SessionUpdateRequest request) {
-        SessionResponse response = sessionService.updateSession(
-                sessionId,
-                request.getName(),
-                request.getCapacity(),
-                request.getLocation(),
-                request.getTime(),
-                request.getSummary(),
-                request.getSpeakerName(),
-                request.getSpeakerOrganization(),
-                request.isActive()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @PutMapping("/{sessionId}")
+//    @Operation(summary = "세션 정보 수정", description = "세션의 정보를 수정합니다.")
+//    public ResponseEntity<SessionResponse> updateSession(@PathVariable Long sessionId, @Valid @RequestBody SessionUpdateRequest request) {
+//        SessionResponse response = sessionService.updateSession(
+//                sessionId,
+//                request.getName()
+//        );
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 }

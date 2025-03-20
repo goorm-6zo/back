@@ -42,14 +42,17 @@ public class Session {
     @Column(name = "summary", nullable = false)
     private String summary;
 
-    @Column(name = "speaker_name", nullable = false)
+    @Column(name = "speaker_name")
     private String speakerName;
 
-    @Column(name = "speaker_organization", nullable = false)
+    @Column(name = "speaker_organization")
     private String speakerOrganization;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    @Column(name = "speaker_image_key")
+    private String speakerImageKey;
 
     public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization) {
         if (conference == null) {
@@ -66,34 +69,11 @@ public class Session {
         this.isActive = true;
     }
 
-    public void updateSession(String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization, boolean isActive) {
-        if (capacity < 0) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_CAPACITY);
-        }
-        if (time.isBefore(LocalDateTime.now())) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_TIME);
-        }
-        if (name == null || name.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
-        if (location == null || location.isBlank()) {
+    public void updateSession(String location) {
+        if (location == null || location.isBlank())
             throw new CustomException(ErrorCode.INVALID_SESSION_LOCATION);
-        }
-        if (speakerName == null || speakerName.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
-        if (speakerOrganization == null || speakerOrganization.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
 
-        this.name = name;
-        this.capacity = capacity;
         this.location = location;
-        this.time = time;
-        this.summary = summary;
-        this.speakerName = speakerName;
-        this.speakerOrganization = speakerOrganization;
-        this.isActive = isActive;
     }
 
     public boolean isReservable() { return capacity > 0; }
