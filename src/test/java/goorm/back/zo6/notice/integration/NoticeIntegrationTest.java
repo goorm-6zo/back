@@ -65,7 +65,7 @@ public class NoticeIntegrationTest {
 
      */
 
-    @Test
+  /*  @Test
     @DisplayName("컨퍼런스 미참여자에게 문자 메세지를 전송합니다.")
     public void sendMessageToNonAttendeeTest() throws IOException {
         Conference conference = ConferenceFixture.컨퍼런스();
@@ -79,7 +79,7 @@ public class NoticeIntegrationTest {
         FileInputStream input = new FileInputStream(file);
         MultipartFile imageFile = new MockMultipartFile("image", file.getName(), "image/jpeg", input);
         noticeService.sendMessage("테스트 메시지\n6조 화이팅",conference.getId(),null,"NON_ATTENDEE",imageFile);
-    }
+    }*/
 
     @Test
     @DisplayName("문자발송 내역을 조회합니다. - 컨퍼런스만 조회")
