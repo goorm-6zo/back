@@ -89,6 +89,9 @@ dependencies {
 
     // Message
     implementation 'net.nurigo:sdk:4.3.2'
+
+    // 이미지 압축
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.1'
 }
 
 tasks.named('test') {

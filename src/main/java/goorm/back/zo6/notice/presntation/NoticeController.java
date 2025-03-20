@@ -2,12 +2,18 @@ package goorm.back.zo6.notice.presntation;
 
 import goorm.back.zo6.notice.application.NoticeService;
 import goorm.back.zo6.notice.dto.NoticeRequest;
+import goorm.back.zo6.notice.dto.NoticeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Tag(name = "Notices", description = "알림 전송 API")
 @RestController
@@ -17,11 +23,21 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeController {
     private final NoticeService noticeService;
 
-    @PostMapping("/{conferenceId}/session/{sessionId}")
-    @Operation(summary = "알림 전송", description = "알림 대상을 ALL, ATTENDEE, NON_ATTENDEE 중 하나로 보내주세요.")
-    public ResponseEntity<String> sendNotice(@PathVariable Long conferenceId, @PathVariable(required = false) Long sessionId, @RequestBody NoticeRequest noticeRequest){
-        noticeService.sendMessage(noticeRequest.message(),conferenceId,sessionId,noticeRequest.noticeTarget());
+    @PostMapping(value="/{conferenceId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "알림 전송", description = "알림 대상을 ALL, ATTENDEE, NON_ATTENDEE 중 하나로 보내주세요. 세션에 대한 전송은 파라미터로 sessionId를 보내주시면 됩니다.")
+    public ResponseEntity<String> sendNotice(@PathVariable Long conferenceId,
+                                             @RequestParam(value = "sessionId", required = false) Long sessionId,
+                                             @RequestPart(value = "noticeRequest") @RequestBody NoticeRequest noticeRequest,
+                                             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        noticeService.sendMessage(noticeRequest.message(),conferenceId,sessionId,noticeRequest.noticeTarget(), image);
         return ResponseEntity.ok("메시지 전송 완료");
+    }
+
+    @GetMapping("/{conferenceId}")
+    @Operation(summary = "알림 전송 내역 확인", description = "전송된 알림의 내역을 확인하고 싶은 세션 또는 세션,컨퍼런스 아이디르 보내주세요. 세션에 대한 조회는 파라미터로 sessionId를 보내주시면 됩니다.")
+    public ResponseEntity<List<NoticeResponseDto>> getNotice(@PathVariable Long conferenceId,
+                                                              @RequestParam(value = "sessionId", required = false) Long sessionId){
+        return ResponseEntity.ok(noticeService.getMessages(conferenceId,sessionId));
     }
 
 }

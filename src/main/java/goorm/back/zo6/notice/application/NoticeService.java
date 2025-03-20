@@ -2,26 +2,35 @@ package goorm.back.zo6.notice.application;
 
 import goorm.back.zo6.notice.domain.Notice;
 import goorm.back.zo6.notice.domain.NoticeTarget;
+import goorm.back.zo6.notice.dto.NoticeResponseDto;
 import goorm.back.zo6.notice.infrastructure.NoticeRepository;
 import goorm.back.zo6.notice.infrastructure.ReservationAttendeePhoneDao;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.model.StorageType;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,12 +60,35 @@ public class NoticeService {
     @Value("${send.provider}")
     private String provider;
 
+
     @Transactional
-    public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget) {
+    public List<NoticeResponseDto> getMessages(Long conferenceId, Long sessionId){
+        List<Notice> notices;
+        if(sessionId==null){
+            notices = noticeRepository.findByConferenceIdAndSessionIdIsNull(conferenceId);
+        }
+        else {
+            notices = noticeRepository.findByConferenceIdAndSessionId(conferenceId,sessionId);
+        }
+        return notices.stream().map(NoticeResponseDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget, MultipartFile image) throws IOException {
         NoticeTarget target = NoticeTarget.from(noticeTarget);
         noticeRepository.save(Notice.builder().message(message).conferenceId(conferenceId).sessionId(sessionId).noticeTarget(target).build());
         List<String> phones = getTarget(conferenceId,sessionId,target);
-
+        String imageId = null;
+        if(image!=null){
+            BufferedImage originalImage = ImageIO.read(image.getInputStream());
+            File outputFile = File.createTempFile("image", ".jpg");
+            Thumbnails.of(originalImage)
+                    .size(800, 800)
+                    .keepAspectRatio(true)
+                    .outputFormat("jpg")
+                    .toFile(outputFile);
+            imageId = defaultMessageService.uploadFile(outputFile,StorageType.MMS,null);
+        }
         //메시지 전송 로직
         ArrayList<Message> messageList = new ArrayList<>();
 
@@ -65,7 +97,9 @@ public class NoticeService {
             sms.setFrom(number);
             sms.setTo(phone);
             sms.setText(message);
-
+            if(image!=null){
+                sms.setImageId(imageId);
+            }
             messageList.add(sms);
         }
 
