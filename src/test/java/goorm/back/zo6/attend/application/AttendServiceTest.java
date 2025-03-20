@@ -103,7 +103,7 @@ class AttendServiceTest {
 
         List<Tuple> mockResults = new ArrayList<>();
         Tuple mockTuple = createGetTuple(conferenceId, isConferenceAttend, 2L, "Session 1", 50, "Room A",
-                LocalDateTime.now(), "Summary 1",  "발표자", "발표자 소속", true, isSessionAttend);
+                LocalDateTime.now(), LocalDateTime.now(),"Summary 1",  "발표자", "발표자 소속", true, isSessionAttend);
         mockResults.add(mockTuple);
 
         when(attendRepository.findAttendInfoByUserAndConference(userId, conferenceId)).thenReturn(mockResults);
@@ -132,7 +132,7 @@ class AttendServiceTest {
 
         List<Tuple> mockResults = new ArrayList<>();
         Tuple mockTuple = createGetTuple(conferenceId, isConferenceAttend, 2L, "Session 1", 50, "Room A",
-                LocalDateTime.now(), "Summary 1", "발표자", "발표자 소속", true,isSessionAttend);
+                LocalDateTime.now(), LocalDateTime.now(),"Summary 1", "발표자", "발표자 소속", true,isSessionAttend);
         mockResults.add(mockTuple);
 
         when(attendRepository.findAttendInfoByUserAndConference(userId, conferenceId)).thenReturn(mockResults);
@@ -180,41 +180,44 @@ class AttendServiceTest {
 
     // Get(참석상태 & 예매 컨퍼런스 정보 조회) Tuple 생성 메서드
     private Tuple createGetTuple(Long conferenceId, Boolean isAttended, Long sessionId, String sessionName,
-                                  Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization, Boolean isActive,Boolean attended) {
+                                  Integer capacity, String location, LocalDateTime startTime, LocalDateTime endTime, String summary, String speakerName, String speakerOrganization, Boolean isActive,Boolean attended) {
         Tuple mockTuple = mock(Tuple.class);
         when(mockTuple.get(0, Long.class)).thenReturn(conferenceId);
         when(mockTuple.get(1, String.class)).thenReturn("Conference Name");
         when(mockTuple.get(2, String.class)).thenReturn("Description");
         when(mockTuple.get(3, String.class)).thenReturn("Location");
         when(mockTuple.get(4, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 9, 0));
-        when(mockTuple.get(5, Integer.class)).thenReturn(100);
-        when(mockTuple.get(6, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(7, String.class)).thenReturn("test.png");
-        when(mockTuple.get(8, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(9, Boolean.class)).thenReturn(isAttended);
+        when(mockTuple.get(5, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 17, 0));
+        when(mockTuple.get(6, Integer.class)).thenReturn(100);
+        when(mockTuple.get(7, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(8, String.class)).thenReturn("test.png");
+        when(mockTuple.get(9, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(10, Boolean.class)).thenReturn(isAttended);
 
         if (sessionId != null) {
-            when(mockTuple.get(10, Long.class)).thenReturn(sessionId);
-            when(mockTuple.get(11, String.class)).thenReturn(sessionName);
-            when(mockTuple.get(12, Integer.class)).thenReturn(capacity);
-            when(mockTuple.get(13, String.class)).thenReturn(location);
-            when(mockTuple.get(14, LocalDateTime.class)).thenReturn(time);
-            when(mockTuple.get(15, String.class)).thenReturn(summary);
-            when(mockTuple.get(16, String.class)).thenReturn(speakerName);
-            when(mockTuple.get(17, String.class)).thenReturn(speakerOrganization);
-            when(mockTuple.get(18, Boolean.class)).thenReturn(isActive);
-            when(mockTuple.get(19, Boolean.class)).thenReturn(attended);
+            when(mockTuple.get(11, Long.class)).thenReturn(sessionId);
+            when(mockTuple.get(12, String.class)).thenReturn(sessionName);
+            when(mockTuple.get(13, Integer.class)).thenReturn(capacity);
+            when(mockTuple.get(14, String.class)).thenReturn(location);
+            when(mockTuple.get(15, LocalDateTime.class)).thenReturn(startTime);
+            when(mockTuple.get(16, LocalDateTime.class)).thenReturn(endTime);
+            when(mockTuple.get(17, String.class)).thenReturn(summary);
+            when(mockTuple.get(18, String.class)).thenReturn(speakerName);
+            when(mockTuple.get(19, String.class)).thenReturn(speakerOrganization);
+            when(mockTuple.get(20, Boolean.class)).thenReturn(isActive);
+            when(mockTuple.get(21, Boolean.class)).thenReturn(attended);
         } else {
             when(mockTuple.get(8, Long.class)).thenReturn(null);
             when(mockTuple.get(9, String.class)).thenReturn(null);
             when(mockTuple.get(10, Integer.class)).thenReturn(null);
             when(mockTuple.get(11, String.class)).thenReturn(null);
             when(mockTuple.get(12, LocalDateTime.class)).thenReturn(null);
-            when(mockTuple.get(13, String.class)).thenReturn(null);
-            when(mockTuple.get(14, String.class)).thenReturn(speakerName);
-            when(mockTuple.get(15, String.class)).thenReturn(speakerOrganization);
-            when(mockTuple.get(16, Boolean.class)).thenReturn(isActive);
-            when(mockTuple.get(17, Boolean.class)).thenReturn(null);
+            when(mockTuple.get(13, LocalDateTime.class)).thenReturn(null);
+            when(mockTuple.get(14, String.class)).thenReturn(null);
+            when(mockTuple.get(15, String.class)).thenReturn(speakerName);
+            when(mockTuple.get(16, String.class)).thenReturn(speakerOrganization);
+            when(mockTuple.get(17, Boolean.class)).thenReturn(isActive);
+            when(mockTuple.get(18, Boolean.class)).thenReturn(null);
         }
 
         return mockTuple;
