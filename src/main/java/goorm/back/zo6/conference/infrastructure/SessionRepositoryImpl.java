@@ -15,11 +15,6 @@ public class SessionRepositoryImpl implements SessionRepository {
     private final SessionJpaRepository sessionJpaRepository;
 
     @Override
-    public List<Session> findByConferenceId(Long conferenceId) {
-        return sessionJpaRepository.findByConferenceId(conferenceId);
-    }
-
-    @Override
     public Optional<Session> findById(Long id) {
         return sessionJpaRepository.findById(id);
     }
@@ -29,12 +24,6 @@ public class SessionRepositoryImpl implements SessionRepository {
         sessionJpaRepository.save(session);
         return session;
     }
-
-    @Override
-    public List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId) {
-        return sessionJpaRepository.findByConferenceIdAndIsActiveTrue(conferenceId);
-    }
-
 
     @Override
     public Optional<Session> findByConferenceIdAndSessionId(Long conferenceId, Long sessionId) {

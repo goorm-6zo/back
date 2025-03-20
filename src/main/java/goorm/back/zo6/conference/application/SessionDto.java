@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -14,15 +15,27 @@ import java.time.LocalDateTime;
 @Builder
 public class SessionDto {
     private Long id;
+
     private Long conferenceId;
+
     private String name;
+
     private Integer capacity;
+
     private String location;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
+
     private String summary;
+
     private String speakerName;
+
     private String speakerOrganization;
+
     private boolean isActive;
+
+    private String speakerImage;
 
 
     public static SessionDto fromEntity(Session session) {
@@ -35,7 +48,8 @@ public class SessionDto {
                 session.getSummary(),
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
-                session.isActive()
+                session.isActive(),
+                session.getSpeakerImageKey()
         );
     }
 }

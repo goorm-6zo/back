@@ -19,6 +19,8 @@ public class ConferenceCreateServiceImpl implements ConferenceCreateService {
                 .capacity(request.getCapacity())
                 .location(request.getLocation())
                 .conferenceAt(request.getConferenceAt())
+                .imageKey(request.getImageUrl())
+                .isActive(true)
                 .hasSessions(request.getHasSessions())
                 .build();
 
@@ -31,6 +33,8 @@ public class ConferenceCreateServiceImpl implements ConferenceCreateService {
                 savedConference.getLocation(),
                 savedConference.getConferenceAt(),
                 savedConference.getCapacity(),
+                savedConference.getImageKey(),
+                savedConference.getIsActive(),
                 savedConference.getHasSessions()
         );
     }

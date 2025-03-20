@@ -42,14 +42,17 @@ public class Session {
     @Column(name = "summary", nullable = false)
     private String summary;
 
-    @Column(name = "speaker_name", nullable = false)
+    @Column(name = "speaker_name")
     private String speakerName;
 
-    @Column(name = "speaker_organization", nullable = false)
+    @Column(name = "speaker_organization")
     private String speakerOrganization;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    @Column(name = "speaker_image_key")
+    private String speakerImageKey;
 
     public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization) {
         if (conference == null) {

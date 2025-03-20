@@ -56,35 +56,36 @@ public class AttendService {
         }
 
         Tuple firstTuple = results.get(0); // 첫 번째 결과를 가져옴
-        Long conferenceIdFromDb = firstTuple.get(0, Long.class);
-        boolean isConferenceAttended = firstTuple.get(7, Boolean.class);
 
         ConferenceInfoDto conferenceInfo = new ConferenceInfoDto(
-                conferenceIdFromDb,
-                firstTuple.get(1, String.class),
-                firstTuple.get(2, String.class),
-                firstTuple.get(3, String.class),
-                firstTuple.get(4, LocalDateTime.class),
-                firstTuple.get(5, Integer.class),
-                firstTuple.get(6, Boolean.class),
-                isConferenceAttended,
+                firstTuple.get(0,Long.class), // c.id
+                firstTuple.get(1, String.class), // c.name
+                firstTuple.get(2, String.class), // c.description
+                firstTuple.get(3, String.class), // c.location
+                firstTuple.get(4, LocalDateTime.class), // c.conferenceAt
+                firstTuple.get(5, Integer.class), // c.capacity
+                firstTuple.get(6, Boolean.class), // c.hasSession
+                firstTuple.get(7, String.class), // c.imageUrl
+                firstTuple.get(8, Boolean.class), // c.isActive
+                firstTuple.get(9,Boolean.class), // c.isAttend
                 new ArrayList<>() // 세션 리스트 초기화
         );
 
         // 세션 정보 추가
         results.forEach(tuple -> {
-            if (tuple.get(8, Long.class) != null) {
+            if (tuple.get(10, Long.class) != null) {
                 SessionInfoDto sessionInfo = new SessionInfoDto(
-                        tuple.get(8, Long.class), // s.id
-                        tuple.get(9, String.class), // s.name
-                        tuple.get(10, Integer.class), // s.capacity
-                        tuple.get(11, String.class), // s.location
-                        tuple.get(12, LocalDateTime.class), // s.time
-                        tuple.get(13, String.class), // s.summary
-                        tuple.get(14, String.class), // s.speakerName
-                        tuple.get(15, String.class), // s.speakerOrganization
-                        tuple.get(16, Boolean.class), // s.isActive
-                        tuple.get(17, Boolean.class) // 세션 참석 여부
+                        tuple.get(10, Long.class), // s.id
+                        tuple.get(11, String.class), // s.name
+                        tuple.get(12, Integer.class), // s.capacity
+                        tuple.get(13, String.class), // s.location
+                        tuple.get(14, LocalDateTime.class), // s.time
+                        tuple.get(15, String.class), // s.summary
+                        tuple.get(16, String.class), // s.speakerName
+                        tuple.get(17, String.class), // s.speakerOrganization
+                        tuple.get(18,String.class), // s.speakerImageKey
+                        tuple.get(19, Boolean.class), // s.isActive
+                        tuple.get(20, Boolean.class) // s.isAttend
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }

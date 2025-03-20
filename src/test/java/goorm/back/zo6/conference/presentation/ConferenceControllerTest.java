@@ -75,7 +75,7 @@ class ConferenceControllerTest {
     void setUp(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(documentationConfiguration(restDocumentation))
-                .alwaysDo(restDocs) // ← 팀원 설정 restDocs를 적용
+                .alwaysDo(restDocs)
                 .build();
 
         User testUser = userJpaRepository.save(UserFixture.유저());
@@ -99,6 +99,8 @@ class ConferenceControllerTest {
                                 fieldWithPath("[].location").type(JsonFieldType.STRING).description("컨퍼런스 장소"),
                                 fieldWithPath("[].conferenceAt").type(JsonFieldType.STRING).description("컨퍼런스 일정"),
                                 fieldWithPath("[].capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
+                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
+                                fieldWithPath("[].isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
                                 fieldWithPath("[].hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부")
                         )
                 ));
@@ -123,6 +125,8 @@ class ConferenceControllerTest {
                                 fieldWithPath("conferenceAt").type(JsonFieldType.STRING).description("컨퍼런스 일정"),
                                 fieldWithPath("capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
                                 fieldWithPath("hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
+                                fieldWithPath("isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
                                 fieldWithPath("sessions[]").type(JsonFieldType.ARRAY).description("세션 목록")
                         )
                 ));
@@ -166,7 +170,8 @@ class ConferenceControllerTest {
                                 fieldWithPath("summary").description("세션 요약"),
                                 fieldWithPath("speakerName").description("발표자"),
                                 fieldWithPath("speakerOrganization").description("발표자 소속"),
-                                fieldWithPath("active").description("활성화")
+                                fieldWithPath("active").description("활성화"),
+                                fieldWithPath("speakerImage").description("테스트 이미지")
                         )
                 ));
     }

@@ -45,6 +45,8 @@ class ConferenceQueryServiceImplTest {
                 conference.getLocation(),
                 conference.getConferenceAt(),
                 conference.getCapacity(),
+                conference.getImageKey(),
+                conference.getIsActive(),
                 conference.getHasSessions()
         );
 
@@ -71,6 +73,8 @@ class ConferenceQueryServiceImplTest {
                 conference.getLocation(),
                 conference.getConferenceAt(),
                 conference.getCapacity(),
+                conference.getImageKey(),
+                conference.getIsActive(),
                 conference.getHasSessions(),
                 List.of(SessionDto.fromEntity(session))
         );
@@ -102,7 +106,8 @@ class ConferenceQueryServiceImplTest {
                 session.getSummary(),
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
-                session.isActive()
+                session.isActive(),
+                session.getSpeakerImageKey()
         );
 
         given(conferenceRepository.findWithSessionsById(conference.getId()))

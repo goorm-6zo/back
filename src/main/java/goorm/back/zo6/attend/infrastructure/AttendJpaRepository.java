@@ -27,9 +27,9 @@ public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
                                @Param("sessionId") Long sessionId);
 
     @Query("""
-    SELECT c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions,
+    SELECT c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions, c.imageKey, c.isActive,
            CASE WHEN MAX(a.id) IS NOT NULL THEN true ELSE false END, 
-           s.id, s.name, s.capacity, s.location, s.time, s.summary, s.speakerName, s.speakerOrganization, s.isActive,
+           s.id, s.name, s.capacity, s.location, s.time, s.summary, s.speakerName, s.speakerOrganization, s.speakerImageKey, s.isActive,
            CASE WHEN MAX(a.sessionId) IS NOT NULL THEN true ELSE false END
     FROM Reservation r
     JOIN r.conference c
@@ -42,8 +42,7 @@ public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
     WHERE r.phone = (SELECT u.phone FROM User u WHERE u.id = :userId) 
       AND r.conference.id = :conferenceId
       AND r.status = 'CONFIRMED'
-    GROUP BY c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions, 
-             s.id, s.name, s.capacity, s.location, s.time, s.summary
+    GROUP BY c.id, s.id
 """)
     List<Tuple> findAttendInfoByUserAndConference(
             @Param("userId") Long userId,

@@ -6,7 +6,6 @@ import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.fixture.ConferenceFixture;
 import goorm.back.zo6.fixture.SessionFixture;
-import goorm.back.zo6.fixture.UserFixture;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
