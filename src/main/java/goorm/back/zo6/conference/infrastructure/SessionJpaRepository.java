@@ -11,7 +11,5 @@ public interface SessionJpaRepository extends JpaRepository<Session, Long> {
 
     List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId);
 
-    Boolean existsByConferenceId(Long conferenceId);
-
     Optional<Session> findByConferenceIdAndId(Long conferenceId, Long sessionId);
 }

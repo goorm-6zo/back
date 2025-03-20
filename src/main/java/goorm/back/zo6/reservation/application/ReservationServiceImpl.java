@@ -116,7 +116,8 @@ public class ReservationServiceImpl implements ReservationService {
                         res.getConference().getId(),
                         res.getConference().getName(),
                         res.getConference().getConferenceAt(),
-                        res.getConference().getLocation()
+                        res.getConference().getLocation(),
+                        res.getConference().getImageKey()
                 ))
                 .sorted(Comparator.comparing(ConferenceSimpleResponse::getConferenceAt).reversed())
                 .collect(Collectors.toList());

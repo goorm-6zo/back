@@ -2,8 +2,6 @@ package goorm.back.zo6.fixture;
 
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
-import goorm.back.zo6.reservation.domain.Reservation;
-import goorm.back.zo6.reservation.domain.ReservationSession;
 
 import java.time.LocalDateTime;
 
@@ -20,13 +18,7 @@ public class SessionFixture {
                 .speakerName("발표자")
                 .speakerOrganization("발표자 소속")
                 .isActive(true)
-                .build();
-    }
-
-    public static ReservationSession 예약_세션(Reservation reservation, Session session) {
-        return ReservationSession.builder()
-                .reservation(reservation)
-                .session(session)
+                .speakerImageKey("test.png")
                 .build();
     }
 
@@ -42,6 +34,7 @@ public class SessionFixture {
                 .speakerName("발표자")
                 .speakerOrganization("발표자 소속")
                 .isActive(true)
+                .speakerImageKey("test.png")
                 .build();
     }
 }

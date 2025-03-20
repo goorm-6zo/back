@@ -19,6 +19,8 @@ public class ConferenceInfoDto {
     private LocalDateTime conferenceAt;
     private Integer capacity;
     private Boolean hasSessions;
+    private String imageUrl;
+    private Boolean isActive;
     private boolean isAttend;
     private List<SessionInfoDto> sessions;
 }

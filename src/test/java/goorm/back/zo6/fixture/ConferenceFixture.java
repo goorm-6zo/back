@@ -15,6 +15,8 @@ public class ConferenceFixture {
                 .conferenceAt(LocalDateTime.now())
                 .capacity(100)
                 .hasSessions(true)
+                .imageKey("test.png")
+                .isActive(true)
                 .sessions(new HashSet<>())
                 .build();
     }
@@ -28,6 +30,8 @@ public class ConferenceFixture {
                 .conferenceAt(LocalDateTime.now())
                 .capacity(100)
                 .hasSessions(true)
+                .imageKey("test.png")
+                .isActive(true)
                 .sessions(new HashSet<>())
                 .build();
     }
