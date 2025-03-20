@@ -34,4 +34,10 @@ public class SessionRepositoryImpl implements SessionRepository {
     public List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId) {
         return sessionJpaRepository.findByConferenceIdAndIsActiveTrue(conferenceId);
     }
+
+
+    @Override
+    public Optional<Session> findByConferenceIdAndSessionId(Long conferenceId, Long sessionId) {
+        return sessionJpaRepository.findByConferenceIdAndId(conferenceId, sessionId);
+    }
 }

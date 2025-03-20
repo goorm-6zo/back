@@ -11,4 +11,6 @@ public interface SessionRepository {
     List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId);
 
     Session save(Session session);
+
+    Optional<Session> findByConferenceIdAndSessionId(Long conferenceId, Long sessionId);
 }
