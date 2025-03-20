@@ -41,6 +41,12 @@ public class Conference {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
+    @Column(name = "image_key", nullable = false)
+    private String imageKey;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @Column(name = "has_sessions", nullable = false)
     private Boolean hasSessions;
 

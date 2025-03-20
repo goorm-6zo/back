@@ -13,5 +13,6 @@ public class ConferenceSimpleResponse {
     private Long conferenceId;
     private String conferenceName;
     private LocalDateTime conferenceAt;
+    private String conferenceImageUrl;
     private String conferenceLocation;
 }

@@ -24,6 +24,6 @@ public class SessionServiceImpl implements SessionService {
 
         session.updateSession(name, capacity, location, time, summary, speakerName, speakerOrganization, isActive);
 
-        return new SessionResponse(session.getId(), session.getName(), session.getCapacity(), session.getLocation(), session.getTime(), session.getSummary(), session.getSpeakerName(), session.getSpeakerOrganization(), session.isActive());
+        return new SessionResponse(session.getId(), session.getName(), session.getCapacity(), session.getLocation(), session.getTime(), session.getSummary(), session.getSpeakerName(), session.getSpeakerOrganization(), session.isActive(), session.getSpeakerImageKey());
     }
 }
