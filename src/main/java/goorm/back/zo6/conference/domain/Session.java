@@ -104,4 +104,8 @@ public class Session {
         }
         this.conference = conference;
     }
+
+    public void updateActive(boolean active) {
+        this.isActive = active;
+    }
 }

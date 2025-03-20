@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,5 +43,15 @@ public class ConferenceAdminController {
     public ResponseEntity<SessionDto> getSessionDetail(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
         Session session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
         return ResponseEntity.ok(SessionDto.fromEntity(session));
+    }
+
+    @PutMapping("/{conferenceId}/sessions/{sessionId}")
+    @Operation(summary = "세션 상태 변경", description = "활성화 / 비활성화를 변경합니다. (관리자 전용)")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> sessionStatus(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
+        boolean currentStatus = conferenceQueryService.getSessionStatus(conferenceId, sessionId);
+        boolean newStatus = !currentStatus;
+        conferenceQueryService.updateSessionStatus(conferenceId, sessionId, newStatus);
+        return ResponseEntity.ok("상태가 변경되었습니다.");
     }
 }
