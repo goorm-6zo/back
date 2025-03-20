@@ -69,34 +69,11 @@ public class Session {
         this.isActive = true;
     }
 
-    public void updateSession(String name, Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization, boolean isActive) {
-        if (capacity < 0) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_CAPACITY);
-        }
-        if (time.isBefore(LocalDateTime.now())) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_TIME);
-        }
-        if (name == null || name.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
-        if (location == null || location.isBlank()) {
+    public void updateSession(String location) {
+        if (location == null || location.isBlank())
             throw new CustomException(ErrorCode.INVALID_SESSION_LOCATION);
-        }
-        if (speakerName == null || speakerName.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
-        if (speakerOrganization == null || speakerOrganization.isBlank()) {
-            throw new CustomException(ErrorCode.INVALID_SESSION_NAME);
-        }
 
-        this.name = name;
-        this.capacity = capacity;
         this.location = location;
-        this.time = time;
-        this.summary = summary;
-        this.speakerName = speakerName;
-        this.speakerOrganization = speakerOrganization;
-        this.isActive = isActive;
     }
 
     public boolean isReservable() { return capacity > 0; }
@@ -106,5 +83,9 @@ public class Session {
             throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
         this.conference = conference;
+    }
+
+    public void updateActive(boolean active) {
+        this.isActive = active;
     }
 }

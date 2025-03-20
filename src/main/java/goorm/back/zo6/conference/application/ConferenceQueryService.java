@@ -15,4 +15,8 @@ public interface ConferenceQueryService {
     List<SessionDto> getSessionsByConferenceIdDto(Long conferenceId);
 
     Session getSessionDetail(Long conferenceId, Long sessionId);
+
+    boolean getSessionStatus(Long conferenceId, Long sessionId);
+
+    void updateSessionStatus(Long conferenceId, Long sessionId, boolean newStatus);
 }

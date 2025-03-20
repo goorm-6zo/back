@@ -7,4 +7,6 @@ public interface SessionRepository {
     Optional<Session> findById(Long id);
 
     Session save(Session session);
+
+    Optional<Session> findByConferenceIdAndSessionId(Long conferenceId, Long sessionId);
 }

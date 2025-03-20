@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,7 +57,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
-                .requestMatchers("/api/v1/notice/**").hasRole(Role.ADMIN.getRoleName())
+                .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
+                .requestMatchers("/api/v1/notices/**").hasRole(Role.ADMIN.getRoleName())
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
