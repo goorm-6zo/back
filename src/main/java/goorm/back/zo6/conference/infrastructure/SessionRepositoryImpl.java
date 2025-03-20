@@ -24,4 +24,9 @@ public class SessionRepositoryImpl implements SessionRepository {
         sessionJpaRepository.save(session);
         return session;
     }
+
+    @Override
+    public Optional<Session> findByConferenceIdAndSessionId(Long conferenceId, Long sessionId) {
+        return sessionJpaRepository.findByConferenceIdAndId(conferenceId, sessionId);
+    }
 }

@@ -10,4 +10,6 @@ public interface SessionJpaRepository extends JpaRepository<Session, Long> {
     List<Session> findByConferenceId(Long conferenceId);
 
     List<Session> findByConferenceIdAndIsActiveTrue(Long conferenceId);
+
+    Optional<Session> findByConferenceIdAndId(Long conferenceId, Long sessionId);
 }
