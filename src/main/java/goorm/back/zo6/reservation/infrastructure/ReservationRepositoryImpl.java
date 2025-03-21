@@ -45,12 +45,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByUserIdAndConferenceId(Long userId, Long conferenceId) {
-        return reservationJpaRepository.existsByUserAndConference(userId, conferenceId);
+    public Boolean existsByUserIdAndConferenceId(Long userId, Long conferenceId) {
+        return reservationJpaRepository.existsByUserIdAndConferenceIdAndStatus(userId, conferenceId, ReservationStatus.CONFIRMED);
     }
 
     @Override
-    public boolean existsByUserAndConferenceAndSession(Long userId, Long conferenceId, Long sessionId) {
-        return reservationJpaRepository.existsByUserAndConferenceAndSession(userId, conferenceId, sessionId);
+    public Boolean existsByUserAndConferenceAndSession(Long userId, Long conferenceId, Long sessionId) {
+        return reservationJpaRepository.existsByUserIdAndConferenceIdAndReservationSessionsSessionIdAndStatus(userId, conferenceId, sessionId, ReservationStatus.CONFIRMED);
     }
 }

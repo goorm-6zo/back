@@ -94,6 +94,7 @@ public class FaceRecognitionService {
         }else{
             isReserved = reservationRepository.existsByUserAndConferenceAndSession(userId,conferenceId, sessionId);
         }
+        log.info("isReserved : {}", isReserved);
 
         if (!isReserved) {
             throw new CustomException(ErrorCode.USER_NOT_RESERVED);

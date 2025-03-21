@@ -19,34 +19,9 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
 
     List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId);
 
-    @Query(value = """
-    SELECT EXISTS (
-        SELECT 1 FROM reservation
-        WHERE user_id = :userId
-        AND conference_id = :conferenceId
-        AND status = 'CONFIRMED'
-    )
-""", nativeQuery = true)
-    boolean existsByUserAndConference(
-            @Param("userId") Long userId,
-            @Param("conferenceId") Long conferenceId
-    );
+    boolean existsByUserIdAndConferenceIdAndStatus(Long userId, Long conferenceId, ReservationStatus status);
 
-    @Query(value = """
-    SELECT EXISTS (
-        SELECT 1 
-        FROM reservation r
-        JOIN reservation_session rs ON r.reservation_id = rs.reservation_id
-        WHERE r.user_id = :userId
-        AND r.conference_id = :conferenceId
-        AND rs.session_id = :sessionId
-        AND r.status = 'CONFIRMED'
-    )
-""", nativeQuery = true)
-    boolean existsByUserAndConferenceAndSession(
-            @Param("userId") Long userId,
-            @Param("conferenceId") Long conferenceId,
-            @Param("sessionId") Long sessionId
-    );
+    boolean existsByUserIdAndConferenceIdAndReservationSessionsSessionIdAndStatus(
+            Long userId, Long conferenceId, Long sessionId, ReservationStatus status);
 
 }

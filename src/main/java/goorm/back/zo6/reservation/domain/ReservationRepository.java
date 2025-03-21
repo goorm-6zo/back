@@ -18,8 +18,8 @@ public interface ReservationRepository {
 
     List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId);
 
-    boolean existsByUserIdAndConferenceId(Long userId, Long conferenceId);
+    Boolean existsByUserIdAndConferenceId(Long userId, Long conferenceId);
 
-    boolean existsByUserAndConferenceAndSession(Long userId, Long conferenceId, Long sessionId);
+    Boolean existsByUserAndConferenceAndSession(Long userId, Long conferenceId, Long sessionId);
 }
 
