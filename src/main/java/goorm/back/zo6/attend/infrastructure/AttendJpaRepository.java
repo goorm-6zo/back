@@ -27,7 +27,7 @@ public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
                                @Param("sessionId") Long sessionId);
 
     @Query("""
-    SELECT c.id, c.name, c.description, c.location, c.conferenceAt, c.capacity, c.hasSessions, c.imageKey, c.isActive,
+    SELECT c.id, c.name, c.description, c.location, c.startTime, c.endTime, c.capacity, c.hasSessions, c.imageKey, c.isActive,
            CASE WHEN MAX(a.id) IS NOT NULL THEN true ELSE false END, 
            s.id, s.name, s.capacity, s.location, s.time, s.summary, s.speakerName, s.speakerOrganization, s.speakerImageKey, s.isActive,
            CASE WHEN MAX(a.sessionId) IS NOT NULL THEN true ELSE false END

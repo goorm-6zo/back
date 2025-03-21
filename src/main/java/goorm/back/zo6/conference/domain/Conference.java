@@ -35,8 +35,11 @@ public class Conference {
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "conference_at", nullable = false)
-    private LocalDateTime conferenceAt;
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
 
     @Column(name = "capacity", nullable = false)
     private Integer capacity;

@@ -16,7 +16,8 @@ public class ConferenceInfoDto {
     private String name;
     private String description;
     private String location;
-    private LocalDateTime conferenceAt;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Integer capacity;
     private Boolean hasSessions;
     private String imageUrl;

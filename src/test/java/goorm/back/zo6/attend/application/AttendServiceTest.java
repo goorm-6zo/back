@@ -181,17 +181,19 @@ class AttendServiceTest {
     // Get(참석상태 & 예매 컨퍼런스 정보 조회) Tuple 생성 메서드
     private Tuple createGetTuple(Long conferenceId, Boolean isAttended, Long sessionId, String sessionName,
                                   Integer capacity, String location, LocalDateTime time, String summary, String speakerName, String speakerOrganization,String speakerImageKey, Boolean isActive,Boolean attended) {
+
         Tuple mockTuple = mock(Tuple.class);
         when(mockTuple.get(0, Long.class)).thenReturn(conferenceId);
         when(mockTuple.get(1, String.class)).thenReturn("Conference Name");
         when(mockTuple.get(2, String.class)).thenReturn("Description");
         when(mockTuple.get(3, String.class)).thenReturn("Location");
         when(mockTuple.get(4, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 9, 0));
-        when(mockTuple.get(5, Integer.class)).thenReturn(100);
-        when(mockTuple.get(6, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(7, String.class)).thenReturn("test.png");
-        when(mockTuple.get(8, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(9, Boolean.class)).thenReturn(isAttended);
+        when(mockTuple.get(5, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 17, 0));
+        when(mockTuple.get(6, Integer.class)).thenReturn(100);
+        when(mockTuple.get(7, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(8, String.class)).thenReturn("test.png");
+        when(mockTuple.get(9, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(10, Boolean.class)).thenReturn(isAttended);
 
         if (sessionId != null) {
             when(mockTuple.get(10, Long.class)).thenReturn(sessionId);
@@ -205,6 +207,7 @@ class AttendServiceTest {
             when(mockTuple.get(18,String.class)).thenReturn(speakerImageKey);
             when(mockTuple.get(19, Boolean.class)).thenReturn(isActive);
             when(mockTuple.get(20, Boolean.class)).thenReturn(attended);
+
         } else {
             when(mockTuple.get(10, Long.class)).thenReturn(null);
             when(mockTuple.get(11, String.class)).thenReturn(null);
@@ -217,6 +220,7 @@ class AttendServiceTest {
             when(mockTuple.get(18,String.class)).thenReturn(null);
             when(mockTuple.get(19, Boolean.class)).thenReturn(null);
             when(mockTuple.get(20, Boolean.class)).thenReturn(null);
+
         }
 
         return mockTuple;

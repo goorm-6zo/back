@@ -30,7 +30,10 @@ public class ReservationResponse {
         private String location;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime conferenceAt;
+        private LocalDateTime startTime;
+
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime endTime;
 
         private Integer capacity;
 
@@ -54,7 +57,10 @@ public class ReservationResponse {
         private String location;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime time;
+        private LocalDateTime startTime;
+
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime endTime;
 
         private String summary;
 

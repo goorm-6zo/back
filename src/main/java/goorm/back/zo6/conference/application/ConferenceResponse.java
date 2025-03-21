@@ -19,7 +19,10 @@ public class ConferenceResponse {
     private String location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime conferenceAt;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     private Integer capacity;
 

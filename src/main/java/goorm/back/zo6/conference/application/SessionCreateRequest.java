@@ -21,7 +21,10 @@ public class SessionCreateRequest {
     private String location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     private String summary;
 
