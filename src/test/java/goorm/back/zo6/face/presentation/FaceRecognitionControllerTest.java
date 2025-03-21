@@ -111,7 +111,7 @@ class FaceRecognitionControllerTest {
                 .andExpect(jsonPath("$.message").value("얼굴 이미지 삭제 완료"))
                 .andDo(print());
 
-        verify(rekognitionService, times(1)).deleteFaceImage(anyLong());
+        verify(rekognitionService, times(1)).deleteUserFace(anyLong());
     }
 
     @Test
