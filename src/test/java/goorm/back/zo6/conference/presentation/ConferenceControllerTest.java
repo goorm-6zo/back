@@ -83,6 +83,9 @@ class ConferenceControllerTest {
                 .alwaysDo(restDocs)
                 .build();
 
+        sessionJpaRepository.deleteAll();
+        conferenceJpaRepository.deleteAll();
+
         User testUser = userJpaRepository.save(UserFixture.유저());
         testToken = generateTestToken(testUser);
 
