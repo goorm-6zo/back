@@ -212,10 +212,10 @@ class AttendServiceTest {
             when(mockTuple.get(13, String.class)).thenReturn(null);
             when(mockTuple.get(14, LocalDateTime.class)).thenReturn(null);
             when(mockTuple.get(15, String.class)).thenReturn(null);
-            when(mockTuple.get(16, String.class)).thenReturn(speakerName);
-            when(mockTuple.get(17, String.class)).thenReturn(speakerOrganization);
-            when(mockTuple.get(18,String.class)).thenReturn(speakerImageKey);
-            when(mockTuple.get(19, Boolean.class)).thenReturn(isActive);
+            when(mockTuple.get(16, String.class)).thenReturn(null);
+            when(mockTuple.get(17, String.class)).thenReturn(null);
+            when(mockTuple.get(18,String.class)).thenReturn(null);
+            when(mockTuple.get(19, Boolean.class)).thenReturn(null);
             when(mockTuple.get(20, Boolean.class)).thenReturn(null);
         }
 
