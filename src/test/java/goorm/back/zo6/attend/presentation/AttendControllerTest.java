@@ -107,7 +107,7 @@ class AttendControllerTest {
         testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).startTime(LocalDateTime.now()).endTime(LocalDateTime.now()).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").imageKey("test.png").isActive(true).build();
         conferenceJpaRepository.saveAllAndFlush(List.of(testConferenceA, testConferenceB, testConferenceC));
 
-        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(localDateTime).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
+        testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").startTime(LocalDateTime.now()).endTime(LocalDateTime.now()).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
 
         sessionJpaRepository.saveAndFlush(testSession);
 

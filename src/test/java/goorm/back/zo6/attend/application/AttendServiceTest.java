@@ -196,31 +196,32 @@ class AttendServiceTest {
         when(mockTuple.get(10, Boolean.class)).thenReturn(isAttended);
 
         if (sessionId != null) {
-            when(mockTuple.get(10, Long.class)).thenReturn(sessionId);
-            when(mockTuple.get(11, String.class)).thenReturn(sessionName);
-            when(mockTuple.get(12, Integer.class)).thenReturn(capacity);
-            when(mockTuple.get(13, String.class)).thenReturn(location);
-            when(mockTuple.get(14, LocalDateTime.class)).thenReturn(time);
-            when(mockTuple.get(15, String.class)).thenReturn(summary);
-            when(mockTuple.get(16, String.class)).thenReturn(speakerName);
-            when(mockTuple.get(17, String.class)).thenReturn(speakerOrganization);
-            when(mockTuple.get(18,String.class)).thenReturn(speakerImageKey);
-            when(mockTuple.get(19, Boolean.class)).thenReturn(isActive);
-            when(mockTuple.get(20, Boolean.class)).thenReturn(attended);
+            when(mockTuple.get(11, Long.class)).thenReturn(sessionId);
+            when(mockTuple.get(12, String.class)).thenReturn(sessionName);
+            when(mockTuple.get(13, Integer.class)).thenReturn(capacity);
+            when(mockTuple.get(14, String.class)).thenReturn(location);
+            when(mockTuple.get(15, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 9, 0));
+            when(mockTuple.get(16, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 17, 0));
+            when(mockTuple.get(17, String.class)).thenReturn(summary);
+            when(mockTuple.get(18, String.class)).thenReturn(speakerName);
+            when(mockTuple.get(19, String.class)).thenReturn(speakerOrganization);
+            when(mockTuple.get(20,String.class)).thenReturn(speakerImageKey);
+            when(mockTuple.get(21, Boolean.class)).thenReturn(isActive);
+            when(mockTuple.get(22, Boolean.class)).thenReturn(attended);
 
         } else {
-            when(mockTuple.get(10, Long.class)).thenReturn(null);
-            when(mockTuple.get(11, String.class)).thenReturn(null);
-            when(mockTuple.get(12, Integer.class)).thenReturn(null);
-            when(mockTuple.get(13, String.class)).thenReturn(null);
-            when(mockTuple.get(14, LocalDateTime.class)).thenReturn(null);
-            when(mockTuple.get(15, String.class)).thenReturn(null);
-            when(mockTuple.get(16, String.class)).thenReturn(null);
+            when(mockTuple.get(11, Long.class)).thenReturn(null);
+            when(mockTuple.get(12, String.class)).thenReturn(null);
+            when(mockTuple.get(13, Integer.class)).thenReturn(null);
+            when(mockTuple.get(14, String.class)).thenReturn(null);
+            when(mockTuple.get(15, LocalDateTime.class)).thenReturn(null);
+            when(mockTuple.get(16, LocalDateTime.class)).thenReturn(null);
             when(mockTuple.get(17, String.class)).thenReturn(null);
-            when(mockTuple.get(18,String.class)).thenReturn(null);
-            when(mockTuple.get(19, Boolean.class)).thenReturn(null);
-            when(mockTuple.get(20, Boolean.class)).thenReturn(null);
-
+            when(mockTuple.get(18, String.class)).thenReturn(null);
+            when(mockTuple.get(19, String.class)).thenReturn(null);
+            when(mockTuple.get(20,String.class)).thenReturn(null);
+            when(mockTuple.get(21, Boolean.class)).thenReturn(null);
+            when(mockTuple.get(22, Boolean.class)).thenReturn(null);
         }
 
         return mockTuple;
