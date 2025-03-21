@@ -162,8 +162,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저 탈퇴 - 논리 삭제 정상적으로 성공")
-    void deleteUser_Success() {
+    @DisplayName("유저 논리 탈퇴(비활성화) - 유저 논리 삭제(비활성화) 정상적으로 성공")
+    void deactivateByToken_Success() {
         //given
         Long userId = 1L;
         testUser = createTestUserByUserId(userId);
@@ -175,7 +175,7 @@ class UserServiceTest {
         doNothing().when(userRepository).deleteById(userId);
 
         //when
-        userService.delete(testUser.getEmail());
+        userService.deactivateByToken(testUser.getEmail());
 
         //then
         verify(userRepository, times(1)).deleteById(userId);
@@ -183,8 +183,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저 탈퇴 - 존재하지 않는 유저 회원 탈퇴(삭제) 시 예외 발생 실패")
-    void deleteUser_NotFoundFails() {
+    @DisplayName("유저 논리 탈퇴(비활성화) - 존재하지 않는 유저 회원 논리 탈퇴(비활성화) 시 예외 발생 실패")
+    void deactivateByToken_NotFoundFails() {
         //given
         String nonExistentEmail = "nonexistent@gmail.com";
 
@@ -193,7 +193,7 @@ class UserServiceTest {
 
         // When
         CustomException exception = assertThrows(CustomException.class, () -> {
-            userService.delete(nonExistentEmail);
+            userService.deactivateByToken(nonExistentEmail);
         });
 
         // then

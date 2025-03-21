@@ -77,8 +77,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("유저 id로 조회 성공 통합 테스트")
-    void findById_Success() throws Exception {
+    @DisplayName("유저 id로 유저 정보 조회 성공 통합 테스트")
+    void getUserById_Success() throws Exception {
         // given
         String testToken = generateTestToken(testUser);
         Long userId = testUser.getId();
@@ -210,7 +210,7 @@ class UserControllerTest {
     
     @Test
     @DisplayName("토큰 기반 유저 회원 탈퇴 성공 테스트.")
-    void deleteUser_Success() throws Exception {
+    void deactivateUser_Success() throws Exception {
         // given
         String email = testUser.getEmail();
         String testToken = generateTestToken(testUser);
