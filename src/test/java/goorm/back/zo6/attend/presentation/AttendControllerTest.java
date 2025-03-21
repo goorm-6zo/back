@@ -102,12 +102,13 @@ class AttendControllerTest {
         testUser = User.builder().name("홍길순").email("test@gmail.com").phone("010-1111-2222").password(Password.from(passwordEncoder.encode("1234"))).role(Role.of("USER")).build();
         userJpaRepository.saveAndFlush(testUser);
 
-        testConferenceA = Conference.builder().name("컨퍼런스A").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스A").hasSessions(true).location("서울 법성포A").imageKey("test.png").isActive(true).build();
-        testConferenceB = Conference.builder().name("컨퍼런스B").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스B").hasSessions(false).location("서울 법성포B").imageKey("test.png").isActive(true).build();
-        testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).conferenceAt(LocalDateTime.now()).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").imageKey("test.png").isActive(true).build();
+        testConferenceA = Conference.builder().name("컨퍼런스A").capacity(10).startTime(LocalDateTime.now()).endTime(LocalDateTime.now()).description("좋은 컨퍼런스A").hasSessions(true).location("서울 법성포A").imageKey("test.png").isActive(true).build();
+        testConferenceB = Conference.builder().name("컨퍼런스B").capacity(10).startTime(LocalDateTime.now()).endTime(LocalDateTime.now()).description("좋은 컨퍼런스B").hasSessions(false).location("서울 법성포B").imageKey("test.png").isActive(true).build();
+        testConferenceC = Conference.builder().name("컨퍼런스C").capacity(10).startTime(LocalDateTime.now()).endTime(LocalDateTime.now()).description("좋은 컨퍼런스C").hasSessions(false).location("서울 법성포C").imageKey("test.png").isActive(true).build();
         conferenceJpaRepository.saveAllAndFlush(List.of(testConferenceA, testConferenceB, testConferenceC));
 
         testSession = Session.builder().name("세션").capacity(10).summary("좋은 세션").conference(testConferenceA).location("서울 법성포 떡잎마을").time(localDateTime).speakerName("발표자").speakerOrganization("발표자 소속").isActive(true).build();
+
         sessionJpaRepository.saveAndFlush(testSession);
 
         testReservationA = Reservation.builder().name("컨퍼런스 예매").status(ReservationStatus.CONFIRMED).phone("010-1111-2222").user(testUser).conference(testConferenceA).build();
