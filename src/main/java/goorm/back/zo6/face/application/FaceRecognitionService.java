@@ -63,14 +63,19 @@ public class FaceRecognitionService {
         ByteBuffer imageBytes = ByteBuffer.wrap(toBytes(uploadedFile));
         // collection 에 존재하는 얼굴 이미지와 전달 된 이미지 비교 결과
         FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
+        if(response == null){
+            return new FaceAuthResultResponse();
+        }
+
         Long userId = Long.parseLong(response.userId());
 
         // 여기서 해당 유저가 예매를 한 유저인지 판단 후 예외 던지기
         validateReservation(userId, conferenceId, sessionId);
 
         // 얼굴 인증 후 참가 이벤트 발생
-        Events.raise(new AttendEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
-        return FaceAuthResultResponse.of(response.userId(), response.similarity());
+        Events.raise(new AttendEvent(userId, conferenceId, sessionId));
+
+        return new FaceAuthResultResponse(response.userId(), response.similarity());
     }
 
     // rekognition collection 생성, 초기 1회 실행

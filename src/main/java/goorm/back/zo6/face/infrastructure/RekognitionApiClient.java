@@ -74,7 +74,7 @@ public class RekognitionApiClient {
             // 얼굴 매칭이 되지 않은 경우
             if (response.faceMatches().isEmpty()) {
                 log.info("얼굴 인증 실패 - 일치하는 얼굴 정보가 없음.");
-                throw new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND);
+                return null;
             }
 
             FaceMatch match = response.faceMatches().get(0);
@@ -83,8 +83,6 @@ public class RekognitionApiClient {
 
             return FaceMatchingResponse.of(userId, similarity);
 
-        }catch (CustomException e){
-            throw e;
         }
         catch (Exception e){
             // 얼굴 매칭 api 호출 시 에러가 발생
