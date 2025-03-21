@@ -120,7 +120,8 @@ public class ReservationServiceImpl implements ReservationService {
                         res.getConference().getStartTime(),
                         res.getConference().getEndTime(),
                         res.getConference().getImageKey(),
-                        res.getConference().getLocation()
+                        res.getConference().getLocation(),
+                        res.getConference().getArea()
                 ))
                 .sorted(Comparator.comparing(ConferenceSimpleResponse::getStartTime).reversed())
                 .collect(Collectors.toList());
@@ -176,6 +177,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .conferenceId(conference.getId())
                 .conferenceName(conference.getName())
                 .conferenceLocation(conference.getLocation())
+                .conferenceArea(conference.getArea())
                 .startTime(conference.getStartTime())
                 .endTime(conference.getEndTime())
                 .conferenceDescription(conference.getDescription())
@@ -276,6 +278,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .conferenceName(conference.getName())
                 .description(conference.getDescription())
                 .location(conference.getLocation())
+                .area(conference.getArea())
                 .startTime(conference.getStartTime())
                 .endTime(conference.getEndTime())
                 .capacity(conference.getCapacity())

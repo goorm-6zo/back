@@ -24,4 +24,6 @@ public class ConferenceSimpleResponse {
     private String conferenceImageUrl;
 
     private String conferenceLocation;
+
+    private String conferenceArea;
 }

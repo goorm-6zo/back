@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -74,6 +75,8 @@ class ReservationControllerTest {
 
     private Conference testConference;
 
+    private Session session;
+
     private Reservation testReservation;
 
     @Autowired
@@ -101,12 +104,14 @@ class ReservationControllerTest {
 
         testUser = userJpaRepository.save(UserFixture.유저());
         testToken = generateTestToken(testUser);
-        System.out.println("testToken : " + testToken);
 
-        testConference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-        Session session = sessionJpaRepository.save(SessionFixture.세션(testConference));
+        this.testConference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
 
-        testReservation = reservationJpaRepository.save(ReservationFixture.확정된예약(
+        this.session = SessionFixture.세션(testConference);
+        testConference.addSession(session);
+        this.sessionJpaRepository.save(session);
+
+        this.testReservation = reservationJpaRepository.save(ReservationFixture.확정된예약(
                 testConference,
                 List.of(session),
                 testUser.getName(),
@@ -114,10 +119,6 @@ class ReservationControllerTest {
                 testUser
                 )
         );
-
-        System.out.println("testReservation : " + testReservation.getName());
-        System.out.println("testUser : " + testUser.getName());
-        System.out.println(testConference.getId());
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 testUser.getEmail(), null, List.of(new SimpleGrantedAuthority(testUser.getRole().name()))
@@ -127,21 +128,14 @@ class ReservationControllerTest {
 
     @Test
     void 예약_임시생성_API테스트() throws Exception {
-        Conference conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-        Session session = sessionJpaRepository.save(SessionFixture.세션(conference));
-
-        conference.addSession(session);
-
-        ReservationRequest request = ReservationRequest.builder()
-                .conferenceId(conference.getId())
-                .sessionIds(List.of(session.getId()))
-                .name(testUser.getName())
-                .phone(testUser.getPhone())
-                .build();
-
         mockMvc.perform(post("/api/v1/reservation/temp")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(Map.of(
+                            "conferenceId", testConference.getId(),
+                                "sessionIds", List.of(session.getId()),
+                                "name", "홍길순",
+                                "phone", "01011112222"
+                        ))))
                 .andExpect(status().isCreated())
                 .andDo(restDocs);
     }
@@ -175,25 +169,14 @@ class ReservationControllerTest {
 
     @Test
     void 예약과_사용자연결_API_테스트() throws Exception {
-
-        Conference conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-        Session session = sessionJpaRepository.save(SessionFixture.세션(conference));
-
-        System.out.println("conferenceId : " + conference.getId());
-        System.out.println("sessionId : " + session.getId());
-
-        conference.addSession(session);
-
-        ReservationRequest tempReservationRequest = ReservationRequest.builder()
-                .conferenceId(conference.getId())
-                .sessionIds(List.of(session.getId()))
-                .name(testUser.getName())
-                .phone(testUser.getPhone())
-                .build();
-
         mockMvc.perform(post("/api/v1/reservation/temp")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(tempReservationRequest)))
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "conferenceId", testConference.getId(),
+                                "sessionIds", List.of(session.getId()),
+                                "name", "홍길순",
+                                "phone", "01011112222"
+                        ))))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/v1/reservation/link-user")

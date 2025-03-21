@@ -18,6 +18,8 @@ public class ConferenceResponse {
 
     private String location;
 
+    private String area;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 

@@ -186,26 +186,27 @@ class AttendServiceTest {
         when(mockTuple.get(1, String.class)).thenReturn("Conference Name");
         when(mockTuple.get(2, String.class)).thenReturn("Description");
         when(mockTuple.get(3, String.class)).thenReturn("Location");
-        when(mockTuple.get(4, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 9, 0));
-        when(mockTuple.get(5, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 17, 0));
-        when(mockTuple.get(6, Integer.class)).thenReturn(100);
-        when(mockTuple.get(7, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(8, String.class)).thenReturn("test.png");
-        when(mockTuple.get(9, Boolean.class)).thenReturn(true);
-        when(mockTuple.get(10, Boolean.class)).thenReturn(isAttended);
+        when(mockTuple.get(4, String.class)).thenReturn("Area");
+        when(mockTuple.get(5, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 9, 0));
+        when(mockTuple.get(6, LocalDateTime.class)).thenReturn(LocalDateTime.of(2025, 3, 18, 17, 0));
+        when(mockTuple.get(7, Integer.class)).thenReturn(100);
+        when(mockTuple.get(8, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(9, String.class)).thenReturn("test.png");
+        when(mockTuple.get(10, Boolean.class)).thenReturn(true);
+        when(mockTuple.get(11, Boolean.class)).thenReturn(isAttended);
 
         if (sessionId != null) {
-            when(mockTuple.get(11, Long.class)).thenReturn(sessionId);
-            when(mockTuple.get(12, String.class)).thenReturn(sessionName);
-            when(mockTuple.get(13, Integer.class)).thenReturn(capacity);
-            when(mockTuple.get(14, String.class)).thenReturn(location);
-            when(mockTuple.get(15, LocalDateTime.class)).thenReturn(startTime);
-            when(mockTuple.get(16, LocalDateTime.class)).thenReturn(endTime);
-            when(mockTuple.get(17, String.class)).thenReturn(summary);
-            when(mockTuple.get(18, String.class)).thenReturn(speakerName);
-            when(mockTuple.get(19, String.class)).thenReturn(speakerOrganization);
-            when(mockTuple.get(20, Boolean.class)).thenReturn(isActive);
-            when(mockTuple.get(21, Boolean.class)).thenReturn(attended);
+            when(mockTuple.get(12, Long.class)).thenReturn(sessionId);
+            when(mockTuple.get(13, String.class)).thenReturn(sessionName);
+            when(mockTuple.get(14, Integer.class)).thenReturn(capacity);
+            when(mockTuple.get(15, String.class)).thenReturn(location);
+            when(mockTuple.get(16, LocalDateTime.class)).thenReturn(startTime);
+            when(mockTuple.get(17, LocalDateTime.class)).thenReturn(endTime);
+            when(mockTuple.get(18, String.class)).thenReturn(summary);
+            when(mockTuple.get(19, String.class)).thenReturn(speakerName);
+            when(mockTuple.get(20, String.class)).thenReturn(speakerOrganization);
+            when(mockTuple.get(21, Boolean.class)).thenReturn(isActive);
+            when(mockTuple.get(22, Boolean.class)).thenReturn(attended);
         } else {
             when(mockTuple.get(8, Long.class)).thenReturn(null);
             when(mockTuple.get(9, String.class)).thenReturn(null);

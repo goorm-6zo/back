@@ -35,6 +35,9 @@ public class Conference {
     @Column(name = "location", nullable = false)
     private String location;
 
+    @Column(name = "area", nullable = false)
+    private String area;
+
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
