@@ -28,6 +28,7 @@ public class AttendService {
 
     @Transactional
     public void registerAttend(Long userId, Long conferenceId, Long sessionId) {
+        log.info("참석 정보 rdb 저장, userId : {}, conferenceId : {} ,sessionId : {}",userId,conferenceId,sessionId);
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // Reservation & 관련 데이터 조회 (phone 기반)
@@ -44,6 +45,7 @@ public class AttendService {
         // Attend 객체 생성 및 저장
         Attend attend = Attend.of(user.getId(), reservationId, reservationSessionId, validConferenceId, validSessionId);
         attendRepository.save(attend);
+        log.info("참석 정보 rdb 저장 완료, userId : {}, conferenceId : {} ,sessionId : {}",attend.getUserId(),attend.getConferenceId(),attend.getSessionId());
     }
 
     public ConferenceInfoDto findAllByToken(Long userId, Long conferenceId) {
@@ -54,21 +56,19 @@ public class AttendService {
         }
 
         Tuple firstTuple = results.get(0); // 첫 번째 결과를 가져옴
-        Long conferenceIdFromDb = firstTuple.get(0, Long.class);
-        boolean isConferenceAttended = firstTuple.get(10, Boolean.class);
 
         ConferenceInfoDto conferenceInfo = new ConferenceInfoDto(
-                conferenceIdFromDb,
-                firstTuple.get(1, String.class),
-                firstTuple.get(2, String.class),
-                firstTuple.get(3, String.class),
-                firstTuple.get(4, LocalDateTime.class),
-                firstTuple.get(5, LocalDateTime.class),
-                firstTuple.get(6, Integer.class),
-                firstTuple.get(7, Boolean.class),
-                firstTuple.get(8, String.class),
-                firstTuple.get(9, Boolean.class),
-                isConferenceAttended,
+                firstTuple.get(0,Long.class), // c.id
+                firstTuple.get(1, String.class), // c.name
+                firstTuple.get(2, String.class), // c.description
+                firstTuple.get(3, String.class), // c.location
+                firstTuple.get(4, LocalDateTime.class), // c.startTime
+                firstTuple.get(5, LocalDateTime.class), // c.endTime
+                firstTuple.get(6, Integer.class), // c.capacity
+                firstTuple.get(7, Boolean.class), // c.hasSession
+                firstTuple.get(8, String.class), // c.imageUrl
+                firstTuple.get(9, Boolean.class), // c.isActive
+                firstTuple.get(10,Boolean.class), // c.isAttend
                 new ArrayList<>() // 세션 리스트 초기화
         );
 
@@ -85,8 +85,9 @@ public class AttendService {
                         tuple.get(17, String.class), // s.summary
                         tuple.get(18, String.class), // s.speakerName
                         tuple.get(19, String.class), // s.speakerOrganization
-                        tuple.get(20, Boolean.class), // s.isActive
-                        tuple.get(21, Boolean.class) // 세션 참석 여부
+                        tuple.get(20,String.class), // s.speakerImageKey
+                        tuple.get(21, Boolean.class), // s.isActive
+                        tuple.get(22, Boolean.class) // s.isAttend
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }

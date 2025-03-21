@@ -71,6 +71,8 @@ public class FaceRecognitionService {
 
             log.info("유저 {} 얼굴정보 확인, 유사도 : {}", response.userId(), response.similarity());
 
+            // 여기서 해당 유저가 예매를 한 유저인지 판단 후 예외 던지기
+
             // 얼굴 인증 후 참가 이벤트 발생
             Events.raise(new AttendEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
             return FaceAuthResultResponse.of(response.userId(), response.similarity());
