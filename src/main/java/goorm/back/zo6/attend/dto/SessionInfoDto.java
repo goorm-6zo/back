@@ -19,6 +19,7 @@ public class SessionInfoDto {
     private String summary;
     private String speakerName;
     private String speakerOrganization;
+    private String speakerImageKey;
     private boolean isActive;
     private boolean isAttend;
 }

@@ -4,7 +4,6 @@ import goorm.back.zo6.attend.dto.AttendInfo;
 import goorm.back.zo6.attend.dto.AttendKeys;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.sse.application.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,10 +17,9 @@ import java.time.Duration;
 public class AttendRedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final SseService sseService;
 
     // 유저 참석 확인
-    public boolean saveUserAttendance(Long conferenceId, Long sessionId, Long userId, long timestamp){
+    public AttendInfo saveUserAttendance(Long conferenceId, Long sessionId, Long userId, long timestamp){
         if(conferenceId == null){
             throw new CustomException(ErrorCode.MISSING_REQUIRED_PARAMETER);
         }
@@ -30,8 +28,7 @@ public class AttendRedisService {
 
         AttendInfo attendInfo = processAttendance(keys, userId, timestamp);
 
-        sseService.sendAttendanceCount(conferenceId, sessionId, attendInfo.attendCount());
-        return attendInfo.alreadyAttended();
+        return attendInfo;
     }
 
     // 참석 처리

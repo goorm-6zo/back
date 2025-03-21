@@ -82,4 +82,8 @@ public class Conference {
             throw new CustomException(ErrorCode.SESSION_NOT_BELONG_TO_CONFERENCE);
         }
     }
+
+    public void updateActive(boolean active) {
+        this.isActive = active;
+    }
 }

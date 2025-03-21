@@ -1,5 +1,6 @@
 package goorm.back.zo6.attend.infrastructure;
 
+import goorm.back.zo6.attend.dto.AttendInfo;
 import goorm.back.zo6.attend.dto.AttendKeys;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -31,9 +32,6 @@ class AttendRedisServiceTest {
     private RedisTemplate<String, String> redisTemplate;
 
     @Mock
-    private SseService sseService;
-
-    @Mock
     private ValueOperations<String, String> valueOperations;
 
     @Mock
@@ -58,14 +56,14 @@ class AttendRedisServiceTest {
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // when
-        boolean alreadyAttended = attendRedisService.saveUserAttendance(conferenceId, null, userId, timestamp);
+        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, null, userId, timestamp);
 
         // then
-        assertThat(alreadyAttended).isFalse();
+        assertEquals(attendInfo.attendCount(),1L);
+        assertThat(attendInfo.alreadyAttended()).isFalse();
         verify(setOperations, times(1)).add(keys.attendanceKey(), userId.toString());
         verify(valueOperations, times(1)).increment(keys.countKey());
         verify(redisTemplate, times(1)).expire(keys.attendanceKey(), Duration.ofSeconds(timestamp));
-        verify(sseService, times(1)).sendAttendanceCount(conferenceId, null,1);
     }
 
     @Test
@@ -88,14 +86,14 @@ class AttendRedisServiceTest {
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // when
-        boolean alreadyAttended = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, timestamp);
+        AttendInfo attendInfo  = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, timestamp);
 
         // then
-        assertThat(alreadyAttended).isFalse();
+        assertEquals(attendInfo.attendCount(), 1L);
+        assertThat(attendInfo.alreadyAttended()).isFalse();
         verify(setOperations, times(1)).add(keys.attendanceKey(), userId.toString());
         verify(valueOperations, times(1)).increment(keys.countKey());
         verify(redisTemplate, times(1)).expire(keys.attendanceKey(), Duration.ofSeconds(timestamp));
-        verify(sseService, times(1)).sendAttendanceCount(conferenceId, sessionId,1);
     }
 
     @Test
