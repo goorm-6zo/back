@@ -45,6 +45,16 @@ public class ConferenceAdminController {
         return ResponseEntity.ok(SessionDto.fromEntity(session));
     }
 
+    @PutMapping("/{conferenceId}/status")
+    @Operation(summary = "컨퍼런스 상태 변경", description = "활성화 / 비활성화를 변경합니다. (관리자 전용)")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> conferenceStatus(@PathVariable Long conferenceId) {
+        boolean currentStatus = conferenceQueryService.getConferenceStatus(conferenceId);
+        boolean newStatus = !currentStatus;
+        conferenceQueryService.updateConferenceStatus(conferenceId, newStatus);
+        return ResponseEntity.ok("상태가 변경되었습니다.");
+    }
+
     @PutMapping("/{conferenceId}/sessions/{sessionId}")
     @Operation(summary = "세션 상태 변경", description = "활성화 / 비활성화를 변경합니다. (관리자 전용)")
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,7 +65,7 @@ public class ConferenceAdminController {
         return ResponseEntity.ok("상태가 변경되었습니다.");
     }
 
-    @PutMapping("/{sessionId}")
+    @PutMapping("/sessions/{sessionId}")
     @Operation(summary = "세션 정보 수정", description = "세션의 정보를 수정합니다 (구역만 수정 가능).")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SessionResponse> updateSession(@PathVariable Long sessionId, @Valid @RequestBody SessionUpdateRequest request) {
