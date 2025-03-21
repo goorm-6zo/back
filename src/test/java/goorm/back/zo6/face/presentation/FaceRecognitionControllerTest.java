@@ -137,11 +137,8 @@ class FaceRecognitionControllerTest {
         Long sessionId = 1L;
         String userId = "1";
         MockMultipartFile faceImage = new MockMultipartFile("faceImage", "face.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3, 4});
-        FaceAuthResultResponse response = FaceAuthResultResponse.builder()
-                .userId(userId)
-                .similarity(99.5f)
-                .result(true)
-                .build();
+        FaceAuthResultResponse response = new FaceAuthResultResponse(userId, 99.5f, true);
+
 
         when(rekognitionService.authenticationByUserFace(anyLong(), anyLong(), any(MultipartFile.class))).thenReturn(response);
 

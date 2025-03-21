@@ -151,12 +151,11 @@ class RekognitionApiClientTest {
                 .thenReturn(mockResponse);
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class,
-                ()-> rekognitionApiClient.authorizeUserFace(imageBytes));
+        FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
 
         // then
+        assertEquals(null, response);
         verify(rekognitionClient, times(1)).searchFacesByImage(any(SearchFacesByImageRequest.class));
-        assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
     }
 
     @Test
