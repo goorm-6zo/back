@@ -50,7 +50,6 @@ class FaceRecognitionControllerTest {
         when(jwtUtil.validateToken(anyString())).thenReturn(true);
         when(jwtUtil.getUserId(anyString())).thenReturn(1L);
         when(jwtUtil.getUsername(anyString())).thenReturn("test@example.com");
-        when(jwtUtil.getName(anyString())).thenReturn("테스트 유저");
         when(jwtUtil.getRole(anyString())).thenReturn("USER");
     }
 

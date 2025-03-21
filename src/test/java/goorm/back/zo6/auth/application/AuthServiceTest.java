@@ -61,7 +61,7 @@ class AuthServiceTest {
         // db 비밀번호 매칭 확인
         when(passwordEncoder.matches(loginRequest.password(), testUser.getPassword().getValue())).thenReturn(true);
         // jwt 토큰 생성
-        when(jwtUtil.createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getName(), testUser.getRole())).thenReturn("mockToken");
+        when(jwtUtil.createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getRole())).thenReturn("mockToken");
 
         // when
         LoginResponse response = authService.login(loginRequest);
@@ -72,7 +72,7 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
-        verify(jwtUtil, times(1)).createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getName(), testUser.getRole());
+        verify(jwtUtil, times(1)).createAccessToken(testUser.getId(), testUser.getEmail(), testUser.getRole());
     }
 
     @Test
@@ -92,7 +92,7 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, never()).matches(anyString(), anyString());
-        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
+        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(),  any(Role.class));
     }
 
     @Test
@@ -116,6 +116,6 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, times(1)).matches(loginRequest.password(), testUser.getPassword().getValue());
-        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), anyString(), any(Role.class));
+        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), any(Role.class));
     }
 }
