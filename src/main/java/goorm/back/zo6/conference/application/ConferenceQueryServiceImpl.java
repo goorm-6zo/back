@@ -9,6 +9,7 @@ import goorm.back.zo6.conference.domain.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,7 +17,9 @@ import java.util.List;
 class ConferenceQueryServiceImpl implements ConferenceQueryService {
 
     private final ConferenceRepository conferenceRepository;
+
     private final ConferenceMapper conferenceMapper;
+
     private final SessionRepository sessionRepository;
 
     @Override
@@ -29,6 +32,10 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
     @Override
     public ConferenceDetailResponse getConference(Long conferenceId) {
         Conference conference = findConferenceOrThrow(conferenceId);
+
+        List<Session> sortedSessions = conference.getSessions().stream()
+                .sorted(Comparator.comparing(Session::getStartTime)).toList();
+
         return conferenceMapper.toConferenceDetailResponse(conference);
     }
 
@@ -40,6 +47,7 @@ class ConferenceQueryServiceImpl implements ConferenceQueryService {
         }
 
         return conference.getSessions().stream()
+                .sorted(Comparator.comparing(Session::getStartTime))
                 .map(conferenceMapper::toSessionResponse)
                 .toList();
     }

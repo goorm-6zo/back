@@ -6,6 +6,9 @@ import goorm.back.zo6.conference.infrastructure.S3FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class ConferenceMapper {
@@ -29,6 +32,11 @@ public class ConferenceMapper {
     }
 
     public ConferenceDetailResponse toConferenceDetailResponse(Conference conference) {
+        List<SessionDto> sortedSessions = conference.getSessions().stream()
+                .sorted(Comparator.comparing(Session::getStartTime))
+                .map(this::toSessionDto)
+                .toList();
+
         return new ConferenceDetailResponse(
                 conference.getId(),
                 conference.getName(),
@@ -41,8 +49,7 @@ public class ConferenceMapper {
                 s3FileService.generatePresignedUrl(conference.getImageKey(), 60),
                 conference.getIsActive(),
                 conference.getHasSessions(),
-                conference.getSessions().stream()
-                        .map(this::toSessionDto).toList()
+                sortedSessions
         );
     }
 

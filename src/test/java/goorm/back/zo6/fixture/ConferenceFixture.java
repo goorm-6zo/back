@@ -3,6 +3,7 @@ package goorm.back.zo6.fixture;
 import goorm.back.zo6.conference.domain.Conference;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ConferenceFixture {
@@ -19,7 +20,7 @@ public class ConferenceFixture {
                 .hasSessions(true)
                 .imageKey("test.png")
                 .isActive(true)
-                .sessions(new HashSet<>())
+                .sessions(new ArrayList<>())
                 .build();
     }
 
@@ -36,7 +37,7 @@ public class ConferenceFixture {
                 .hasSessions(true)
                 .imageKey("test.png")
                 .isActive(true)
-                .sessions(new HashSet<>())
+                .sessions(new ArrayList<>())
                 .build();
     }
 }
