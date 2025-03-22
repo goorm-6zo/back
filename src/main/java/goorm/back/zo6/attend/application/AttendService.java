@@ -62,33 +62,32 @@ public class AttendService {
                 firstTuple.get(1, String.class), // c.name
                 firstTuple.get(2, String.class), // c.description
                 firstTuple.get(3, String.class), // c.location
-                firstTuple.get(4, String.class), // c.area
-                firstTuple.get(5, LocalDateTime.class), // c.startTime
-                firstTuple.get(6, LocalDateTime.class), // c.endTime
-                firstTuple.get(7, Integer.class), // c.capacity
-                firstTuple.get(8, Boolean.class), // c.hasSession
-                firstTuple.get(9, String.class), // c.imageUrl
-                firstTuple.get(10, Boolean.class), // c.isActive
-                firstTuple.get(11, Boolean.class), // c.isAttend
+                firstTuple.get(4, LocalDateTime.class), // c.startTime
+                firstTuple.get(5, LocalDateTime.class), // c.endTime
+                firstTuple.get(6, Integer.class), // c.capacity
+                firstTuple.get(7, Boolean.class), // c.hasSession
+                firstTuple.get(8, String.class), // c.imageUrl
+                firstTuple.get(9, Boolean.class), // c.isActive
+                firstTuple.get(10, Boolean.class), // c.isAttend
                 new ArrayList<>() // 세션 리스트 초기화
         );
 
         // 세션 정보 추가
         results.forEach(tuple -> {
-            if (tuple.get(12, Long.class) != null) {
+            if (tuple.get(11, Long.class) != null) {
                 SessionInfoDto sessionInfo = new SessionInfoDto(
-                        tuple.get(12, Long.class), // s.id
-                        tuple.get(13, String.class), // s.name
-                        tuple.get(14, Integer.class), // s.capacity
-                        tuple.get(15, String.class), // s.location
-                        tuple.get(16, LocalDateTime.class), // s.startTime
-                        tuple.get(17, LocalDateTime.class), // s.endTime
-                        tuple.get(18, String.class), // s.summary
-                        tuple.get(19, String.class), // s.speakerName
-                        tuple.get(20, String.class), // s.speakerOrganization
-                        tuple.get(21, String.class), // s.speakerImageKey
-                        tuple.get(22, Boolean.class), // s.isActive
-                        tuple.get(23, Boolean.class) // s.isAttend
+                        tuple.get(11, Long.class), // s.id
+                        tuple.get(12, String.class), // s.name
+                        tuple.get(13, Integer.class), // s.capacity
+                        tuple.get(14, String.class), // s.location
+                        tuple.get(15, LocalDateTime.class), // s.startTime
+                        tuple.get(16, LocalDateTime.class), // s.endTime
+                        tuple.get(17, String.class), // s.summary
+                        tuple.get(18, String.class), // s.speakerName
+                        tuple.get(19, String.class), // s.speakerOrganization
+                        tuple.get(20, String.class), // s.speakerImageKey
+                        tuple.get(21, Boolean.class), // s.isActive
+                        tuple.get(22, Boolean.class) // s.isAttend
                 );
                 conferenceInfo.getSessions().add(sessionInfo);
             }

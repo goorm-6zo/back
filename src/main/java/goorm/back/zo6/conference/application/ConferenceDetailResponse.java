@@ -22,8 +22,6 @@ public class ConferenceDetailResponse {
 
     private String location;
 
-    private String area;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 
@@ -46,7 +44,6 @@ public class ConferenceDetailResponse {
                 conference.getName(),
                 conference.getDescription(),
                 conference.getLocation(),
-                conference.getArea(),
                 conference.getStartTime(),
                 conference.getEndTime(),
                 conference.getCapacity(),

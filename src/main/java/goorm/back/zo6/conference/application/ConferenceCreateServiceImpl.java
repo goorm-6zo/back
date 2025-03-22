@@ -18,7 +18,6 @@ public class ConferenceCreateServiceImpl implements ConferenceCreateService {
                 .description(request.getDescription())
                 .capacity(request.getCapacity())
                 .location(request.getLocation())
-                .area(request.getArea())
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
                 .imageKey(request.getImageUrl())
@@ -33,7 +32,6 @@ public class ConferenceCreateServiceImpl implements ConferenceCreateService {
                 savedConference.getName(),
                 savedConference.getDescription(),
                 savedConference.getLocation(),
-                savedConference.getArea(),
                 savedConference.getStartTime(),
                 savedConference.getEndTime(),
                 savedConference.getCapacity(),
