@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -59,36 +60,27 @@ public class RekognitionApiClient {
     }
 
     // 업로드된 이미지와 Collection 내의 이미지들과 얼굴 비교 후 가장 유사한 사용자 id 반환
-    public FaceMatchingResponse authorizeUserFace(ByteBuffer imageBytes) {
+    public Optional<FaceMatchingResponse> authorizeUserFace(ByteBuffer imageBytes) {
         try {
             SearchFacesByImageRequest request = SearchFacesByImageRequest.builder()
                     .collectionId(collectionId)
                     .image(Image.builder().bytes(SdkBytes.fromByteBuffer(imageBytes)).build())
                     .maxFaces(1)
-                    .faceMatchThreshold(85f)  // 85% 이상 일치하는 경우만 인증 성공
+                    .faceMatchThreshold(85f)
                     .build();
 
-            // AWS Rekognition API 호출
-            SearchFacesByImageResponse response = rekognitionClient.searchFacesByImage(request);
+            return Optional.of(rekognitionClient.searchFacesByImage(request))
+                    .map(SearchFacesByImageResponse::faceMatches)
+                    .filter(matches -> !matches.isEmpty())  // 필터에 걸리면 Optional.empty 가 리턴된다.
+                    .map(matches -> matches.get(0)) // 해당 단계에서 반환 한 값을 다음 단계에서 가공한다.(함수형 api 핵심 동작)
+                    .map(match -> {
+                        Long userId = Long.parseLong(match.face().externalImageId());
+                        float similarity = match.similarity();
+                        return FaceMatchingResponse.of(userId, similarity);
+                    });
 
-            // 얼굴 매칭이 되지 않은 경우
-            if (response.faceMatches().isEmpty()) {
-                log.info("얼굴 인증 실패 - 일치하는 얼굴 정보가 없음.");
-                throw new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND);
-            }
-
-            FaceMatch match = response.faceMatches().get(0);
-            String userId = match.face().externalImageId();
-            float similarity = match.similarity();
-
-            return FaceMatchingResponse.of(userId, similarity);
-
-        }catch (CustomException e){
-            throw e;
-        }
-        catch (Exception e){
-            // 얼굴 매칭 api 호출 시 에러가 발생
-            log.info("얼굴 매칭 중 api 서버 에러.");
+        } catch (Exception e) {
+            log.info("얼굴 매칭 중 API 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
         }
     }

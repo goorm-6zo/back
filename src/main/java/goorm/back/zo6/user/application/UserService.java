@@ -57,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(String email) {
+    public void deactivateByToken(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         userRepository.deleteById(user.getId());
     }

@@ -50,7 +50,6 @@ class FaceRecognitionControllerTest {
         when(jwtUtil.validateToken(anyString())).thenReturn(true);
         when(jwtUtil.getUserId(anyString())).thenReturn(1L);
         when(jwtUtil.getUsername(anyString())).thenReturn("test@example.com");
-        when(jwtUtil.getName(anyString())).thenReturn("테스트 유저");
         when(jwtUtil.getRole(anyString())).thenReturn("USER");
     }
 
@@ -112,7 +111,7 @@ class FaceRecognitionControllerTest {
                 .andExpect(jsonPath("$.message").value("얼굴 이미지 삭제 완료"))
                 .andDo(print());
 
-        verify(rekognitionService, times(1)).deleteFaceImage(anyLong());
+        verify(rekognitionService, times(1)).deleteUserFace(anyLong());
     }
 
     @Test
@@ -136,13 +135,10 @@ class FaceRecognitionControllerTest {
         // given
         Long conferenceId = 1L;
         Long sessionId = 1L;
-        String userId = "1";
+        Long userId = 1L;
         MockMultipartFile faceImage = new MockMultipartFile("faceImage", "face.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3, 4});
-        FaceAuthResultResponse response = FaceAuthResultResponse.builder()
-                .userId(userId)
-                .similarity(99.5f)
-                .result(true)
-                .build();
+        FaceAuthResultResponse response = new FaceAuthResultResponse(userId, 99.5f, true);
+
 
         when(rekognitionService.authenticationByUserFace(anyLong(), anyLong(), any(MultipartFile.class))).thenReturn(response);
 

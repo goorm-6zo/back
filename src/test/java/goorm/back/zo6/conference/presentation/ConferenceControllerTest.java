@@ -125,6 +125,6 @@ class ConferenceControllerTest {
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole());
     }
 }

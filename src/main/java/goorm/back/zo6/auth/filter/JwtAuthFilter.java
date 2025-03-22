@@ -77,19 +77,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private LoginUser getUser(String token){
         Long userId = jwtUtil.getUserId(token);
         String email = jwtUtil.getUsername(token);
-        String name = jwtUtil.getName(token);
         String role = jwtUtil.getRole(token);
 
-        log.info("getUser username: ", email);
-        return new LoginUser(userId, email, name, role);
+        return new LoginUser(userId, email, role);
     }
 
-    private boolean verifyToken(HttpServletRequest request,String token) throws IOException, ServletException {
+    private boolean verifyToken(HttpServletRequest request,String token){
         Boolean isValid = (Boolean) request.getAttribute("isTokenValid");
         if(isValid != null) return isValid;
 
         if (token == null || !jwtUtil.validateToken(token)) {
-            log.debug("token null");
+            log.debug("token null or not validate");
             request.setAttribute("isTokenValid",false);
             return false;
         }

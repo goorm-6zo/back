@@ -25,11 +25,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Boolean isExist(String phone) {
-        return userJpaRepository.existsByPhone(phone);
-    }
-
-    @Override
     public void deleteById(Long userId) {
         userJpaRepository.deleteById(userId);
     }

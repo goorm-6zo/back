@@ -11,6 +11,7 @@ import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
 import goorm.back.zo6.attend.domain.AttendEvent;
+import goorm.back.zo6.reservation.domain.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,6 +36,9 @@ class FaceRecognitionServiceTest {
     private RekognitionApiClient rekognitionApiClient;
     @Mock
     private FaceRepository faceRepository;
+
+    @Mock
+    private ReservationRepository reservationRepository;
 
     @Test
     @DisplayName("얼굴 이미지 업로드 - 성공")
@@ -98,7 +103,7 @@ class FaceRecognitionServiceTest {
         doNothing().when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
 
         // when
-        faceRecognitionService.deleteFaceImage(userId);
+        faceRecognitionService.deleteUserFace(userId);
 
         // then
         verify(faceRepository, times(1)).findFaceByUserId(userId);
@@ -117,7 +122,7 @@ class FaceRecognitionServiceTest {
                 .when(faceRepository).findFaceByUserId(userId);
 
         // when
-        CustomException exception = assertThrows(CustomException.class, () -> faceRecognitionService.deleteFaceImage(userId));
+        CustomException exception = assertThrows(CustomException.class, () -> faceRecognitionService.deleteUserFace(userId));
 
         // then
         assertEquals(ErrorCode.FACE_NOT_FOUND, exception.getErrorCode());
@@ -142,7 +147,7 @@ class FaceRecognitionServiceTest {
                 .when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
 
         // when
-        CustomException exception = assertThrows(CustomException.class, () -> faceRecognitionService.deleteFaceImage(userId));
+        CustomException exception = assertThrows(CustomException.class, () -> faceRecognitionService.deleteUserFace(userId));
 
         // then
         assertEquals(ErrorCode.REKOGNITION_DELETE_FAILED, exception.getErrorCode());
@@ -155,7 +160,7 @@ class FaceRecognitionServiceTest {
     @DisplayName("얼굴 인식 - 성공")
     void authenticationByUserFace_Success() throws IOException {
         // given
-        String userId = "1";
+        Long userId = 1L;
         float similarity = 92.5f;
         MultipartFile uploadedFile = mock(MultipartFile.class);
         Long conferenceId = 1L;
@@ -168,9 +173,11 @@ class FaceRecognitionServiceTest {
         ByteBuffer imageBytes = ByteBuffer.wrap(new byte[]{1, 2, 3});
 
         // Rekognition API가 정상적으로 응답을 반환하도록 설정
-        FaceMatchingResponse matchingResponse = FaceMatchingResponse.of(userId, similarity);
+        Optional<FaceMatchingResponse> matchingResponse = Optional.ofNullable(FaceMatchingResponse.of(userId, similarity));
         when(rekognitionApiClient.authorizeUserFace(imageBytes)).thenReturn(matchingResponse);
 
+        // 예매 한 유저 처리
+        when(reservationRepository.existsByUserAndConferenceAndSession(userId,conferenceId,sessionId)).thenReturn(true);
         // when
         FaceAuthResultResponse result = faceRecognitionService.authenticationByUserFace(conferenceId, sessionId, uploadedFile);
 
@@ -179,6 +186,7 @@ class FaceRecognitionServiceTest {
         assertEquals(userId, result.userId());
         assertEquals(similarity, result.similarity());
         verify(rekognitionApiClient, times(1)).authorizeUserFace(imageBytes);
+        verify(reservationRepository,times(1)).existsByUserAndConferenceAndSession(userId,conferenceId,sessionId);
     }
 
     @Test
