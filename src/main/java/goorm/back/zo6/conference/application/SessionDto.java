@@ -40,7 +40,6 @@ public class SessionDto {
 
     private String speakerImage;
 
-
     public static SessionDto fromEntity(Session session) {
         return new SessionDto(
                 session.getId(),

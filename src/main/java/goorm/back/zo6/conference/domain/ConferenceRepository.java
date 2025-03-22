@@ -11,8 +11,16 @@ public interface ConferenceRepository {
 
     @EntityGraph(attributePaths = {"sessions"})
     Optional<Conference> findById(Long id);
-    @Query("SELECT c FROM Conference c LEFT JOIN FETCH c.sessions WHERE c.id = :conferenceId")
+
+    @Query("""
+        SELECT DISTINCT c FROM Conference c
+        LEFT JOIN FETCH c.sessions s
+        WHERE c.id = :conferenceId
+        ORDER BY s.startTime ASC
+    """)
     Optional<Conference> findWithSessionsById(@Param("conferenceId") Long conferenceId);
+
     List<Conference> findAll();
+
     Conference save(Conference conference);
 }

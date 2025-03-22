@@ -58,7 +58,7 @@ public class AttendService {
         Tuple firstTuple = results.get(0); // 첫 번째 결과를 가져옴
 
         ConferenceInfoDto conferenceInfo = new ConferenceInfoDto(
-                firstTuple.get(0,Long.class), // c.id
+                firstTuple.get(0, Long.class), // c.id
                 firstTuple.get(1, String.class), // c.name
                 firstTuple.get(2, String.class), // c.description
                 firstTuple.get(3, String.class), // c.location
@@ -68,7 +68,7 @@ public class AttendService {
                 firstTuple.get(7, Boolean.class), // c.hasSession
                 firstTuple.get(8, String.class), // c.imageUrl
                 firstTuple.get(9, Boolean.class), // c.isActive
-                firstTuple.get(10,Boolean.class), // c.isAttend
+                firstTuple.get(10, Boolean.class), // c.isAttend
                 new ArrayList<>() // 세션 리스트 초기화
         );
 
@@ -85,7 +85,7 @@ public class AttendService {
                         tuple.get(17, String.class), // s.summary
                         tuple.get(18, String.class), // s.speakerName
                         tuple.get(19, String.class), // s.speakerOrganization
-                        tuple.get(20,String.class), // s.speakerImageKey
+                        tuple.get(20, String.class), // s.speakerImageKey
                         tuple.get(21, Boolean.class), // s.isActive
                         tuple.get(22, Boolean.class) // s.isAttend
                 );
