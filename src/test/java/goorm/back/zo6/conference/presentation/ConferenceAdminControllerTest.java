@@ -123,7 +123,7 @@ public class ConferenceAdminControllerTest {
     void sessionData_put_success() throws Exception {
         String requestBody = sessionRequestSetting();
 
-        mockMvc.perform(put("/api/v1/admin/conference/{sessionId}", session.getId())
+        mockMvc.perform(put("/api/v1/admin/conference/sessions/{sessionId}", session.getId())
                         .contentType("application/json")
                         .content(requestBody)
                         .cookie(new Cookie("Authorization", testToken)))
@@ -140,6 +140,6 @@ public class ConferenceAdminControllerTest {
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole());
     }
 }

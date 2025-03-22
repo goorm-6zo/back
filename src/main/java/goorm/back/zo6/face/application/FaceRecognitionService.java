@@ -93,15 +93,12 @@ public class FaceRecognitionService {
     }
 
     private void validateReservation(Long userId, Long conferenceId, Long sessionId) {
-        boolean isReserved;
-        if(sessionId == null){
-            isReserved = reservationRepository.existsByUserIdAndConferenceId(userId, conferenceId);
-        }else{
-            isReserved = reservationRepository.existsByUserAndConferenceAndSession(userId,conferenceId, sessionId);
-        }
-        log.info("isReserved : {}", isReserved);
+        boolean isReserved = (sessionId == null)
+                ? reservationRepository.existsByUserIdAndConferenceId(userId, conferenceId)
+                : reservationRepository.existsByUserAndConferenceAndSession(userId, conferenceId, sessionId);
 
-        if (!isReserved) {
+        log.info("isReserved : {}", isReserved);
+        if(!isReserved) {
             throw new CustomException(ErrorCode.USER_NOT_RESERVED);
         }
     }

@@ -92,7 +92,7 @@ class AuthServiceTest {
 
         verify(userRepository, times(1)).findByEmail(loginRequest.email());
         verify(passwordEncoder, never()).matches(anyString(), anyString());
-        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(),  any(Role.class));
+        verify(jwtUtil, never()).createAccessToken(anyLong(), anyString(), any(Role.class));
     }
 
     @Test
