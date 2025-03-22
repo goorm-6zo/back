@@ -16,6 +16,9 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,7 +46,7 @@ class AttendRedisServiceTest {
         // given
         Long conferenceId = 1L;
         Long userId = 1L;
-        long timestamp = 300L;
+        Date date = getNext5AM();
         AttendKeys keys = AttendKeys.builder()
                 .attendanceKey("conference:" + conferenceId)
                 .countKey("conference_count:" + conferenceId)
@@ -56,14 +59,16 @@ class AttendRedisServiceTest {
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // when
-        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, null, userId, timestamp);
+        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, null, userId);
 
         // then
         assertEquals(attendInfo.attendCount(),1L);
-        assertThat(attendInfo.alreadyAttended()).isFalse();
+        assertThat(attendInfo.isNewUser()).isTrue();
         verify(setOperations, times(1)).add(keys.attendanceKey(), userId.toString());
         verify(valueOperations, times(1)).increment(keys.countKey());
-        verify(redisTemplate, times(1)).expire(keys.attendanceKey(), Duration.ofSeconds(timestamp));
+        verify(redisTemplate, times(1)).expireAt(keys.attendanceKey(), date);
+        verify(redisTemplate, times(1)).expireAt(keys.countKey(), date);
+
     }
 
     @Test
@@ -73,7 +78,7 @@ class AttendRedisServiceTest {
         Long conferenceId = 1L;
         Long sessionId = 2L;
         Long userId = 1L;
-        long timestamp = 300L;
+        Date date = getNext5AM();
         AttendKeys keys = AttendKeys.builder()
                 .attendanceKey("conference:" + conferenceId + ":session:" + sessionId)
                 .countKey("conference:" + conferenceId + ":session_count:" + sessionId)
@@ -86,14 +91,16 @@ class AttendRedisServiceTest {
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // when
-        AttendInfo attendInfo  = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, timestamp);
+        AttendInfo attendInfo  = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId);
 
         // then
         assertEquals(attendInfo.attendCount(), 1L);
-        assertThat(attendInfo.alreadyAttended()).isFalse();
+        assertThat(attendInfo.isNewUser()).isTrue();
         verify(setOperations, times(1)).add(keys.attendanceKey(), userId.toString());
         verify(valueOperations, times(1)).increment(keys.countKey());
-        verify(redisTemplate, times(1)).expire(keys.attendanceKey(), Duration.ofSeconds(timestamp));
+        verify(redisTemplate, times(1)).expireAt(keys.attendanceKey(), date);
+        verify(redisTemplate, times(1)).expireAt(keys.countKey(), date);
+
     }
 
     @Test
@@ -102,13 +109,19 @@ class AttendRedisServiceTest {
         // given
         Long sessionId = 2L;
         Long userId = 1L;
-        Long timestamp = 200L;
 
         // when
         CustomException customException = assertThrows(CustomException.class, () ->
-                attendRedisService.saveUserAttendance(null, sessionId, userId, timestamp));
+                attendRedisService.saveUserAttendance(null, sessionId, userId));
 
         // then
         assertEquals(ErrorCode.MISSING_REQUIRED_PARAMETER, customException.getErrorCode());
+    }
+
+    public Date getNext5AM() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        ZonedDateTime next5am = now.plusDays(1).withHour(5).withMinute(0).withSecond(0).withNano(0);
+        Date expireDate = Date.from(next5am.toInstant());
+        return expireDate;
     }
 }
