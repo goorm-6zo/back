@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
+                .requestMatchers("/api/v1/admin/conference/**").hasRole(Role.ADMIN.getRoleName())
                 .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
                 .requestMatchers("/api/v1/notices/**").hasRole(Role.ADMIN.getRoleName())
                 .anyRequest().authenticated());

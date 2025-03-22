@@ -19,4 +19,8 @@ public interface ConferenceQueryService {
     boolean getSessionStatus(Long conferenceId, Long sessionId);
 
     void updateSessionStatus(Long conferenceId, Long sessionId, boolean newStatus);
+
+    boolean getConferenceStatus(Long conferenceId);
+
+    void updateConferenceStatus(Long conferenceId, boolean newStatus);
 }
