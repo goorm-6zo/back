@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,21 +62,14 @@ public class FaceRecognitionService {
     public FaceAuthResultResponse authenticationByUserFace(Long conferenceId, Long sessionId, MultipartFile uploadedFile) {
         // 전달 된 얼굴 이미지를 ByteBuffer 로 변환
         ByteBuffer imageBytes = ByteBuffer.wrap(toBytes(uploadedFile));
-        // collection 에 존재하는 얼굴 이미지와 전달 된 이미지 비교 결과
-        FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
-        if(response == null){
-            return new FaceAuthResultResponse();
-        }
 
-        Long userId = Long.parseLong(response.userId());
-
-        // 여기서 해당 유저가 예매를 한 유저인지 판단 후 예외 던지기
-        validateReservation(userId, conferenceId, sessionId);
-
-        // 얼굴 인증 후 참가 이벤트 발생
-        Events.raise(new AttendEvent(userId, conferenceId, sessionId));
-
-        return new FaceAuthResultResponse(response.userId(), response.similarity());
+        return rekognitionApiClient.authorizeUserFace(imageBytes)
+                .filter(response -> validateReservation(response.userId(),conferenceId,sessionId))
+                .map(response -> {
+                    Events.raise(new AttendEvent(response.userId(),conferenceId,sessionId));
+                    return new FaceAuthResultResponse(response.userId(), response.similarity());
+                })
+                .orElse(new FaceAuthResultResponse());
     }
 
     // rekognition collection 생성, 초기 1회 실행
@@ -92,14 +86,12 @@ public class FaceRecognitionService {
         }
     }
 
-    private void validateReservation(Long userId, Long conferenceId, Long sessionId) {
+    private boolean validateReservation(Long userId, Long conferenceId, Long sessionId) {
         boolean isReserved = (sessionId == null)
                 ? reservationRepository.existsByUserIdAndConferenceId(userId, conferenceId)
                 : reservationRepository.existsByUserAndConferenceAndSession(userId, conferenceId, sessionId);
 
         log.info("isReserved : {}", isReserved);
-        if(!isReserved) {
-            throw new CustomException(ErrorCode.USER_NOT_RESERVED);
-        }
+        return isReserved;
     }
 }

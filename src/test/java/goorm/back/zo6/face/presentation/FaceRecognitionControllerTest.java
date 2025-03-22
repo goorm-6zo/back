@@ -135,7 +135,7 @@ class FaceRecognitionControllerTest {
         // given
         Long conferenceId = 1L;
         Long sessionId = 1L;
-        String userId = "1";
+        Long userId = 1L;
         MockMultipartFile faceImage = new MockMultipartFile("faceImage", "face.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3, 4});
         FaceAuthResultResponse response = new FaceAuthResultResponse(userId, 99.5f, true);
 

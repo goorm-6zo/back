@@ -4,10 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record FaceMatchingResponse(
-        String userId,
+        Long userId,
         float similarity
 ) {
-    public static FaceMatchingResponse of(String userId, float similarity){
+    public static FaceMatchingResponse of(Long userId, float similarity){
         return FaceMatchingResponse.builder()
                 .userId(userId)
                 .similarity(similarity)
