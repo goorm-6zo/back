@@ -1,4 +1,4 @@
-package goorm.back.zo6.face.config;
+package goorm.back.zo6.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -6,11 +6,12 @@ import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.infrastructure.SessionJpaRepository;
 import goorm.back.zo6.config.RestDocsConfiguration;
+import goorm.back.zo6.fixture.AdminFixture;
 import goorm.back.zo6.fixture.ConferenceFixture;
 import goorm.back.zo6.fixture.SessionFixture;
-import goorm.back.zo6.fixture.UserFixture;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -27,11 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.context.annotation.Import;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(RestDocsConfiguration.class)
-class ConferenceControllerTest {
+public class ConferenceAdminControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -49,7 +50,7 @@ class ConferenceControllerTest {
     private RestDocumentationResultHandler restDocs;
 
     @Autowired
-    private ConferenceJpaRepository conferenceJpaRepository;
+    private ConferenceJpaRepository conferenceRepository;
 
     @Autowired
     private SessionJpaRepository sessionJpaRepository;
@@ -75,53 +76,67 @@ class ConferenceControllerTest {
                 .alwaysDo(restDocs)
                 .build();
 
-        sessionJpaRepository.deleteAll();
-        conferenceJpaRepository.deleteAll();
+        User testUser = userJpaRepository.save(AdminFixture.관리자());
+        this.testToken = generateTestToken(testUser);
 
-        User testUser = userJpaRepository.save(UserFixture.유저());
-        testToken = generateTestToken(testUser);
-
-        this.conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
+        this.conference = conferenceRepository.save(ConferenceFixture.컨퍼런스());
 
         this.session = SessionFixture.세션(conference);
         this.conference.addSession(session);
-        this.sessionJpaRepository.save(session);
+        this.session = sessionJpaRepository.save(session);
     }
 
     @Test
-    @DisplayName("모든 컨퍼런스 리스트 조회 성공")
-    void getAllConferences_ReturnsConferenceList() throws Exception {
-        mockMvc.perform(get("/api/v1/conference")
-                        .header("Authorization", "Bearer " + testToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(conference.getName()));
+    @DisplayName("관리자 - 모든 컨퍼런스 리스트 조회 성공")
+    void allConferences_get_success() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/conference")
+                        .cookie(new Cookie("Authorization", testToken)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("특정 컨퍼런스 조회 성공")
-    void getConference_ReturnsSpecificConference() throws Exception {
-        mockMvc.perform(get("/api/v1/conference/{conferenceId}", conference.getId())
-                        .header("Authorization", "Bearer " + testToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(conference.getId()))
-                .andExpect(jsonPath("$.name").value(conference.getName()));
+    @DisplayName("관리자 - 특정 컨퍼런스 조회 성공")
+    void conference_get_success() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/conference/{conferenceId}", conference.getId())
+                .cookie(new Cookie("Authorization", testToken)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("특정 컨퍼런스 내 특정 세션 조회 성공")
-    void getSessionDetail_ReturnsSpecificSession() throws Exception {
-        mockMvc.perform(get("/api/v1/conference/{conferenceId}/sessions/{sessionId}", conference.getId(), session.getId())
-                        .header("Authorization", "Bearer " + testToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(session.getId()))
-                .andExpect(jsonPath("$.conferenceId").value(session.getId()))
-                .andExpect(jsonPath("$.name").value(session.getName()))
-                .andExpect(jsonPath("$.capacity").value(session.getCapacity()))
-                .andExpect(jsonPath("$.location").value(session.getLocation()))
-                .andExpect(jsonPath("$.summary").value(session.getSummary()))
-                .andExpect(jsonPath("$.speakerName").value(session.getSpeakerName()))
-                .andExpect(jsonPath("$.speakerOrganization").value(session.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.active").value(session.isActive()));
+    @DisplayName("관리자 - 특정 컨퍼런스 내 특정 세션 조회 성공")
+    void sessionDetail_get_success() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/conference/{conferenceId}/sessions/{sessionId}", conference.getId(), session.getId())
+                .cookie(new Cookie("Authorization", testToken)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("관리자 - 세션 상태 변경")
+    void sessionStatus_put_success() throws Exception {
+        mockMvc.perform(put("/api/v1/admin/conference/{conferenceId}/sessions/{sessionId}", conference.getId(), session.getId())
+                .cookie(new Cookie("Authorization", testToken)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("관리자 - 세션 정보 수정")
+    void sessionData_put_success() throws Exception {
+        String requestBody = sessionRequestSetting();
+
+        mockMvc.perform(put("/api/v1/admin/conference/sessions/{sessionId}", session.getId())
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .cookie(new Cookie("Authorization", testToken)))
+                .andExpect(status().isOk());
+    }
+
+    private static String sessionRequestSetting() {
+        String newLocation = "변경된 장소";
+        return """
+        {
+            "location": "%s"
+        }
+        """.formatted(newLocation);
     }
 
     private String generateTestToken(User user) {

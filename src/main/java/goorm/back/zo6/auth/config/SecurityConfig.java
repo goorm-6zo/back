@@ -6,9 +6,7 @@ import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.user.domain.Role;
-import goorm.back.zo6.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,9 +31,6 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
 
-    @Value("${server.url}")
-    private String SERVER_URL;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //cors 설정
@@ -57,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
+                .requestMatchers("/api/v1/admin/conference/**").hasRole(Role.ADMIN.getRoleName())
                 .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
                 .requestMatchers("/api/v1/notices/**").hasRole(Role.ADMIN.getRoleName())
                 .anyRequest().authenticated());
@@ -80,7 +76,6 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        //configuration.addAllowedOriginPattern(SERVER_URL);
         configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");

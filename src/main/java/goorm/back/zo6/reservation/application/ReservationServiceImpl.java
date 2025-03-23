@@ -206,7 +206,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .user(null)
                 .build();
 
-        validateSessions.forEach(session -> reservation.addSession(session));
+        validateSessions.forEach(reservation::addSession);
 
         reservationRepository.save(reservation);
 

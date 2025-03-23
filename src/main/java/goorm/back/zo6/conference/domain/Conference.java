@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,9 +57,12 @@ public class Conference {
 
     @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<Session> sessions = new HashSet<>();
+    private List<Session> sessions = new ArrayList<>();
 
     public void addSession(Session session) {
+        if (this.sessions.stream().anyMatch(existingSession -> session.getId() != null && session.getId().equals(existingSession.getId()))) {
+            return;
+        }
         session.setConference(this);
         this.sessions.add(session);
     }
@@ -78,5 +83,9 @@ public class Conference {
         if (!existingSessionIds.containsAll(sessionIds)) {
             throw new CustomException(ErrorCode.SESSION_NOT_BELONG_TO_CONFERENCE);
         }
+    }
+
+    public void updateActive(boolean active) {
+        this.isActive = active;
     }
 }

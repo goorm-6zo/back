@@ -49,7 +49,7 @@ public enum ErrorCode {
     REKOGNITION_NO_MATCH_FOUND(HttpStatus.BAD_REQUEST, "Rekognition 얼굴 매칭에 실패하였습니다."),
     REKOGNITION_API_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR,"Rekognition Api 호출 시 문제가 발생하였습니다."),
     REKOGNITION_CREATE_COLLECTION_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Rekognition Collection 생성 실패"),
-
+    USER_NOT_RESERVED(HttpStatus.BAD_REQUEST,"예매 내역에 존재하지 않는 유저가 인증을 시도하였습니다."),
     // Face Error
     FACE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST,"유저 얼굴 이미지 저장 실패하였습니다."),
     FACE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저의 얼굴 이미지 저장 정보를 조회할 수 없습니다."),
