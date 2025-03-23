@@ -76,6 +76,10 @@ public class FaceRecognitionService {
         return CollectionResponse.of(collectionArl);
     }
 
+    public void deleteCollection(){
+        rekognitionApiClient.deleteCollection();
+    }
+
     private byte[] toBytes(MultipartFile file) {
         try {
             return file.getBytes();
