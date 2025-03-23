@@ -1,5 +1,6 @@
 package goorm.back.zo6.face.application;
 
+import goorm.back.zo6.attend.domain.AttendEvent;
 import goorm.back.zo6.common.event.Events;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -7,10 +8,8 @@ import goorm.back.zo6.face.domain.Face;
 import goorm.back.zo6.face.domain.FaceRepository;
 import goorm.back.zo6.face.dto.response.CollectionResponse;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
-import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
-import goorm.back.zo6.attend.domain.AttendEvent;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
