@@ -49,6 +49,11 @@ public class AttendRedisService {
         return AttendInfo.of(isNewUser, count);
     }
 
+    // 모든 참석 키 삭제 - swagger 테스트 시 사용
+    public void deleteAllKeys(){
+        redisTemplate.delete(redisTemplate.keys("*"));
+    }
+
     private boolean addNewUserToAttendance(String attendanceKey, Long userId) {
         Long added = redisTemplate.opsForSet().add(attendanceKey, userId.toString());
         if(added > 0){
