@@ -66,4 +66,13 @@ public class FaceRecognitionController {
         rekognitionService.createCollection();
         return ResponseEntity.ok("Rekognition Collection 생성 완료!");
     }
+
+    @DeleteMapping("/collection")
+    @Operation(summary = "Rekognition Collection 생성", description = "Rekognition Collection 을 생성합니다. <br>" +
+            "aws collection 이 없을 때 단 한번만 호출하면 됩니다. swagger 에서 호출 해도 무방합니다.<br>" +
+            "collection 이 존재 할때 호출 하면 예외가 발생되고 서버에 문제가 생기진 않습니다.")
+    public ResponseEntity<String> deleteCollection(){
+        rekognitionService.deleteCollection();
+        return ResponseEntity.ok("Rekognition Collection 삭제 완료!");
+    }
 }

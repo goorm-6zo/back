@@ -4,12 +4,12 @@ import lombok.Builder;
 
 @Builder
 public record AttendInfo(
-        boolean alreadyAttended,
+        boolean isNewUser,
         long attendCount
 ) {
-    public static AttendInfo of(boolean alreadyAttended, long attendCount){
+    public static AttendInfo of(boolean isNewUser, long attendCount){
         return AttendInfo.builder()
-                .alreadyAttended(alreadyAttended)
+                .isNewUser(isNewUser)
                 .attendCount(attendCount)
                 .build();
     }
