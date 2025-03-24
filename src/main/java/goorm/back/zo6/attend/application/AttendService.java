@@ -103,7 +103,7 @@ public class AttendService {
                         sessionTuple.get(22, Boolean.class) // s.isAttend
                 ))
                 .collect(Collectors.toList());
-    }
 
+    }
 
 }
