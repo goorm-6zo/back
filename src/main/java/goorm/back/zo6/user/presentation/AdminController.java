@@ -1,5 +1,6 @@
 package goorm.back.zo6.user.presentation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.user.application.UserService;
 import goorm.back.zo6.user.dto.request.SignUpRequest;
 import goorm.back.zo6.user.dto.response.SignUpResponse;
@@ -21,7 +22,7 @@ public class AdminController {
 
     @PostMapping("/signup")
     @Operation(summary = "관리자 회원가입", description = "관리자를 등록합니다.")
-    public ResponseEntity<SignUpResponse> adminSignUp(@RequestBody SignUpRequest request) {
-        return ResponseEntity.ok().body(userService.adminSignUp(request));
+    public ResponseEntity<ResponseDto<SignUpResponse>> adminSignUp(@RequestBody SignUpRequest request) {
+        return ResponseEntity.ok().body(ResponseDto.of(userService.adminSignUp(request)));
     }
 }

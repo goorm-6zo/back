@@ -90,19 +90,20 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference")
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(conference.getName()))
+                .andExpect(jsonPath("$.data.[0].name").value(conference.getName()))
                 .andDo(restDocs.document(
                         responseFields(
-                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("컨퍼런스 ID"),
-                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("컨퍼런스 이름"),
-                                fieldWithPath("[].description").type(JsonFieldType.STRING).description("컨퍼런스 설명"),
-                                fieldWithPath("[].location").type(JsonFieldType.STRING).description("컨퍼런스 장소"),
-                                fieldWithPath("[].startTime").type(JsonFieldType.STRING).description("컨퍼런스 시작 일정"),
-                                fieldWithPath("[].endTime").type(JsonFieldType.STRING).description("컨퍼런스 종료 일정"),
-                                fieldWithPath("[].capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
-                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
-                                fieldWithPath("[].isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
-                                fieldWithPath("[].hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부")
+                                fieldWithPath(".status").description(true),
+                                fieldWithPath(".data.[].id").type(JsonFieldType.NUMBER).description("컨퍼런스 ID"),
+                                fieldWithPath(".data.[].name").type(JsonFieldType.STRING).description("컨퍼런스 이름"),
+                                fieldWithPath(".data.[].description").type(JsonFieldType.STRING).description("컨퍼런스 설명"),
+                                fieldWithPath(".data.[].location").type(JsonFieldType.STRING).description("컨퍼런스 장소"),
+                                fieldWithPath(".data.[].startTime").type(JsonFieldType.STRING).description("컨퍼런스 시작 일정"),
+                                fieldWithPath(".data.[].endTime").type(JsonFieldType.STRING).description("컨퍼런스 종료 일정"),
+                                fieldWithPath(".data.[].capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
+                                fieldWithPath(".data.[].imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
+                                fieldWithPath(".data.[].isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
+                                fieldWithPath(".data.[].hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부")
                         )
                 ));
     }
@@ -115,21 +116,22 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference/{conferenceId}", conference.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(conference.getId()))
-                .andExpect(jsonPath("$.name").value(conference.getName()))
+                .andExpect(jsonPath("$.data.id").value(conference.getId()))
+                .andExpect(jsonPath("$.data.name").value(conference.getName()))
                 .andDo(restDocs.document(
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("컨퍼런스 ID"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("컨퍼런스 이름"),
-                                fieldWithPath("description").type(JsonFieldType.STRING).description("컨퍼런스 설명"),
-                                fieldWithPath("location").type(JsonFieldType.STRING).description("컨퍼런스 장소"),
-                                fieldWithPath("startTime").type(JsonFieldType.STRING).description("컨퍼런스 시작 일정"),
-                                fieldWithPath("endTime").type(JsonFieldType.STRING).description("컨퍼런스 종료 일정"),
-                                fieldWithPath("capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
-                                fieldWithPath("hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
-                                fieldWithPath("isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
-                                fieldWithPath("sessions[]").type(JsonFieldType.ARRAY).description("세션 목록")
+                                fieldWithPath(".status").description(true),
+                                fieldWithPath(".data.id").type(JsonFieldType.NUMBER).description("컨퍼런스 ID"),
+                                fieldWithPath(".data.name").type(JsonFieldType.STRING).description("컨퍼런스 이름"),
+                                fieldWithPath(".data.description").type(JsonFieldType.STRING).description("컨퍼런스 설명"),
+                                fieldWithPath(".data.location").type(JsonFieldType.STRING).description("컨퍼런스 장소"),
+                                fieldWithPath(".data.startTime").type(JsonFieldType.STRING).description("컨퍼런스 시작 일정"),
+                                fieldWithPath(".data.endTime").type(JsonFieldType.STRING).description("컨퍼런스 종료 일정"),
+                                fieldWithPath(".data.capacity").type(JsonFieldType.NUMBER).description("컨퍼런스 수용인원"),
+                                fieldWithPath(".data.hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부"),
+                                fieldWithPath(".data.imageUrl").type(JsonFieldType.STRING).description("컨퍼런스 이미지"),
+                                fieldWithPath(".data.isActive").type(JsonFieldType.BOOLEAN).description("활성화"),
+                                fieldWithPath(".data.sessions[]").type(JsonFieldType.ARRAY).description("세션 목록")
                         )
                 ));
     }
@@ -148,33 +150,34 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference/{conferenceId}/sessions/{sessionId}", savedConference.getId(), session.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(savedSession.getId()))
-                .andExpect(jsonPath("$.conferenceId").value(savedConference.getId()))
-                .andExpect(jsonPath("$.name").value(savedSession.getName()))
-                .andExpect(jsonPath("$.capacity").value(savedSession.getCapacity()))
-                .andExpect(jsonPath("$.location").value(savedSession.getLocation()))
-                .andExpect(jsonPath("$.summary").value(savedSession.getSummary()))
-                .andExpect(jsonPath("$.speakerName").value(savedSession.getSpeakerName()))
-                .andExpect(jsonPath("$.speakerOrganization").value(savedSession.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.active").value(savedSession.isActive()))
+                .andExpect(jsonPath("$.data.id").value(savedSession.getId()))
+                .andExpect(jsonPath("$.data.conferenceId").value(savedConference.getId()))
+                .andExpect(jsonPath("$.data.name").value(savedSession.getName()))
+                .andExpect(jsonPath("$.data.capacity").value(savedSession.getCapacity()))
+                .andExpect(jsonPath("$.data.location").value(savedSession.getLocation()))
+                .andExpect(jsonPath("$.data.summary").value(savedSession.getSummary()))
+                .andExpect(jsonPath("$.data.speakerName").value(savedSession.getSpeakerName()))
+                .andExpect(jsonPath("$.data.speakerOrganization").value(savedSession.getSpeakerOrganization()))
+                .andExpect(jsonPath("$.data.active").value(savedSession.isActive()))
                 .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("conferenceId").description("조회할 컨퍼런스 ID"),
                                 parameterWithName("sessionId").description("조회할 세션 ID")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("세션 ID"),
-                                fieldWithPath("conferenceId").description("컨퍼런스 ID"),
-                                fieldWithPath("name").description("세션 이름"),
-                                fieldWithPath("capacity").description("세션 수용 가능 인원"),
-                                fieldWithPath("location").description("세션 장소"),
-                                fieldWithPath("startTime").description("세션 시작 일정"),
-                                fieldWithPath("endTime").description("세션 종료 일정"),
-                                fieldWithPath("summary").description("세션 요약"),
-                                fieldWithPath("speakerName").description("발표자"),
-                                fieldWithPath("speakerOrganization").description("발표자 소속"),
-                                fieldWithPath("active").description("활성화"),
-                                fieldWithPath("speakerImage").description("테스트 이미지")
+                                fieldWithPath(".status").description(true),
+                                fieldWithPath(".data.id").description("세션 ID"),
+                                fieldWithPath(".data.conferenceId").description("컨퍼런스 ID"),
+                                fieldWithPath(".data.name").description("세션 이름"),
+                                fieldWithPath(".data.capacity").description("세션 수용 가능 인원"),
+                                fieldWithPath(".data.location").description("세션 장소"),
+                                fieldWithPath(".data.startTime").description("세션 시작 일정"),
+                                fieldWithPath(".data.endTime").description("세션 종료 일정"),
+                                fieldWithPath(".data.summary").description("세션 요약"),
+                                fieldWithPath(".data.speakerName").description("발표자"),
+                                fieldWithPath(".data.speakerOrganization").description("발표자 소속"),
+                                fieldWithPath(".data.active").description("활성화"),
+                                fieldWithPath(".data.speakerImage").description("테스트 이미지")
                         )
                 ));
     }

@@ -8,6 +8,7 @@ import goorm.back.zo6.face.domain.Face;
 import goorm.back.zo6.face.domain.FaceRepository;
 import goorm.back.zo6.face.dto.response.CollectionResponse;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
+import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
@@ -58,16 +59,16 @@ public class FaceRecognitionService {
     // 얼굴 비교 및 인증
     @Transactional
     public FaceAuthResultResponse authenticationByUserFace(Long conferenceId, Long sessionId, MultipartFile uploadedFile) {
-        // 전달 된 얼굴 이미지를 ByteBuffer 로 변환
-        ByteBuffer imageBytes = ByteBuffer.wrap(toBytes(uploadedFile));
 
-        return rekognitionApiClient.authorizeUserFace(imageBytes)
-                .filter(response -> validateReservation(response.userId(),conferenceId,sessionId))
-                .map(response -> {
-                    Events.raise(new AttendEvent(response.userId(),conferenceId,sessionId));
-                    return new FaceAuthResultResponse(response.userId(), response.similarity());
-                })
-                .orElse(new FaceAuthResultResponse());
+        ByteBuffer imageBytes = ByteBuffer.wrap(toBytes(uploadedFile));
+        FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
+
+        if (!validateReservation(response.userId(), conferenceId, sessionId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_RESERVATION);
+        }
+
+        Events.raise(new AttendEvent(response.userId(), conferenceId, sessionId));
+        return FaceAuthResultResponse.of(response.userId(), response.similarity());
     }
 
     // rekognition collection 생성, 초기 1회 실행

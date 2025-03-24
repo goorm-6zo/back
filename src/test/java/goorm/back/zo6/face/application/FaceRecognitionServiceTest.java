@@ -173,7 +173,7 @@ class FaceRecognitionServiceTest {
         ByteBuffer imageBytes = ByteBuffer.wrap(new byte[]{1, 2, 3});
 
         // Rekognition API가 정상적으로 응답을 반환하도록 설정
-        Optional<FaceMatchingResponse> matchingResponse = Optional.ofNullable(FaceMatchingResponse.of(userId, similarity));
+        FaceMatchingResponse matchingResponse = FaceMatchingResponse.of(userId, similarity);
         when(rekognitionApiClient.authorizeUserFace(imageBytes)).thenReturn(matchingResponse);
 
         // 예매 한 유저 처리

@@ -129,13 +129,13 @@ class RekognitionApiClientTest {
                 .thenReturn(mockResponse);
 
         // when
-        Optional<FaceMatchingResponse> response = rekognitionApiClient.authorizeUserFace(imageBytes);
-        System.out.println("result : " +response.get().userId());
+        FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
+        System.out.println("result : " +response.userId());
         System.out.println("expect: "+ userId);
         // then
-        assertTrue(response.isPresent());
-        assertEquals(similarity,response.get().similarity());
-        assertEquals(Long.parseLong(userId), response.get().userId());
+        assertNotNull(response);
+        assertEquals(similarity,response.similarity());
+        assertEquals(Long.parseLong(userId), response.userId());
     }
 
     @Test
@@ -153,10 +153,10 @@ class RekognitionApiClientTest {
                 .thenReturn(mockResponse);
 
         // when & then
-        Optional<FaceMatchingResponse> response = rekognitionApiClient.authorizeUserFace(imageBytes);
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.authorizeUserFace(imageBytes));
 
         // then
-        assertTrue(response.isEmpty());
+        assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
         verify(rekognitionClient, times(1)).searchFacesByImage(any(SearchFacesByImageRequest.class));
     }
 

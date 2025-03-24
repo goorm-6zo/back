@@ -1,20 +1,16 @@
 package goorm.back.zo6.face.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL) // null 값인 필드는 JSON에서 제외
+@Builder
 public record FaceAuthResultResponse(
         Long userId,
-        Float similarity,
-        boolean result
+        Float similarity
 ) {
-    // 인증 성공 (userId, similarity 포함)
-    public FaceAuthResultResponse(Long userId, float similarity) {
-        this(userId, similarity, true);
-    }
-
-    // 인증 실패 (result만 포함)
-    public FaceAuthResultResponse() {
-        this(null, null, false);
+    public static FaceAuthResultResponse of(Long userId, Float similarity){
+        return FaceAuthResultResponse.builder()
+                .userId(userId)
+                .similarity(similarity)
+                .build();
     }
 }

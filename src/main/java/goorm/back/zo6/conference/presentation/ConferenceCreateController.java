@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.presentation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.ConferenceCreateRequest;
 import goorm.back.zo6.conference.application.ConferenceCreateService;
 import goorm.back.zo6.conference.application.ConferenceResponse;
@@ -26,9 +27,9 @@ public class ConferenceCreateController {
 
     @PostMapping
     @Operation(summary = "컨퍼런스 생성", description = "새로운 컨퍼런스를 생성합니다.")
-    public ResponseEntity<ConferenceResponse> createConference(@Valid @RequestBody ConferenceCreateRequest request) {
+    public ResponseEntity<ResponseDto<ConferenceResponse>> createConference(@Valid @RequestBody ConferenceCreateRequest request) {
         ConferenceResponse conferenceResponse = conferenceCreateService.createConference(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(conferenceResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.of(conferenceResponse));
     }
 }
