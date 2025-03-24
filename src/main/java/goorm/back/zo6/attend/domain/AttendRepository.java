@@ -7,6 +7,5 @@ import java.util.List;
 public interface AttendRepository {
     Attend save(Attend attend);
     List<Tuple> findAttendInfoByUserAndConference(Long userId, Long conferenceId);
-
     List<Tuple> findAttendData(String phone, Long conferenceId, Long sessionId);
 }

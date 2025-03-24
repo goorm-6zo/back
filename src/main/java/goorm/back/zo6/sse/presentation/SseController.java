@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-@Tag(name = "[Sse] Sse API", description = "Sse API")
+@Tag(name = "sse", description = "Sse API")
 @RestController
 @RequestMapping("/api/v1/sse")
 @RequiredArgsConstructor

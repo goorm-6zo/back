@@ -115,4 +115,16 @@ public class RekognitionApiClient {
             throw new CustomException(ErrorCode.REKOGNITION_CREATE_COLLECTION_FAIL);
         }
     }
+
+    public void deleteCollection(){
+        try{
+            rekognitionClient.deleteCollection(DeleteCollectionRequest.builder()
+                    .collectionId(collectionId)
+                    .build());
+            log.info("Rekognition Collection 초기화 완료");
+        }catch (Exception e){
+            log.error("Rekognition Collection 초기화 실패");
+            throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
+        }
+    }
 }
