@@ -1,6 +1,8 @@
 package goorm.back.zo6.reservation.application;
 
 import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.conference.application.shared.ConferenceValidator;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
@@ -41,6 +43,9 @@ class ReservationServiceImplTest {
 
     @Mock
     private ReservationRepository reservationRepository;
+
+    @Mock
+    private ConferenceValidator conferenceValidator;
 
     @Mock
     private ConferenceJpaRepository conferenceJpaRepository;
@@ -84,8 +89,7 @@ class ReservationServiceImplTest {
 
         conference.addSession(session);
 
-        when(conferenceJpaRepository.findById(conference.getId()))
-                .thenReturn(Optional.of(conference));
+        when(conferenceValidator.findConferenceOrThrow(conference.getId())).thenReturn(conference);
 
         ReservationRequest request = new ReservationRequest(
                 conference.getId(),
@@ -110,7 +114,7 @@ class ReservationServiceImplTest {
     void createReservation_Fail_ConferenceNotFound() {
 
         Long invalidConferenceId = 999L;
-        when(conferenceJpaRepository.findById(invalidConferenceId)).thenReturn(Optional.empty());
+        when(conferenceValidator.findConferenceOrThrow(invalidConferenceId)).thenThrow(new CustomException(ErrorCode.INVALID_PARAMETER));
 
         ReservationRequest request = new ReservationRequest(
                 invalidConferenceId,
@@ -167,7 +171,7 @@ class ReservationServiceImplTest {
     void createTemporaryReservation_Sucess() {
 
         Conference conference = ConferenceFixture.컨퍼런스_아이디포함();
-        when(conferenceJpaRepository.findById(conference.getId())).thenReturn(Optional.of(conference));
+        when(conferenceValidator.findConferenceWithSessionsOrThrow(conference.getId())).thenReturn(conference);
 
         ReservationRequest request = new ReservationRequest(
                 conference.getId(),

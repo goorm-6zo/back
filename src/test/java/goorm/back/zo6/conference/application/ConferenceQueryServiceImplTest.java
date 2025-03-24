@@ -81,14 +81,14 @@ class ConferenceQueryServiceImplTest {
 
         ConferenceDetailResponse detailResponse = ConferenceDetailResponse.fromEntity(conference);
 
-        when(conferenceValidator.findConferenceOrThrow(conference.getId())).thenReturn(conference);
+        when(conferenceValidator.findConferenceWithSessionsOrThrow(conference.getId())).thenReturn(conference);
         when(conferenceMapper.toConferenceDetailResponse(conference)).thenReturn(detailResponse);
 
         ConferenceDetailResponse result = conferenceQueryService.getConference(conference.getId());
 
         assertNotNull(result);
         assertEquals(conference.getId(), result.getId());
-        verify(conferenceValidator).findConferenceOrThrow(conference.getId());
+        verify(conferenceValidator).findConferenceWithSessionsOrThrow(conference.getId());
         verify(conferenceMapper).toConferenceDetailResponse(conference);
     }
 
@@ -125,7 +125,7 @@ class ConferenceQueryServiceImplTest {
 
         SessionDto sessionDto = SessionDto.fromEntity(session);
 
-        when(conferenceValidator.findConferenceOrThrow(conferenceId)).thenReturn(conference);
+        when(conferenceValidator.findConferenceWithSessionsOrThrow(conferenceId)).thenReturn(conference);
         when(sessionValidator.getSessionOrThrow(sessionId)).thenReturn(session);
         when(conferenceMapper.toSessionDto(session)).thenReturn(sessionDto);
 
@@ -134,7 +134,7 @@ class ConferenceQueryServiceImplTest {
         assertNotNull(result);
         assertEquals(sessionDto, result);
 
-        verify(conferenceValidator).findConferenceOrThrow(conferenceId);
+        verify(conferenceValidator).findConferenceWithSessionsOrThrow(conferenceId);
         verify(sessionValidator).getSessionOrThrow(sessionId);
         verify(conferenceMapper).toSessionDto(session);
     }
@@ -152,7 +152,7 @@ class ConferenceQueryServiceImplTest {
 
         SessionDto sessionDto = SessionDto.fromEntity(session);
 
-        when(conferenceValidator.findConferenceOrThrow(conferenceId)).thenReturn(conference);
+        when(conferenceValidator.findConferenceWithSessionsOrThrow(conferenceId)).thenReturn(conference);
         when(sessionValidator.getSessionOrThrow(sessionId)).thenReturn(session);
         when(conferenceMapper.toSessionDto(session)).thenReturn(sessionDto);
 
@@ -161,7 +161,7 @@ class ConferenceQueryServiceImplTest {
         assertNotNull(result);
         assertEquals(sessionDto, result);
 
-        verify(conferenceValidator).findConferenceOrThrow(conferenceId);
+        verify(conferenceValidator).findConferenceWithSessionsOrThrow(conferenceId);
         verify(sessionValidator).getSessionOrThrow(sessionId);
         verify(conferenceMapper).toSessionDto(session);
     }

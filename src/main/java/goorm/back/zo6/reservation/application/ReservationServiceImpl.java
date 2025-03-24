@@ -4,8 +4,8 @@ import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
+import goorm.back.zo6.conference.application.shared.ConferenceValidator;
 import goorm.back.zo6.conference.domain.Conference;
-import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
     private static final String S3_BASE_URL = "https://maskpass-bucket.s3.ap-northeast-2.amazonaws.com/";
 
     private final ReservationRepository reservationRepository;
-    private final ConferenceJpaRepository conferenceJpaRepository;
+    private final ConferenceValidator conferenceValidator;
     private final UserRepository userRepository;
 
     @Transactional
@@ -45,8 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         validateRequest(reservationRequest);
 
-        Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId())
-                .orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+        Conference conference = conferenceValidator.findConferenceOrThrow(reservationRequest.getConferenceId());
 
         Set<Session> reservedSessions = validateSessionReservations(
                 conference,
@@ -145,7 +144,7 @@ public class ReservationServiceImpl implements ReservationService {
         String currentUserEmail = getCurrentUserEmail();
         User currentUser = userRepository.findByEmail(currentUserEmail).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Conference conference = conferenceJpaRepository.findById(conferneceId).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(conferneceId);
 
         List<Reservation> reservations = reservationRepository.findByConferenceIdAndUserId(conferneceId, currentUser.getId());
 
@@ -189,7 +188,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         validateRequest(reservationRequest);
 
-        Conference conference = conferenceJpaRepository.findById(reservationRequest.getConferenceId()).orElseThrow(() -> new CustomException(ErrorCode.CONFERENCE_NOT_FOUND));
+        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(reservationRequest.getConferenceId());
 
         Set<Session> validateSessions = validateSessionReservations(
                 conference,

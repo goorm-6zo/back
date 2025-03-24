@@ -38,7 +38,7 @@ public class ConferenceQueryServiceImpl implements ConferenceQueryService {
 
     @Override
     public ConferenceDetailResponse getConference(Long conferenceId) {
-        Conference conference = conferenceValidator.findConferenceOrThrow(conferenceId);
+        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(conferenceId);
         return conferenceMapper.toConferenceDetailResponse(conference);
     }
 
@@ -57,7 +57,7 @@ public class ConferenceQueryServiceImpl implements ConferenceQueryService {
 
     @Override
     public SessionDto getSessionDetail(Long conferenceId, Long sessionId) {
-        Conference conference = conferenceValidator.findConferenceOrThrow(conferenceId);
+        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(conferenceId);
         if (Boolean.FALSE.equals(conference.containsSession(sessionId))) {
             throw new CustomException(ErrorCode.SESSION_NOT_BELONG_TO_CONFERENCE);
         }
