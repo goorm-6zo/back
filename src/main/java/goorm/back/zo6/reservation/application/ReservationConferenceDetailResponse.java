@@ -1,6 +1,6 @@
 package goorm.back.zo6.reservation.application;
 
-import goorm.back.zo6.conference.application.SessionDto;
+import goorm.back.zo6.conference.application.dto.SessionDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +21,6 @@ public class ReservationConferenceDetailResponse {
     private String conferenceName;
 
     private String conferenceLocation;
-
-    private String conferenceArea;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;

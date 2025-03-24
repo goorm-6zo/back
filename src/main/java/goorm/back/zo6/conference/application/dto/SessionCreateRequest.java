@@ -1,4 +1,4 @@
-package goorm.back.zo6.conference.application;
+package goorm.back.zo6.conference.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessionResponse {
+public class SessionCreateRequest {
 
-    private Long id;
+    private Long conferenceId;
 
     private String name;
 
@@ -31,8 +31,6 @@ public class SessionResponse {
     private String speakerName;
 
     private String speakerOrganization;
-
-    private boolean isActive;
 
     private String speakerImage;
 }

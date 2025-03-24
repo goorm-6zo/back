@@ -1,24 +1,19 @@
-package goorm.back.zo6.conference.application;
+package goorm.back.zo6.conference.application.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-@Getter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class ConferenceCreateRequest {
+@AllArgsConstructor
+public class ConferenceSimpleResponse {
+    private Long conferenceId;
 
-    private String name;
-
-    private String description;
-
-    private String location;
-
-    private Integer capacity;
+    private String conferenceName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
@@ -26,9 +21,7 @@ public class ConferenceCreateRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 
-    private String imageUrl;
+    private String conferenceImageUrl;
 
-    private Boolean isActive;
-
-    private Boolean hasSessions;
+    private String conferenceLocation;
 }

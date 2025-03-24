@@ -1,6 +1,6 @@
 package goorm.back.zo6.reservation.application;
 
-import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
 
 import java.util.List;
 

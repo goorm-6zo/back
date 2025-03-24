@@ -2,8 +2,8 @@ package goorm.back.zo6.reservation.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
-import goorm.back.zo6.conference.application.SessionDto;
+import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.domain.Session;

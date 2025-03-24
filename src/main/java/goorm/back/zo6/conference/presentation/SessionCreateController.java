@@ -1,8 +1,8 @@
 package goorm.back.zo6.conference.presentation;
 
-import goorm.back.zo6.conference.application.SessionCreateRequest;
-import goorm.back.zo6.conference.application.SessionCreateService;
-import goorm.back.zo6.conference.application.SessionResponse;
+import goorm.back.zo6.conference.application.command.session.SessionCommandService;
+import goorm.back.zo6.conference.application.dto.SessionCreateRequest;
+import goorm.back.zo6.conference.application.dto.SessionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SessionCreateController {
 
-    private final SessionCreateService sessionCreateService;
+    private final SessionCommandService sessionCommandService;
 
     @PostMapping
     @Operation(summary = "세션 생성", description = "새로운 세션을 생성합니다.")
-    public ResponseEntity<SessionResponse> createSession(@Valid @RequestBody SessionCreateRequest request) {
-        SessionResponse sessionResponse = sessionCreateService.createSession(request);
+    public ResponseEntity<SessionDto> createSession(@Valid @RequestBody SessionCreateRequest request) {
+        SessionDto session = sessionCommandService.createSession(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(sessionResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(session);
     }
 }

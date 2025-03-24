@@ -1,5 +1,8 @@
-package goorm.back.zo6.conference.application;
+package goorm.back.zo6.conference.application.shared;
 
+import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
+import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.S3FileService;
@@ -48,22 +51,6 @@ public class ConferenceMapper {
                 conference.getIsActive(),
                 conference.getHasSessions(),
                 sortedSessions
-        );
-    }
-
-    public SessionResponse toSessionResponse(Session session) {
-        return new SessionResponse(
-                session.getId(),
-                session.getName(),
-                session.getCapacity(),
-                session.getLocation(),
-                session.getStartTime(),
-                session.getEndTime(),
-                session.getSummary(),
-                session.getSpeakerName(),
-                session.getSpeakerOrganization(),
-                session.isActive(),
-                generateSpeakerImageUrl(session.getSpeakerImageKey())
         );
     }
 

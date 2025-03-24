@@ -1,4 +1,4 @@
-package goorm.back.zo6.conference.application;
+package goorm.back.zo6.conference.application.dto;
 
 import goorm.back.zo6.conference.domain.Session;
 import lombok.AllArgsConstructor;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class SessionDto {
+
     private Long id;
 
     private Long conferenceId;

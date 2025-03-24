@@ -1,18 +1,19 @@
-package goorm.back.zo6.conference.application;
+package goorm.back.zo6.conference.application.dto;
 
 import goorm.back.zo6.conference.domain.Conference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConferenceDetailResponse {
+@Builder
+public class ConferenceResponse {
 
     private Long id;
 
@@ -36,10 +37,8 @@ public class ConferenceDetailResponse {
 
     private Boolean hasSessions;
 
-    private List<SessionDto> sessions;
-
-    public static ConferenceDetailResponse fromEntity(Conference conference) {
-        return new ConferenceDetailResponse(
+    public static ConferenceResponse fromEntity(Conference conference) {
+        return new ConferenceResponse(
                 conference.getId(),
                 conference.getName(),
                 conference.getDescription(),
@@ -49,10 +48,7 @@ public class ConferenceDetailResponse {
                 conference.getCapacity(),
                 conference.getImageKey(),
                 conference.getIsActive(),
-                conference.getHasSessions(),
-                conference.getSessions().stream()
-                        .map(SessionDto::fromEntity)
-                        .toList()
+                conference.getHasSessions()
         );
     }
 }
