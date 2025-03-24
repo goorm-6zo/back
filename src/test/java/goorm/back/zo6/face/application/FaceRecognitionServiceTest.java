@@ -12,6 +12,9 @@ import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
 import goorm.back.zo6.attend.domain.AttendEvent;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.user.domain.Role;
+import goorm.back.zo6.user.domain.User;
+import goorm.back.zo6.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +43,9 @@ class FaceRecognitionServiceTest {
     @Mock
     private ReservationRepository reservationRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @Test
     @DisplayName("얼굴 이미지 업로드 - 성공")
     void uploadUserFace_Success() throws IOException {
@@ -47,9 +53,11 @@ class FaceRecognitionServiceTest {
         Long userId = 1L;
         String rekognitionFaceId = "rekog-12345";
         Face face = Face.of(rekognitionFaceId, userId);
+        User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
         MultipartFile testFaceImage = mock(MultipartFile.class);
         byte[] imageBytes = new byte[]{1, 2, 3};
 
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
         when(testFaceImage.getBytes()).thenReturn(imageBytes);
         // collection 저장 성공
         when(rekognitionApiClient.addFaceToCollection(userId,imageBytes)).thenReturn(rekognitionFaceId);
@@ -65,6 +73,7 @@ class FaceRecognitionServiceTest {
 
         verify(rekognitionApiClient, times(1)).addFaceToCollection(userId, imageBytes);
         verify(faceRepository, times(1)).save(any(Face.class));
+        verify(userRepository, times(1)).findById(any(Long.class));
     }
 
     @Test
@@ -72,9 +81,11 @@ class FaceRecognitionServiceTest {
     void uploadUserFace_WhenRekognitionFails() throws IOException {
         // given
         Long userId = 1L;
+        User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
         MultipartFile testFaceImage = mock(MultipartFile.class);
         byte[] imageBytes = new byte[]{1, 2, 3};
 
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
         when(testFaceImage.getBytes()).thenReturn(imageBytes);
 
         // Rekognition 등록 실패
@@ -96,8 +107,10 @@ class FaceRecognitionServiceTest {
         // given
         Long userId = 1L;
         String rekognitionFaceId = "rekog-12345";
+        User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
         Face face = Face.of(rekognitionFaceId, userId);
 
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
         when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
         doNothing().when(faceRepository).deleteByUserId(userId);
         doNothing().when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
@@ -109,6 +122,7 @@ class FaceRecognitionServiceTest {
         verify(faceRepository, times(1)).findFaceByUserId(userId);
         verify(faceRepository, times(1)).deleteByUserId(userId);
         verify(rekognitionApiClient, times(1)).deleteFaceFromCollection(rekognitionFaceId);
+        verify(userRepository, times(1)).findById(any(Long.class));
     }
 
     @Test
@@ -116,6 +130,9 @@ class FaceRecognitionServiceTest {
     void deleteFaceImage_WhenFaceNotFound() {
         // given
         Long userId = 1L;
+        User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
+
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
 
         // FaceRepository 에서 유저 얼굴 정보가 없을 경우 예외 발생하도록 설정
         doThrow(new CustomException(ErrorCode.FACE_NOT_FOUND))
@@ -128,6 +145,7 @@ class FaceRecognitionServiceTest {
         assertEquals(ErrorCode.FACE_NOT_FOUND, exception.getErrorCode());
         // FaceRepository 는 호출이 된다.
         verify(faceRepository, times(1)).findFaceByUserId(userId);
+        verify(userRepository, times(1)).findById(any(Long.class));
         // S3와 Rekognition API가 호출되지 않아야 함
         verifyNoInteractions(rekognitionApiClient);
     }
@@ -139,7 +157,9 @@ class FaceRecognitionServiceTest {
         Long userId = 1L;
         String rekognitionFaceId = "rekog-12345";
         Face face = Face.of(rekognitionFaceId, userId);
+        User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
 
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
         when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
 
         // Rekognition 얼굴 삭제 실패 설정
@@ -155,6 +175,7 @@ class FaceRecognitionServiceTest {
         verify(rekognitionApiClient, times(1)).deleteFaceFromCollection(rekognitionFaceId);
         // DB 삭제는 호출되지 않음
         verify(faceRepository, never()).deleteByUserId(userId);
+        verify(userRepository, times(1)).findById(any(Long.class));
     }
     @Test
     @DisplayName("얼굴 인식 - 성공")
@@ -173,7 +194,7 @@ class FaceRecognitionServiceTest {
         ByteBuffer imageBytes = ByteBuffer.wrap(new byte[]{1, 2, 3});
 
         // Rekognition API가 정상적으로 응답을 반환하도록 설정
-        Optional<FaceMatchingResponse> matchingResponse = Optional.ofNullable(FaceMatchingResponse.of(userId, similarity));
+        FaceMatchingResponse matchingResponse = FaceMatchingResponse.of(userId, similarity);
         when(rekognitionApiClient.authorizeUserFace(imageBytes)).thenReturn(matchingResponse);
 
         // 예매 한 유저 처리

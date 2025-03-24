@@ -1,5 +1,6 @@
 package goorm.back.zo6.reservation.presnetation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.ConferenceSimpleResponse;
 import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationRequest;
@@ -25,45 +26,45 @@ public class ReservationController {
 
     @GetMapping("/my")
     @Operation(summary = "내 예약 조회", description = "로그인한 사용자의 모든 예약을 조회합니다.")
-    public ResponseEntity<List<ReservationResponse>> getMyReservations() {
+    public ResponseEntity<ResponseDto<List<ReservationResponse>>> getMyReservations() {
         List<ReservationResponse> reservations = reservationService.getMyReservations();
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(ResponseDto.of(reservations));
     }
 
     @GetMapping("/my/conference")
     @Operation(summary = "내가 예약한 컨퍼런스 목록 조회", description = "로그인한 사용자가 예약한 컨퍼런스의 간략한 정보 목록을 조회합니다.")
-    public ResponseEntity<List<ConferenceSimpleResponse>> getMyConference() {
+    public ResponseEntity<ResponseDto<List<ConferenceSimpleResponse>>> getMyConference() {
         List<ConferenceSimpleResponse> simpleResponses = reservationService.getMyConferenceSimpleList();
-        return ResponseEntity.ok(simpleResponses);
+        return ResponseEntity.ok(ResponseDto.of(simpleResponses));
     }
 
     @GetMapping("/my/conference/{conferenceId}")
     @Operation(summary = "예약한 특정 컨퍼런스 상세 정보 조회", description = "예약한 특정 컨퍼런스와 세션들 상세 정보를 조회합니다.")
-    public ResponseEntity<ReservationConferenceDetailResponse> getReservedConferenceDetails(@PathVariable Long conferenceId) {
+    public ResponseEntity<ResponseDto<ReservationConferenceDetailResponse>> getReservedConferenceDetails(@PathVariable Long conferenceId) {
         ReservationConferenceDetailResponse details = reservationService.getReservedConferenceDetails(conferenceId);
-        return ResponseEntity.ok(details);
+        return ResponseEntity.ok(ResponseDto.of(details));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "예약 상세 조회", description = "예약 ID를 통해 특정 예약의 상세 정보를 조회합니다.")
-    public ResponseEntity<ReservationResponse> getReservationDetails(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<ReservationResponse>> getReservationDetails(@PathVariable Long id) {
         ReservationResponse resDetail = reservationService.getReservationDetailsById(id);
-        return ResponseEntity.ok(resDetail);
+        return ResponseEntity.ok(ResponseDto.of(resDetail));
     }
 
     @PostMapping("/temp")
     @Operation(summary = "임시 예약 생성", description = "임시로 예약 정보를 생성합니다.")
-    public ResponseEntity<ReservationResponse> createTemporaryReservation(@Valid @RequestBody ReservationRequest request) {
+    public ResponseEntity<ResponseDto<ReservationResponse>> createTemporaryReservation(@Valid @RequestBody ReservationRequest request) {
         ReservationResponse response = reservationService.createTemporaryReservation(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.of(response));
     }
 
     @PostMapping("/link-user")
     @Operation(summary = "예약과 사용자 연결", description = "전화번호(phone)를 통해 사용자를 검증합니다.")
-    public ResponseEntity<ReservationResponse> linkUserToReservation(
+    public ResponseEntity<ResponseDto<ReservationResponse>> linkUserToReservation(
             @RequestParam("phone") String inputPhone
     ) {
         ReservationResponse response = reservationService.linkReservationByPhone(inputPhone);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseDto.of(response));
     }
 }

@@ -12,21 +12,21 @@ import java.util.Optional;
 
 @Builder
 public record ErrorResponse(
-        HttpStatus status,
+        boolean status,
         String message,
         @JsonInclude(JsonInclude.Include.NON_EMPTY) // errors가 비어있으면 JSON 응답에서 제외
         List<ValidationError> validationErrors
 ) {
     public static ErrorResponse of(ErrorCode errorCode, List<ValidationError> validationErrors){
         return ErrorResponse.builder()
-                .status(errorCode.getStatus())
+                .status(false)
                 .message(errorCode.getMessage())
                 .validationErrors(Optional.ofNullable(validationErrors).orElse(List.of())) // null 방지
                 .build();
     }
-    public static ErrorResponse of(HttpStatus status, String errorMessage){
+    public static ErrorResponse of(String errorMessage){
         return ErrorResponse.builder()
-                .status(status)
+                .status(false)
                 .message(errorMessage)
                 .build();
     }

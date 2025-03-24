@@ -60,7 +60,7 @@ public class RekognitionApiClient {
     }
 
     // 업로드된 이미지와 Collection 내의 이미지들과 얼굴 비교 후 가장 유사한 사용자 id 반환
-    public Optional<FaceMatchingResponse> authorizeUserFace(ByteBuffer imageBytes) {
+    public FaceMatchingResponse authorizeUserFace(ByteBuffer imageBytes) {
         try {
             SearchFacesByImageRequest request = SearchFacesByImageRequest.builder()
                     .collectionId(collectionId)
@@ -69,17 +69,21 @@ public class RekognitionApiClient {
                     .faceMatchThreshold(85f)
                     .build();
 
-            return Optional.of(rekognitionClient.searchFacesByImage(request))
-                    .map(SearchFacesByImageResponse::faceMatches)
-                    .filter(matches -> !matches.isEmpty())  // 필터에 걸리면 Optional.empty 가 리턴된다.
-                    .map(matches -> matches.get(0)) // 해당 단계에서 반환 한 값을 다음 단계에서 가공한다.(함수형 api 핵심 동작)
+            return rekognitionClient.searchFacesByImage(request)
+                    .faceMatches()
+                    .stream()
+                    .findFirst()
                     .map(match -> {
                         Long userId = Long.parseLong(match.face().externalImageId());
                         float similarity = match.similarity();
                         return FaceMatchingResponse.of(userId, similarity);
-                    });
+                    })
+                    .orElseThrow(() -> new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND));
 
-        } catch (Exception e) {
+        }catch (CustomException e){
+            throw e;
+        }
+        catch (Exception e) {
             log.info("얼굴 매칭 중 API 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
         }

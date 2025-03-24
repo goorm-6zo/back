@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -27,12 +28,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.context.annotation.Import;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest
@@ -94,7 +95,7 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference")
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(conference.getName()));
+                .andExpect(jsonPath("$.data.[0].name").value(conference.getName()));
     }
 
     @Test
@@ -103,8 +104,8 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference/{conferenceId}", conference.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(conference.getId()))
-                .andExpect(jsonPath("$.name").value(conference.getName()));
+                .andExpect(jsonPath("$.data.id").value(conference.getId()))
+                .andExpect(jsonPath("$.data.name").value(conference.getName()));
     }
 
     @Test
@@ -113,15 +114,15 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/api/v1/conference/{conferenceId}/sessions/{sessionId}", conference.getId(), session.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(session.getId()))
-                .andExpect(jsonPath("$.conferenceId").value(session.getId()))
-                .andExpect(jsonPath("$.name").value(session.getName()))
-                .andExpect(jsonPath("$.capacity").value(session.getCapacity()))
-                .andExpect(jsonPath("$.location").value(session.getLocation()))
-                .andExpect(jsonPath("$.summary").value(session.getSummary()))
-                .andExpect(jsonPath("$.speakerName").value(session.getSpeakerName()))
-                .andExpect(jsonPath("$.speakerOrganization").value(session.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.active").value(session.isActive()));
+                .andExpect(jsonPath("$.data.id").value(session.getId()))
+                .andExpect(jsonPath("$.data.conferenceId").value(session.getId()))
+                .andExpect(jsonPath("$.data.name").value(session.getName()))
+                .andExpect(jsonPath("$.data.capacity").value(session.getCapacity()))
+                .andExpect(jsonPath("$.data.location").value(session.getLocation()))
+                .andExpect(jsonPath("$.data.summary").value(session.getSummary()))
+                .andExpect(jsonPath("$.data.speakerName").value(session.getSpeakerName()))
+                .andExpect(jsonPath("$.data.speakerOrganization").value(session.getSpeakerOrganization()))
+                .andExpect(jsonPath("$.data.active").value(session.isActive()));
     }
 
     private String generateTestToken(User user) {

@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.presentation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.SessionCreateRequest;
 import goorm.back.zo6.conference.application.SessionCreateService;
 import goorm.back.zo6.conference.application.SessionResponse;
@@ -25,9 +26,9 @@ public class SessionCreateController {
 
     @PostMapping
     @Operation(summary = "세션 생성", description = "새로운 세션을 생성합니다.")
-    public ResponseEntity<SessionResponse> createSession(@Valid @RequestBody SessionCreateRequest request) {
+    public ResponseEntity<ResponseDto<SessionResponse>> createSession(@Valid @RequestBody SessionCreateRequest request) {
         SessionResponse sessionResponse = sessionCreateService.createSession(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(sessionResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.of(sessionResponse));
     }
 }
