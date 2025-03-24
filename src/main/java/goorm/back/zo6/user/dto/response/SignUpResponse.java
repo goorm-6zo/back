@@ -13,6 +13,7 @@ public record SignUpResponse(
         String phone,
         String name,
         Role role,
+        Boolean hasFace,
         LocalDateTime createdAt
 ) {
     public static SignUpResponse from(User user){
@@ -22,6 +23,7 @@ public record SignUpResponse(
                 .phone(user.getPhone())
                 .name(user.getName())
                 .role(user.getRole())
+                .hasFace(user.getHasFace())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

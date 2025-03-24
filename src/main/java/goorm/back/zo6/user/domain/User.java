@@ -37,6 +37,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "has_face")
+    private Boolean hasFace;
+
     @Builder
     private User(String email, String name, Password password, String phone, Role role) {
         this.email = email;
@@ -45,6 +48,7 @@ public class User extends BaseEntity {
         this.phone = phone;
         this.role = role;
         this.isDeleted = false;
+        this.hasFace = false;
     }
     public static User singUpUser(String email, String name, String password, String phone, Role role) {
         return User.builder()
@@ -58,5 +62,13 @@ public class User extends BaseEntity {
 
     public void logicalDelete() {
         this.isDeleted = true;
+    }
+
+    public void faceRegistration(){
+        this.hasFace = true;
+    }
+
+    public void deleteFace(){
+        this.hasFace = false;
     }
 }
