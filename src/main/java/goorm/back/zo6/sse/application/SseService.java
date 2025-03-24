@@ -9,13 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Service
 @Log4j2
 public class SseService {
     private final EmitterRepository emitterRepository;
-
+    private final Map<String, Long> lastKnownCounts = new ConcurrentHashMap<>();
     private static final long TIMEOUT = 1800*1000L;
     private static final long RECONNECTION_TIMEOUT = 1000L;
     private static final String ATTEND_EVENT_NAME = "AttendanceCount";
@@ -33,10 +35,11 @@ public class SseService {
 
     // SseEmitter 를 통해 클라이언트에게 초기 전달용 이벤트를 전송하는 역할을 합니다.
     private void sendToClientFirst(String eventKey, SseEmitter sseEmitter){
-        long baseAttendCount = 0L;
+        long baseAttendCount = lastKnownCounts.getOrDefault(eventKey, 0L);
         SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, baseAttendCount);
         try{
             sseEmitter.send(event);
+            lastKnownCounts.putIfAbsent(eventKey, 0L);
         }catch (IOException e){
             log.error("구독 실패, eventId ={}, {}", eventKey, e.getMessage());
             throw new CustomException(ErrorCode.SSE_CONNECTION_FAILED);
@@ -48,6 +51,7 @@ public class SseService {
         String eventKey = generateEventKey(conferenceId, sessionId);
         SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
         SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, count);
+        lastKnownCounts.put(eventKey, count);
         if(emitter != null){
             try{
                 emitter.send(event);
