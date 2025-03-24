@@ -89,8 +89,8 @@ class AuthControllerTest {
                         status().isOk(),
                         header().exists(HttpHeaders.SET_COOKIE),
                         header().string(HttpHeaders.SET_COOKIE, Matchers.containsString("Authorization=")),
-                        jsonPath("$.accessToken").exists(),
-                        jsonPath("$.role").value("USER")
+                        jsonPath("$.data.accessToken").exists(),
+                        jsonPath("$.data.role").value("USER")
                 );
     }
 
@@ -107,7 +107,7 @@ class AuthControllerTest {
                         .content(requestBody))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("email"),
                         jsonPath("$.validationErrors[0].message").value("이메일을 입력해 주세요.")
@@ -127,7 +127,7 @@ class AuthControllerTest {
                         .content(requestBody))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("password"),
                         jsonPath("$.validationErrors[0].message").value("비밀번호를 입력해 주세요.")
@@ -148,7 +148,7 @@ class AuthControllerTest {
                         .content(requestBody))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("로그인 정보에 해당하는 유저가 존재하지 않습니다.")
                 );
     }
@@ -165,7 +165,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpectAll(
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("로그인 정보에 해당하는 유저가 존재하지 않습니다.")
                 );
     }

@@ -1,8 +1,5 @@
 package goorm.back.zo6.common.exception;
 
-import goorm.back.zo6.common.exception.CustomException;
-import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.common.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -31,7 +28,7 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String errorMessage = ex.getMessage();
 
-        return ResponseEntity.status(status).body(ErrorResponse.of(status, errorMessage));
+        return ResponseEntity.status(status).body(ErrorResponse.of(errorMessage));
     }
 
     // @RequestParam, @PathVariable의 유효성 검사를 수행
@@ -50,7 +47,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ex.getErrorCode();
         HttpStatus status = errorCode.getStatus();
         String errorMessage = errorCode.getMessage();
-        return ResponseEntity.status(errorCode.getStatus()).body(ErrorResponse.of(status, errorMessage));
+        return ResponseEntity.status(errorCode.getStatus()).body(ErrorResponse.of(errorMessage));
     }
 
     //  JSON 데이터를 DTO로 변환하는 과정에서 유효성 검사를 수행
@@ -69,7 +66,7 @@ public class GlobalExceptionHandler {
         String errorMessage = errorCode.getMessage() + " : " + ex.getMessage();
         HttpStatus status = errorCode.getStatus();
         log.error("예외 발생 msg: {}", errorMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(status, errorMessage));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(errorMessage));
     }
 
     private List<ErrorResponse.ValidationError> extractValidationErrors(BindingResult bindingResult) {

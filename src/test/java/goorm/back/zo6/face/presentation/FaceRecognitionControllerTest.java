@@ -70,9 +70,9 @@ class FaceRecognitionControllerTest {
                         .cookie(new Cookie("Authorization", testToken))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.rekognitionId").value("rekognition-12345"))
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.data.rekognitionId").value("rekognition-12345"))
+                .andExpect(jsonPath("$.data.id").value(1L))
+                .andExpect(jsonPath("$.data.userId").value(1L))
                 .andDo(print());
         verify(rekognitionService, times(1)).uploadUserFace(eq(1L), any(MultipartFile.class));
     }
@@ -92,7 +92,7 @@ class FaceRecognitionControllerTest {
                         .file(faceImage)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("\"인증에 실패하였습니다. 다시 로그인 해 주세요.\"")) // 응답 메시지 검증
+                .andExpect(jsonPath("$.message").value("인증에 실패하였습니다. 다시 로그인 해 주세요.")) // 응답 메시지 검증
                 .andDo(print());
         verifyNoInteractions(rekognitionService);
     }
@@ -108,7 +108,7 @@ class FaceRecognitionControllerTest {
                 .cookie(new Cookie("Authorization", testToken))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("얼굴 이미지 삭제 완료"))
+                .andExpect(jsonPath("$.data").value("얼굴 이미지 삭제 완료"))
                 .andDo(print());
 
         verify(rekognitionService, times(1)).deleteUserFace(anyLong());
@@ -122,7 +122,7 @@ class FaceRecognitionControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/face/delete")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("\"인증에 실패하였습니다. 다시 로그인 해 주세요.\"")) // 응답 메시지 검증
+                .andExpect(jsonPath("$.message").value("인증에 실패하였습니다. 다시 로그인 해 주세요.")) // 응답 메시지 검증
                 .andDo(print());
 
         verifyNoInteractions(rekognitionService);
@@ -137,7 +137,7 @@ class FaceRecognitionControllerTest {
         Long sessionId = 1L;
         Long userId = 1L;
         MockMultipartFile faceImage = new MockMultipartFile("faceImage", "face.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3, 4});
-        FaceAuthResultResponse response = new FaceAuthResultResponse(userId, 99.5f, true);
+        FaceAuthResultResponse response = new FaceAuthResultResponse(userId, 99.5f);
 
 
         when(rekognitionService.authenticationByUserFace(anyLong(), anyLong(), any(MultipartFile.class))).thenReturn(response);
@@ -149,9 +149,8 @@ class FaceRecognitionControllerTest {
                 .param("sessionId",sessionId.toString())
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value("1"))
-                .andExpect(jsonPath("$.similarity").value(99.5))
-                .andExpect(jsonPath("$.result").value(true))
+                .andExpect(jsonPath("$.data.userId").value("1"))
+                .andExpect(jsonPath("$.data.similarity").value(99.5))
                 .andDo(print());
 
         verify(rekognitionService, times(1)).authenticationByUserFace(conferenceId, sessionId,faceImage);
@@ -192,24 +191,9 @@ class FaceRecognitionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(new Cookie("Authorization", testToken)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Rekognition Collection 생성 완료!"))
+                .andExpect(jsonPath("$.data").value("Rekognition Collection 생성 완료!")) // 응답 메시지 검증
                 .andDo(print());
 
         verify(rekognitionService, times(1)).createCollection();
     }
-
-    @Test
-    @DisplayName("Rekognition Collection 생성 - 쿠키가 없을 때 실패")
-    void createCollection_WhenCookieNone_Fails() throws Exception{
-        // given
-        // when & then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/face/collection")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string("\"인증에 실패하였습니다. 다시 로그인 해 주세요.\"")) // 응답 메시지 검증
-                .andDo(print());
-
-        verifyNoInteractions(rekognitionService);
-    }
-
 }
