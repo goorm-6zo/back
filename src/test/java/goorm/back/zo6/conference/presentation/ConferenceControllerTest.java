@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,14 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.context.annotation.Import;
 
-import java.util.Collections;
-
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +64,10 @@ class ConferenceControllerTest {
 
     private String testToken;
 
+    private Conference conference;
+
+    private Session session;
+
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -78,15 +75,22 @@ class ConferenceControllerTest {
                 .alwaysDo(restDocs)
                 .build();
 
+        sessionJpaRepository.deleteAll();
+        conferenceJpaRepository.deleteAll();
+
         User testUser = userJpaRepository.save(UserFixture.유저());
         testToken = generateTestToken(testUser);
+
+        this.conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
+
+        this.session = SessionFixture.세션(conference);
+        this.conference.addSession(session);
+        this.sessionJpaRepository.save(session);
     }
 
     @Test
     @DisplayName("모든 컨퍼런스 리스트 조회 성공")
     void getAllConferences_ReturnsConferenceList() throws Exception {
-        Conference conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-
         mockMvc.perform(get("/api/v1/conference")
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
@@ -106,13 +110,12 @@ class ConferenceControllerTest {
                                 fieldWithPath(".data.[].hasSessions").type(JsonFieldType.BOOLEAN).description("세션 존재 여부")
                         )
                 ));
+
     }
 
     @Test
     @DisplayName("특정 컨퍼런스 조회 성공")
     void getConference_ReturnsSpecificConference() throws Exception {
-        Conference conference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-
         mockMvc.perform(get("/api/v1/conference/{conferenceId}", conference.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
@@ -134,20 +137,13 @@ class ConferenceControllerTest {
                                 fieldWithPath(".data.sessions[]").type(JsonFieldType.ARRAY).description("세션 목록")
                         )
                 ));
+
     }
 
     @Test
     @DisplayName("특정 컨퍼런스 내 특정 세션 조회 성공")
     void getSessionDetail_ReturnsSpecificSession() throws Exception {
-        Conference savedConference = conferenceJpaRepository.save(ConferenceFixture.컨퍼런스());
-
-        Session session = SessionFixture.세션(savedConference);
-
-        savedConference.addSession(session);
-        Session savedSession = sessionJpaRepository.save(session);
-
-
-        mockMvc.perform(get("/api/v1/conference/{conferenceId}/sessions/{sessionId}", savedConference.getId(), session.getId())
+        mockMvc.perform(get("/api/v1/conference/{conferenceId}/sessions/{sessionId}", conference.getId(), session.getId())
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(savedSession.getId()))
