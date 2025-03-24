@@ -53,6 +53,7 @@ class ReservationServiceImplTest {
 
     @BeforeEach
     void setUpSecurityContext() {
+
         Authentication authentication = mock(Authentication.class);
         lenient().when(authentication.getName()).thenReturn("테스트유저");
 

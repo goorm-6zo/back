@@ -22,6 +22,8 @@ public class ReservationConferenceDetailResponse {
 
     private String conferenceLocation;
 
+    private String conferenceArea;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 

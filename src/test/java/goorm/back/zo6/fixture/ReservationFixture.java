@@ -10,19 +10,6 @@ import java.util.List;
 
 public class ReservationFixture {
 
-    public static Reservation 임시예약(Conference conference, List<Session> sessions, String name, String phone) {
-        Reservation reservation = Reservation.builder()
-                .conference(conference)
-                .name(name)
-                .phone(phone)
-                .status(ReservationStatus.TEMPORARY)
-                .build();
-
-        sessions.forEach(reservation::addSession);
-
-        return reservation;
-    }
-
     public static Reservation 확정된예약(Conference conference, List<Session> sessions, String name, String phone, User user) {
         Reservation reservation = Reservation.builder()
                 .conference(conference)
