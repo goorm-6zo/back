@@ -36,20 +36,7 @@ public class ConferenceMapper {
     }
 
     public SessionDto toSessionDto(Session session) {
-        return new SessionDto(
-                session.getId(),
-                session.getConference().getId(),
-                session.getName(),
-                session.getCapacity(),
-                session.getLocation(),
-                session.getStartTime(),
-                session.getEndTime(),
-                session.getSummary(),
-                session.getSpeakerName(),
-                session.getSpeakerOrganization(),
-                session.isActive(),
-                generateSpeakerImageUrl(session.getSpeakerImageKey())
-        );
+        return SessionDto.from(session, generateSpeakerImageUrl(session.getSpeakerImageKey()));
     }
 
     private String generateConferenceImageUrl(String imageKey) {

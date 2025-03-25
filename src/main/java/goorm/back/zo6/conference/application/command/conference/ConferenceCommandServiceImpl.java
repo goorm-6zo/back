@@ -1,7 +1,5 @@
 package goorm.back.zo6.conference.application.command.conference;
 
-import goorm.back.zo6.common.exception.CustomException;
-import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.application.dto.ConferenceCreateRequest;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.shared.ConferenceFactory;

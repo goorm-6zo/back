@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.presentation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.command.conference.ConferenceCommandService;
 import goorm.back.zo6.conference.application.command.session.SessionCommandService;
 import goorm.back.zo6.conference.application.dto.*;
@@ -10,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class ConferenceAdminController {
     @Operation(summary = "특정 컨퍼런스 조회", description = "conferenceId로 특정 컨퍼런스의 상세 정보를 조회합니다. (관리자 전용)")
     public ResponseEntity<ResponseDto<ConferenceResponse>> getConference(@PathVariable Long conferenceId) {
         ConferenceResponse response = conferenceQueryService.getConference(conferenceId);
-        return ResponseEntity.ok(ResPonseDto.of(response));
+        return ResponseEntity.ok(ResponseDto.of(response));
     }
 
     @GetMapping("/{conferenceId}/sessions/{sessionId}")
@@ -50,7 +50,6 @@ public class ConferenceAdminController {
 
     @PutMapping("/{conferenceId}/status")
     @Operation(summary = "컨퍼런스 상태 변경", description = "활성화 / 비활성화를 변경합니다. (관리자 전용)")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDto<String>> conferenceStatus(@PathVariable Long conferenceId) {
         boolean currentStatus = conferenceCommandService.getConferenceStatus(conferenceId);
         boolean newStatus = !currentStatus;

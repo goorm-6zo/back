@@ -121,7 +121,7 @@ class ConferenceControllerTest {
                 .andExpect(jsonPath("$.data.summary").value(session.getSummary()))
                 .andExpect(jsonPath("$.data.speakerName").value(session.getSpeakerName()))
                 .andExpect(jsonPath("$.data.speakerOrganization").value(session.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.data.active").value(session.isActive()));
+                .andExpect(jsonPath("$.data.isActive").value(session.isActive()));
     }
 
     private String generateTestToken(User user) {

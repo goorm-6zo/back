@@ -1,5 +1,6 @@
 package goorm.back.zo6.reservation.presnetation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationRequest;

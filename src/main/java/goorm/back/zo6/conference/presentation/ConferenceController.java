@@ -1,5 +1,6 @@
 package goorm.back.zo6.conference.presentation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.application.query.ConferenceQueryService;
