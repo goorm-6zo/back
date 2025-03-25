@@ -110,7 +110,8 @@ class ConferenceQueryServiceImplTest {
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
                 session.isActive(),
-                session.getSpeakerImageKey()
+                session.getSpeakerImageKey(),
+                session.getSpeakerName() != null && !session.getSpeakerName().isBlank()
         );
 
         given(conferenceRepository.findWithSessionsById(conference.getId()))

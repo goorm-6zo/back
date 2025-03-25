@@ -49,6 +49,7 @@ public class SessionCreateServiceImpl implements SessionCreateService {
                 savedSession.getSpeakerName(),
                 savedSession.getSpeakerOrganization(),
                 savedSession.isActive(),
-                savedSession.getSpeakerImageKey());
+                savedSession.getSpeakerImageKey(),
+                session.getSpeakerName() != null && !session.getSpeakerName().isBlank());
     }
 }
