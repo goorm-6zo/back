@@ -40,6 +40,8 @@ public class SessionDto {
 
     private String speakerImage;
 
+    private boolean speakerStatus;
+
     public static SessionDto fromEntity(Session session) {
         return new SessionDto(
                 session.getId(),
@@ -52,7 +54,8 @@ public class SessionDto {
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
                 session.isActive(),
-                session.getSpeakerImageKey()
+                session.getSpeakerImageKey(),
+                session.getSpeakerName() != null && !session.getSpeakerName().isBlank()
         );
     }
 }
