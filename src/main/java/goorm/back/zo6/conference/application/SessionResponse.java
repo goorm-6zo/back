@@ -35,4 +35,6 @@ public class SessionResponse {
     private boolean isActive;
 
     private String speakerImage;
+
+    private boolean isSpeaker;
 }
