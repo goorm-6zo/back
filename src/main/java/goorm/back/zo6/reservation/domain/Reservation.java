@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -67,13 +68,6 @@ public class Reservation {
     public void confirm() {
         if (this.status != ReservationStatus.TEMPORARY) {
             throw new CustomException(ErrorCode.INVALID_RESERVATION_STATUS);
-        }
-        this.status = ReservationStatus.CONFIRMED;
-    }
-
-    public void confirmReservation() {
-        if (this.status == ReservationStatus.CONFIRMED) {
-            throw new CustomException(ErrorCode.RESERVATION_ALREADY_CONFIRMED);
         }
         this.status = ReservationStatus.CONFIRMED;
     }

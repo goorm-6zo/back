@@ -27,7 +27,7 @@ public class ConferenceMapper {
                 conference.getStartTime(),
                 conference.getEndTime(),
                 conference.getCapacity(),
-                s3FileService.generatePresignedUrl(conference.getImageKey(), 60),
+                s3FileService.generatePresignedUrl(conference.getImageKey(), 60), // url 컨퍼런스 유효 시간으로 지정
                 conference.getIsActive(),
                 conference.getHasSessions()
         );
@@ -47,7 +47,7 @@ public class ConferenceMapper {
                 conference.getStartTime(),
                 conference.getEndTime(),
                 conference.getCapacity(),
-                s3FileService.generatePresignedUrl(conference.getImageKey(), 60),
+                s3FileService.generatePresignedUrl(conference.getImageKey(), 60), // 컨퍼런스 url 유효 시간으로 변경..
                 conference.getIsActive(),
                 conference.getHasSessions(),
                 sortedSessions

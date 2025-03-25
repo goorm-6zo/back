@@ -1,22 +1,18 @@
-package goorm.back.zo6.reservation.application;
+package goorm.back.zo6.reservation.application.query;
 
 import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
+import goorm.back.zo6.reservation.application.ReservationResponse;
 
 import java.util.List;
 
-public interface ReservationService {
-
-    ReservationResponse createReservation(ReservationRequest reservationRequest);
+public interface ReservationQueryService {
 
     List<ReservationResponse> getMyReservations();
-
-    ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest);
 
     List<ConferenceSimpleResponse> getMyConferenceSimpleList();
 
     ReservationResponse getReservationDetailsById(Long reservationId);
-
-    ReservationResponse linkReservationByPhone(String inputPhone);
 
     ReservationConferenceDetailResponse getReservedConferenceDetails(Long conferenceId);
 }

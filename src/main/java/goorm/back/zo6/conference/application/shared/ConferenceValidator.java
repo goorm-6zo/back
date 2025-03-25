@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ConferenceValidator {
+
     private final ConferenceRepository conferenceRepository;
 
     public Conference findConferenceOrThrow(Long id) {
