@@ -2,12 +2,16 @@ package goorm.back.zo6.user.presentation;
 
 import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.common.dto.ResponseDto;
+import goorm.back.zo6.user.application.PhoneValidService;
 import goorm.back.zo6.user.application.UserService;
+import goorm.back.zo6.user.dto.request.PhoneRequest;
+import goorm.back.zo6.user.dto.request.PhoneValidRequest;
 import goorm.back.zo6.user.dto.request.SignUpRequest;
 import goorm.back.zo6.user.dto.response.SignUpResponse;
 import goorm.back.zo6.user.dto.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PhoneValidService phoneValidService;
 
     @GetMapping("/{userId}")
     @Operation(summary = "id 유저 조회", description = "유저 id로 유저 정보를 조회합니다.")
@@ -42,11 +47,30 @@ public class UserController {
         return ResponseEntity.ok().body(ResponseDto.of(userService.signUp(request)));
     }
 
+    @PutMapping("/phone")
+    @Operation(summary = "소셜 로그인 유저 전화번호 등록", description = "소셜 로그인 유저의 전화번호를 등록합니다.")
+    public ResponseEntity<String> updatePhone(@AuthenticationPrincipal LoginUser loginUser, @Validated @RequestBody PhoneRequest request) {
+        userService.initPhoneNumber(loginUser.getUsername(), request.phone());
+        return ResponseEntity.ok().body("소셜 로그인 유저 전화번호 등록 완료");
+    }
+
     @DeleteMapping
     @Operation(summary = "유저 논리 탈퇴", description = "유저 토큰으로 유저를 논리 탈퇴(비활성화) 합니다.")
     public ResponseEntity<ResponseDto<String>> deactivateByToken(@AuthenticationPrincipal LoginUser loginUser) {
         String email = loginUser.getUsername();
         userService.deactivateByToken(email);
         return ResponseEntity.ok().body(ResponseDto.of("성공적으로 회원 탈퇴하였습니다."));
+    }
+    @PostMapping("/code")
+    @Operation(summary = "전화번호 인증 문자 전송", description = "해당 전화번호에 인증 번호를 전송합니다.")
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody PhoneRequest request) {
+        phoneValidService.sendValidMessage(request.phone());
+        return ResponseEntity.ok().body("인증 번호 전송 완료");
+    }
+
+    @PostMapping("/verify")
+    @Operation(summary = "전화번호 검증", description = "해당 전화번호에 인증 번호를 검증합니다.")
+    public ResponseEntity<Boolean> verifyCode(@Valid @RequestBody PhoneValidRequest request) {
+        return ResponseEntity.ok().body(phoneValidService.validPhone(request.phone(), request.code()));
     }
 }
