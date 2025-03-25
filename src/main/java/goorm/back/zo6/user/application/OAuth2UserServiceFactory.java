@@ -1,6 +1,5 @@
 package goorm.back.zo6.user.application;
 
-import goorm.back.zo6.auth.application.KakaoOAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
