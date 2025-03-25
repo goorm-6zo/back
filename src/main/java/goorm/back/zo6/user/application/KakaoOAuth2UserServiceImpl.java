@@ -19,8 +19,8 @@ public class KakaoOAuth2UserServiceImpl extends DefaultOAuth2UserService impleme
 
     private final UserRepository userRepository;
 
-    @Override
     @Transactional
+    @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
