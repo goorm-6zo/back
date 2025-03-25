@@ -28,17 +28,20 @@ public class ReservationValidator {
     }
 
     public void validateUserAccess(Reservation reservation, String currentUser, String currentPhone) {
+
         if (!reservation.getName().equals(currentUser) || !reservation.getPhone().equals(currentPhone)) {
             throw new IllegalStateException("조회 권한이 없습니다.");
         }
     }
 
     public Reservation getReservationOrThrow(Long reservationId) {
+
         return reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
     }
 
     public void validateRequest(ReservationRequest reservationRequest) {
-        if (reservationRequest.getConferenceId() == null || reservationRequest.getName() == null || reservationRequest.getPhone() == null) {
+
+        if (reservationRequest.conferenceId() == null || reservationRequest.name() == null || reservationRequest.phone() == null) {
             throw new CustomException(ErrorCode.INVALID_PARAMETER);
         }
     }

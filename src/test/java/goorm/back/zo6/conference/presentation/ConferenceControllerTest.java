@@ -86,6 +86,8 @@ class ConferenceControllerTest {
         this.session = SessionFixture.세션(conference);
         this.conference.addSession(session);
         this.sessionJpaRepository.save(session);
+
+        System.out.println("isActive: " + session.isActive());
     }
 
     @Test
@@ -121,7 +123,7 @@ class ConferenceControllerTest {
                 .andExpect(jsonPath("$.summary").value(session.getSummary()))
                 .andExpect(jsonPath("$.speakerName").value(session.getSpeakerName()))
                 .andExpect(jsonPath("$.speakerOrganization").value(session.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.active").value(session.isActive()));
+                .andExpect(jsonPath("$.isActive").value(session.isActive()));
     }
 
     private String generateTestToken(User user) {

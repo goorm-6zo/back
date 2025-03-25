@@ -83,7 +83,7 @@ class ReservationCommandServiceImplTest {
                 .build();
 
         given(conferenceValidator.findConferenceOrThrow(conference.getId())).willReturn(conference);
-        given(reservationValidator.validateSessionReservations(conference, request.getSessionIds(), request.getName(), request.getPhone())).willReturn(Set.of(session));
+        given(reservationValidator.validateSessionReservations(conference, request.sessionIds(), request.name(), request.phone())).willReturn(Set.of(session));
         given(reservationFactory.createReservationEntity(conference, request, Set.of(session), ReservationStatus.CONFIRMED)).willReturn(reservation);
         given(reservationRepository.save(reservation)).willReturn(reservation);
 
@@ -107,8 +107,8 @@ class ReservationCommandServiceImplTest {
                 .phone(user.getPhone())
                 .build();
 
-        given(conferenceValidator.findConferenceWithSessionsOrThrow(request.getConferenceId())).willReturn(conference);
-        given(reservationValidator.validateSessionReservations(conference, request.getSessionIds(), request.getName(), request.getPhone())).willReturn(Set.of(session));
+        given(conferenceValidator.findConferenceWithSessionsOrThrow(request.conferenceId())).willReturn(conference);
+        given(reservationValidator.validateSessionReservations(conference, request.sessionIds(), request.name(), request.phone())).willReturn(Set.of(session));
         given(reservationFactory.createReservationEntity(conference, request, Set.of(session), ReservationStatus.TEMPORARY)).willReturn(reservation);
         given(reservationRepository.save(reservation)).willReturn(reservation);
 

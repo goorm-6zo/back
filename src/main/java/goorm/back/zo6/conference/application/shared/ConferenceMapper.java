@@ -18,7 +18,8 @@ public class ConferenceMapper {
     private final S3FileService s3FileService;
 
     public ConferenceResponse toConferenceResponse(Conference conference) {
-        return ConferenceResponse.from(conference, generateConferenceImageUrl(conference.getImageKey()));
+        String imageUrl = generateConferenceImageUrl(conference.getImageKey());
+        return ConferenceResponse.from(conference, imageUrl);
     }
 
     public ConferenceResponse toConferenceDetailResponse(Conference conference) {

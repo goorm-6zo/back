@@ -72,7 +72,7 @@ public class ConferenceAdminController {
     public ResponseEntity<SessionDto> updateSession(@PathVariable Long sessionId, @Valid @RequestBody SessionUpdateRequest request) {
         SessionDto response = sessionCommandService.updateSession(
                 sessionId,
-                request.getLocation()
+                request.location()
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

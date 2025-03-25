@@ -15,10 +15,11 @@ import java.util.Set;
 public class ReservationFactory {
 
     public Reservation createReservationEntity(Conference conference, ReservationRequest reservationRequest, Set<Session> sessions, ReservationStatus status) {
+
         Reservation reservation = Reservation.builder()
                 .conference(conference)
-                .name(reservationRequest.getName())
-                .phone(reservationRequest.getPhone())
+                .name(reservationRequest.name())
+                .phone(reservationRequest.phone())
                 .status(status)
                 .build();
 

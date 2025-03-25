@@ -86,7 +86,7 @@ class ConferenceQueryServiceImplTest {
         ConferenceResponse result = conferenceQueryService.getConference(conference.getId());
 
         assertNotNull(result);
-        assertEquals(conference.getId(), result.getId());
+        assertEquals(conference.getId(), result.id());
         verify(conferenceValidator).findConferenceWithSessionsOrThrow(conference.getId());
         verify(conferenceMapper).toConferenceDetailResponse(conference);
     }

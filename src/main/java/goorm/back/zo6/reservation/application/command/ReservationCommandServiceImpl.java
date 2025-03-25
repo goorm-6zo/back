@@ -41,10 +41,8 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
 
         reservationValidator.validateRequest(reservationRequest);
-
-        Conference conference = conferenceValidator.findConferenceOrThrow(reservationRequest.getConferenceId());
-
-        Set<Session> sessions = reservationValidator.validateSessionReservations(conference, reservationRequest.getSessionIds(), reservationRequest.getName(), reservationRequest.getPhone());
+        Conference conference = conferenceValidator.findConferenceOrThrow(reservationRequest.conferenceId());
+        Set<Session> sessions = reservationValidator.validateSessionReservations(conference, reservationRequest.sessionIds(), reservationRequest.name(), reservationRequest.phone());
 
         Reservation reservation = reservationFactory.createReservationEntity(conference, reservationRequest, sessions, ReservationStatus.CONFIRMED);
 
@@ -58,10 +56,8 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     public ReservationResponse createTemporaryReservation(ReservationRequest reservationRequest) {
 
         reservationValidator.validateRequest(reservationRequest);
-
-        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(reservationRequest.getConferenceId());
-
-        Set<Session> sessions = reservationValidator.validateSessionReservations(conference, reservationRequest.getSessionIds(), reservationRequest.getName(), reservationRequest.getPhone());
+        Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(reservationRequest.conferenceId());
+        Set<Session> sessions = reservationValidator.validateSessionReservations(conference, reservationRequest.sessionIds(), reservationRequest.name(), reservationRequest.phone());
 
         Reservation reservation = reservationFactory.createReservationEntity(conference, reservationRequest, sessions, ReservationStatus.TEMPORARY);
 
@@ -77,7 +73,6 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
         List<Reservation> reservations = reservationRepository.findAllByPhoneAndStatus(inputPhone, ReservationStatus.TEMPORARY);
 
         User user = userContext.findByPhoneOrThrow(inputPhone);
-
         reservationValidator.validateReservations(reservations);
 
         Reservation reservation = reservations.get(0);

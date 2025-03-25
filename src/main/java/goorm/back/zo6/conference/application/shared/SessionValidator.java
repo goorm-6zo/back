@@ -14,11 +14,13 @@ public class SessionValidator {
     private final SessionRepository sessionRepository;
 
     public Session getSessionOrThrow(Long sessionId) {
+
         return sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUND));
     }
 
     public Session findSessionByConferenceAndSessionId(Long conferenceId, Long sessionId) {
+
         return sessionRepository.findByConferenceIdAndSessionId(conferenceId, sessionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SESSION_NOT_FOUNT));
     }

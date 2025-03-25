@@ -18,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,9 +78,7 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
         User currentUser = userContext.findByEmailOrThrow(currentUserEmail);
 
         Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(conferneceId);
-
         List<Reservation> reservations = reservationRepository.findByConferenceIdAndUserId(conferneceId, currentUser.getId());
-
         reservationValidator.validateReservations(reservations);
 
         Set<SessionDto> reservedSessions = sessionFactory.createSessionDtos(reservations);

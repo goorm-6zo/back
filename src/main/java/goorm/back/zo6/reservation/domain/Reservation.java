@@ -52,6 +52,7 @@ public class Reservation {
 
     @Builder
     public Reservation(Conference conference, String name, String phone) {
+
         this.conference = conference;
         this.name = name;
         this.phone = phone;
@@ -59,6 +60,7 @@ public class Reservation {
     }
 
     public void linkUser(User user) {
+
         if (this.user != null) {
             throw new CustomException(ErrorCode.ALREADY_LINKED_USER);
         }
@@ -66,6 +68,7 @@ public class Reservation {
     }
 
     public void confirm() {
+
         if (this.status != ReservationStatus.TEMPORARY) {
             throw new CustomException(ErrorCode.INVALID_RESERVATION_STATUS);
         }
@@ -73,6 +76,7 @@ public class Reservation {
     }
 
     public void addSession(Session session) {
+
         this.reservationSessions.add(new ReservationSession(this, session));
     }
 
