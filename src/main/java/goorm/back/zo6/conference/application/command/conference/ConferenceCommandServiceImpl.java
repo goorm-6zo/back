@@ -46,6 +46,6 @@ public class ConferenceCommandServiceImpl implements ConferenceCommandService {
 
         Conference savedConference = conferenceRepository.save(conference);
 
-        return ConferenceResponse.fromEntity(savedConference);
+        return ConferenceResponse.from(savedConference, conference.getImageKey());
     }
 }

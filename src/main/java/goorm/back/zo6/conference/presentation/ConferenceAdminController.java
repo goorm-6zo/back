@@ -36,8 +36,8 @@ public class ConferenceAdminController {
 
     @GetMapping("/{conferenceId}")
     @Operation(summary = "특정 컨퍼런스 조회", description = "conferenceId로 특정 컨퍼런스의 상세 정보를 조회합니다. (관리자 전용)")
-    public ResponseEntity<ConferenceDetailResponse> getConference(@PathVariable Long conferenceId) {
-        ConferenceDetailResponse response = conferenceQueryService.getConference(conferenceId);
+    public ResponseEntity<ConferenceResponse> getConference(@PathVariable Long conferenceId) {
+        ConferenceResponse response = conferenceQueryService.getConference(conferenceId);
         return ResponseEntity.ok(response);
     }
 

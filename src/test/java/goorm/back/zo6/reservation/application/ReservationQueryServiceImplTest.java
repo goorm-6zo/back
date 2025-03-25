@@ -2,7 +2,7 @@ package goorm.back.zo6.reservation.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.application.shared.ConferenceValidator;
 import goorm.back.zo6.conference.application.shared.SessionFactory;
@@ -126,14 +126,14 @@ class ReservationQueryServiceImplTest {
     @DisplayName("내 컨퍼런스 간단 목록 조회 성공")
     void getMyConferencesSimpleList_success() {
         List<Reservation> reservations = List.of(reservation);
-        List<ConferenceSimpleResponse> responses = List.of(ConferenceSimpleResponse.builder().build());
+        List<ConferenceResponse> responses = List.of(ConferenceResponse.builder().build());
 
         given(userContext.getCurrentUserEmail()).willReturn(user.getEmail());
         given(userContext.findByEmailOrThrow(user.getEmail())).willReturn(user);
         given(reservationRepository.findAllByUser(user)).willReturn(reservations);
         given(reservationMapper.mapToConferenceSimpleResponse(reservations)).willReturn(responses);
 
-        List<ConferenceSimpleResponse> actual = reservationQueryService.getMyConferenceSimpleList();
+        List<ConferenceResponse> actual = reservationQueryService.getMyConferenceSimpleList();
 
         assertThat(actual).isEqualTo(responses);
     }

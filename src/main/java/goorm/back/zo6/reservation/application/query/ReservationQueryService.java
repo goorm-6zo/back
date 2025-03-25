@@ -1,6 +1,6 @@
 package goorm.back.zo6.reservation.application.query;
 
-import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationResponse;
 
@@ -10,7 +10,7 @@ public interface ReservationQueryService {
 
     List<ReservationResponse> getMyReservations();
 
-    List<ConferenceSimpleResponse> getMyConferenceSimpleList();
+    List<ConferenceResponse> getMyConferenceSimpleList();
 
     ReservationResponse getReservationDetailsById(Long reservationId);
 

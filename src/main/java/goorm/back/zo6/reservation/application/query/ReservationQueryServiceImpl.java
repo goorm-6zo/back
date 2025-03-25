@@ -1,8 +1,7 @@
 package goorm.back.zo6.reservation.application.query;
 
-import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
-import goorm.back.zo6.conference.application.shared.ConferenceMapper;
 import goorm.back.zo6.conference.application.shared.ConferenceValidator;
 import goorm.back.zo6.conference.application.shared.SessionFactory;
 import goorm.back.zo6.conference.domain.Conference;
@@ -13,7 +12,6 @@ import goorm.back.zo6.reservation.application.shared.ReservationValidator;
 import goorm.back.zo6.reservation.application.shared.UserContext;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationRepository;
-import goorm.back.zo6.reservation.domain.ReservationSession;
 import goorm.back.zo6.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,7 +51,7 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     }
 
     @Override
-    public List<ConferenceSimpleResponse> getMyConferenceSimpleList() {
+    public List<ConferenceResponse> getMyConferenceSimpleList() {
 
         User currentUser = userContext.findByEmailOrThrow(userContext.getCurrentUserEmail());
 

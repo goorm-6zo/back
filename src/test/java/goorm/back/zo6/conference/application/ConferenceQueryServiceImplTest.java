@@ -1,6 +1,5 @@
 package goorm.back.zo6.conference.application;
 
-import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.application.query.ConferenceQueryServiceImpl;
@@ -55,7 +54,7 @@ class ConferenceQueryServiceImplTest {
     @DisplayName("모든 컨퍼런스를 성공적으로 조회한다")
     void getAllConferences_Success() {
         Conference conference = ConferenceFixture.컨퍼런스_아이디포함();
-        ConferenceResponse response = ConferenceResponse.fromEntity(conference);
+        ConferenceResponse response = ConferenceResponse.from(conference, conference.getImageKey());
 
         List<Conference> conferences = List.of(conference);
 
@@ -79,12 +78,12 @@ class ConferenceQueryServiceImplTest {
         Session session = SessionFixture.세션_아이디포함(conference);
         conference.getSessions().add(session);
 
-        ConferenceDetailResponse detailResponse = ConferenceDetailResponse.fromEntity(conference);
+        ConferenceResponse detailResponse = ConferenceResponse.detailFrom(conference, conference.getImageKey(), List.of(SessionDto.fromEntity(session)));
 
         when(conferenceValidator.findConferenceWithSessionsOrThrow(conference.getId())).thenReturn(conference);
         when(conferenceMapper.toConferenceDetailResponse(conference)).thenReturn(detailResponse);
 
-        ConferenceDetailResponse result = conferenceQueryService.getConference(conference.getId());
+        ConferenceResponse result = conferenceQueryService.getConference(conference.getId());
 
         assertNotNull(result);
         assertEquals(conference.getId(), result.getId());

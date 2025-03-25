@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -37,18 +39,53 @@ public class ConferenceResponse {
 
     private Boolean hasSessions;
 
-    public static ConferenceResponse fromEntity(Conference conference) {
-        return new ConferenceResponse(
-                conference.getId(),
-                conference.getName(),
-                conference.getDescription(),
-                conference.getLocation(),
-                conference.getStartTime(),
-                conference.getEndTime(),
-                conference.getCapacity(),
-                conference.getImageKey(),
-                conference.getIsActive(),
-                conference.getHasSessions()
-        );
+    @Builder.Default
+    private List<SessionDto> sessions = Collections.emptyList();
+
+    public static ConferenceResponse detailFrom(Conference conference, String imageUrl, List<SessionDto> sessions) {
+        return ConferenceResponse.builder()
+                .id(conference.getId())
+                .name(conference.getName())
+                .description(conference.getDescription())
+                .location(conference.getLocation())
+                .startTime(conference.getStartTime())
+                .endTime(conference.getEndTime())
+                .capacity(conference.getCapacity())
+                .imageUrl(conference.getImageKey())
+                .isActive(conference.getIsActive())
+                .hasSessions(conference.getHasSessions())
+                .sessions(
+                        conference.getSessions().stream()
+                                .map(SessionDto::fromEntity)
+                                .toList()
+                )
+                .build();
+    }
+
+    public static ConferenceResponse from(Conference conference, String imageUrl) {
+        return ConferenceResponse.builder()
+                .id(conference.getId())
+                .name(conference.getName())
+                .description(conference.getDescription())
+                .location(conference.getLocation())
+                .startTime(conference.getStartTime())
+                .endTime(conference.getEndTime())
+                .capacity(conference.getCapacity())
+                .imageUrl(conference.getImageKey())
+                .isActive(conference.getIsActive())
+                .hasSessions(conference.getHasSessions())
+                .sessions(Collections.emptyList())
+                .build();
+    }
+
+    public static ConferenceResponse simpleFrom(Conference conference, String imageUrl) {
+        return ConferenceResponse.builder()
+                .id(conference.getId())
+                .name(conference.getName())
+                .location(conference.getLocation())
+                .startTime(conference.getStartTime())
+                .endTime(conference.getEndTime())
+                .imageUrl(conference.getImageKey())
+                .build();
     }
 }

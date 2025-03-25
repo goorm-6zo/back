@@ -1,6 +1,6 @@
 package goorm.back.zo6.reservation.presnetation;
 
-import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationRequest;
 import goorm.back.zo6.reservation.application.ReservationResponse;
@@ -35,8 +35,8 @@ public class ReservationController {
 
     @GetMapping("/my/conference")
     @Operation(summary = "내가 예약한 컨퍼런스 목록 조회", description = "로그인한 사용자가 예약한 컨퍼런스의 간략한 정보 목록을 조회합니다.")
-    public ResponseEntity<List<ConferenceSimpleResponse>> getMyConference() {
-        List<ConferenceSimpleResponse> simpleResponses = reservationQueryService.getMyConferenceSimpleList();
+    public ResponseEntity<List<ConferenceResponse>> getMyConference() {
+        List<ConferenceResponse> simpleResponses = reservationQueryService.getMyConferenceSimpleList();
         return ResponseEntity.ok(simpleResponses);
     }
 

@@ -1,6 +1,5 @@
 package goorm.back.zo6.conference.application.shared;
 
-import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
@@ -19,39 +18,20 @@ public class ConferenceMapper {
     private final S3FileService s3FileService;
 
     public ConferenceResponse toConferenceResponse(Conference conference) {
-        return new ConferenceResponse(
-                conference.getId(),
-                conference.getName(),
-                conference.getDescription(),
-                conference.getLocation(),
-                conference.getStartTime(),
-                conference.getEndTime(),
-                conference.getCapacity(),
-                s3FileService.generatePresignedUrl(conference.getImageKey(), 60), // url 컨퍼런스 유효 시간으로 지정
-                conference.getIsActive(),
-                conference.getHasSessions()
-        );
+        return ConferenceResponse.from(conference, generateConferenceImageUrl(conference.getImageKey()));
     }
 
-    public ConferenceDetailResponse toConferenceDetailResponse(Conference conference) {
+    public ConferenceResponse toConferenceDetailResponse(Conference conference) {
         List<SessionDto> sortedSessions = conference.getSessions().stream()
                 .sorted(Comparator.comparing(Session::getStartTime))
                 .map(this::toSessionDto)
                 .toList();
 
-        return new ConferenceDetailResponse(
-                conference.getId(),
-                conference.getName(),
-                conference.getDescription(),
-                conference.getLocation(),
-                conference.getStartTime(),
-                conference.getEndTime(),
-                conference.getCapacity(),
-                s3FileService.generatePresignedUrl(conference.getImageKey(), 60), // 컨퍼런스 url 유효 시간으로 변경..
-                conference.getIsActive(),
-                conference.getHasSessions(),
-                sortedSessions
-        );
+        return ConferenceResponse.detailFrom(conference, generateConferenceImageUrl(conference.getImageKey()), sortedSessions);
+    }
+
+    public ConferenceResponse toConferenceSimpleResponse(Conference conference) {
+        return ConferenceResponse.simpleFrom(conference, generateConferenceImageUrl(conference.getImageKey()));
     }
 
     public SessionDto toSessionDto(Session session) {
@@ -69,6 +49,13 @@ public class ConferenceMapper {
                 session.isActive(),
                 generateSpeakerImageUrl(session.getSpeakerImageKey())
         );
+    }
+
+    private String generateConferenceImageUrl(String imageKey) {
+        if (imageKey == null) {
+            return null;
+        }
+        return s3FileService.generatePresignedUrl(imageKey, 60);
     }
 
     private String generateSpeakerImageUrl(String speakerImageKey) {

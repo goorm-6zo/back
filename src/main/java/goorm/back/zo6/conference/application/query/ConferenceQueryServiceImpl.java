@@ -2,7 +2,6 @@ package goorm.back.zo6.conference.application.query;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
-import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.application.shared.ConferenceMapper;
@@ -37,7 +36,7 @@ public class ConferenceQueryServiceImpl implements ConferenceQueryService {
     }
 
     @Override
-    public ConferenceDetailResponse getConference(Long conferenceId) {
+    public ConferenceResponse getConference(Long conferenceId) {
         Conference conference = conferenceValidator.findConferenceWithSessionsOrThrow(conferenceId);
         return conferenceMapper.toConferenceDetailResponse(conference);
     }

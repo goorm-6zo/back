@@ -1,6 +1,5 @@
 package goorm.back.zo6.conference.presentation;
 
-import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.application.query.ConferenceQueryService;
@@ -29,8 +28,8 @@ public class ConferenceController {
 
     @GetMapping("/{conferenceId}")
     @Operation(summary = "특정 컨퍼런스 조회", description = "conferenceId로 특정 컨퍼런스의 상세 정보를 조회합니다.")
-    public ResponseEntity<ConferenceDetailResponse> getConference(@PathVariable Long conferenceId) {
-        ConferenceDetailResponse response = conferenceQueryService.getConference(conferenceId);
+    public ResponseEntity<ConferenceResponse> getConference(@PathVariable Long conferenceId) {
+        ConferenceResponse response = conferenceQueryService.getConference(conferenceId);
         return ResponseEntity.ok(response);
     }
 

@@ -1,6 +1,5 @@
 package goorm.back.zo6.conference.application.query;
 
-import goorm.back.zo6.conference.application.dto.ConferenceDetailResponse;
 import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 
@@ -10,7 +9,7 @@ public interface ConferenceQueryService {
 
     List<ConferenceResponse> getAllConferences();
 
-    ConferenceDetailResponse getConference(Long conferenceId);
+    ConferenceResponse getConference(Long conferenceId);
 
     List<SessionDto> getSessionsByConferenceId(Long conferenceId);
 

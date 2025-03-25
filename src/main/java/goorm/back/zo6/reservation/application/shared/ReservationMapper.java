@@ -1,13 +1,12 @@
 package goorm.back.zo6.reservation.application.shared;
 
-import goorm.back.zo6.conference.application.dto.ConferenceSimpleResponse;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
 import goorm.back.zo6.conference.application.dto.SessionDto;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.reservation.application.ReservationConferenceDetailResponse;
 import goorm.back.zo6.reservation.application.ReservationResponse;
 import goorm.back.zo6.reservation.domain.Reservation;
-import goorm.back.zo6.reservation.domain.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,10 +27,10 @@ public class ReservationMapper {
                 .collect(Collectors.toList());
     }
 
-    public List<ConferenceSimpleResponse> mapToConferenceSimpleResponse(List<Reservation> reservations) {
+    public List<ConferenceResponse> mapToConferenceSimpleResponse(List<Reservation> reservations) {
         return reservations.stream()
                 .map(this::createConferenceSimpleResponse)
-                .sorted(Comparator.comparing(ConferenceSimpleResponse::getStartTime).reversed())
+                .sorted(Comparator.comparing(ConferenceResponse::getStartTime).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -89,14 +88,9 @@ public class ReservationMapper {
                 .build();
     }
 
-    public ConferenceSimpleResponse createConferenceSimpleResponse(Reservation reservation) {
-        return new ConferenceSimpleResponse(
-                reservation.getConference().getId(),
-                reservation.getConference().getName(),
-                reservation.getConference().getStartTime(),
-                reservation.getConference().getEndTime(),
-                reservation.getConference().getImageKey(),
-                reservation.getConference().getLocation()
+    public ConferenceResponse createConferenceSimpleResponse(Reservation reservation) {
+        return ConferenceResponse.simpleFrom(
+                reservation.getConference(), S3_BASE_URL + reservation.getConference().getImageKey()
         );
     }
 }
