@@ -1,6 +1,7 @@
 package goorm.back.zo6.attend.infrastructure;
 
 import goorm.back.zo6.attend.domain.Attend;
+import goorm.back.zo6.attend.dto.UserAttendanceResponse;
 import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,44 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AttendJpaRepository extends JpaRepository<Attend, Long> {
+
+    @Query("""
+    SELECT u.id,
+           u.name,
+           CASE
+               WHEN COUNT(a) > 0 THEN true
+               ELSE false
+           END,
+           CASE
+               WHEN :sessionId IS NOT NULL THEN s.name
+               ELSE c.name
+           END,
+           CASE
+               WHEN :sessionId IS NOT NULL THEN s.capacity
+               ELSE c.capacity
+           END
+    FROM Reservation r
+    JOIN r.user u
+    JOIN r.conference c
+    LEFT JOIN r.reservationSessions rs
+    LEFT JOIN rs.session s
+    LEFT JOIN Attend a ON a.userId = u.id
+        AND (
+            (:sessionId IS NOT NULL AND a.sessionId = :sessionId)
+            OR (:sessionId IS NULL AND a.conferenceId = :conferenceId AND a.sessionId IS NULL)
+        )
+    WHERE r.conference.id = :conferenceId
+      AND r.status = 'CONFIRMED'
+      AND (
+          :sessionId IS NULL
+          OR s.id = :sessionId
+      )
+    GROUP BY u.id, u.name, c.name, c.capacity, s.name, s.capacity
+""")
+    List<Tuple> findUsersWithAttendanceAndMeta(
+            @Param("conferenceId") Long conferenceId,
+            @Param("sessionId") Long sessionId
+    );
 
     @Query("""
     SELECT r.id, 

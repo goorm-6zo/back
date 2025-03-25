@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,5 +26,10 @@ public class AttendRepositoryImpl implements AttendRepository {
     @Override
     public List<Tuple> findAttendData(String phone, Long conferenceId, Long sessionId) {
         return attendJpaRepository.findAttendData(phone, conferenceId, sessionId);
+    }
+
+    @Override
+    public List<Tuple> findUsersWithAttendanceAndMeta(Long conferenceId, Long sessionId) {
+        return attendJpaRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId);
     }
 }

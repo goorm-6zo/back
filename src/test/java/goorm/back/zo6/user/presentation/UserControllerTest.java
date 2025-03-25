@@ -73,12 +73,12 @@ class UserControllerTest {
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole());
     }
 
     @Test
-    @DisplayName("유저 id로 조회 성공 통합 테스트")
-    void findById_Success() throws Exception {
+    @DisplayName("유저 id로 유저 정보 조회 성공 통합 테스트")
+    void getUserById_Success() throws Exception {
         // given
         String testToken = generateTestToken(testUser);
         Long userId = testUser.getId();
@@ -88,11 +88,11 @@ class UserControllerTest {
                         .cookie(new Cookie("Authorization", testToken))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUser.getId()))
-                .andExpect(jsonPath("$.email").value(testUser.getEmail()))
-                .andExpect(jsonPath("$.phone").value(testUser.getPhone()))
-                .andExpect(jsonPath("$.name").value(testUser.getName()))
-                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()));
+                .andExpect(jsonPath("$.data.id").value(testUser.getId()))
+                .andExpect(jsonPath("$.data.email").value(testUser.getEmail()))
+                .andExpect(jsonPath("$.data.phone").value(testUser.getPhone()))
+                .andExpect(jsonPath("$.data.name").value(testUser.getName()))
+                .andExpect(jsonPath("$.data.role").value(testUser.getRole().getRoleName()));
     }
 
     @Test
@@ -106,11 +106,11 @@ class UserControllerTest {
                         .cookie(new Cookie("Authorization", testToken))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUser.getId()))
-                .andExpect(jsonPath("$.email").value(testUser.getEmail()))
-                .andExpect(jsonPath("$.phone").value(testUser.getPhone()))
-                .andExpect(jsonPath("$.name").value(testUser.getName()))
-                .andExpect(jsonPath("$.role").value(testUser.getRole().getRoleName()));
+                .andExpect(jsonPath("$.data.id").value(testUser.getId()))
+                .andExpect(jsonPath("$.data.email").value(testUser.getEmail()))
+                .andExpect(jsonPath("$.data.phone").value(testUser.getPhone()))
+                .andExpect(jsonPath("$.data.name").value(testUser.getName()))
+                .andExpect(jsonPath("$.data.role").value(testUser.getRole().getRoleName()));
     }
 
     @Test
@@ -124,12 +124,12 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.role").exists())
-                .andExpect(jsonPath("$.email").value(request.email()))
-                .andExpect(jsonPath("$.phone").value(request.phone()))
-                .andExpect(jsonPath("$.name").value(request.name()));
+                .andExpect(jsonPath("$.data.id").exists())
+                .andExpect(jsonPath("$.data.createdAt").exists())
+                .andExpect(jsonPath("$.data.role").exists())
+                .andExpect(jsonPath("$.data.email").value(request.email()))
+                .andExpect(jsonPath("$.data.phone").value(request.phone()))
+                .andExpect(jsonPath("$.data.name").value(request.name()));
     }
 
     @Test
@@ -144,7 +144,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("name"),
                         jsonPath("$.validationErrors[0].message").value("이름을 입력해 주세요.")
@@ -163,7 +163,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("email"),
                         jsonPath("$.validationErrors[0].message").value("이메일을 입력해 주세요.")
@@ -182,7 +182,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("password"),
                         jsonPath("$.validationErrors[0].message").value("비밀번호를 입력해 주세요.")
@@ -201,7 +201,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value("BAD_REQUEST"),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("잘못된 요청입니다."),
                         jsonPath("$.validationErrors[0].field").value("phone"),
                         jsonPath("$.validationErrors[0].message").value("전화 번호를 입력해 주세요.")
@@ -210,7 +210,7 @@ class UserControllerTest {
     
     @Test
     @DisplayName("토큰 기반 유저 회원 탈퇴 성공 테스트.")
-    void deleteUser_Success() throws Exception {
+    void deactivateUser_Success() throws Exception {
         // given
         String email = testUser.getEmail();
         String testToken = generateTestToken(testUser);
@@ -219,7 +219,7 @@ class UserControllerTest {
         mockMvc.perform(delete("/api/v1/users")
                         .cookie(new Cookie("Authorization", testToken)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("성공적으로 회원 탈퇴하였습니다."));
+                .andExpect(jsonPath("$.data").value("성공적으로 회원 탈퇴하였습니다."));
 
         // 데이터베이스에서 삭제 확인
         Optional<User> user = userRepository.findByEmail(email);

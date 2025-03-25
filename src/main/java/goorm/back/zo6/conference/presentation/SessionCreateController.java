@@ -25,9 +25,9 @@ public class SessionCreateController {
 
     @PostMapping
     @Operation(summary = "세션 생성", description = "새로운 세션을 생성합니다.")
-    public ResponseEntity<SessionDto> createSession(@Valid @RequestBody SessionCreateRequest request) {
+    public ResponseEntity<ResponseDto<SessionDto>> createSession(@Valid @RequestBody SessionCreateRequest request) {
         SessionDto session = sessionCommandService.createSession(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(session);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.of(session));
     }
 }

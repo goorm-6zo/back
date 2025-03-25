@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -65,30 +66,25 @@ public class RekognitionApiClient {
                     .collectionId(collectionId)
                     .image(Image.builder().bytes(SdkBytes.fromByteBuffer(imageBytes)).build())
                     .maxFaces(1)
-                    .faceMatchThreshold(85f)  // 85% 이상 일치하는 경우만 인증 성공
+                    .faceMatchThreshold(85f)
                     .build();
 
-            // AWS Rekognition API 호출
-            SearchFacesByImageResponse response = rekognitionClient.searchFacesByImage(request);
-
-            // 얼굴 매칭이 되지 않은 경우
-            if (response.faceMatches().isEmpty()) {
-                log.info("얼굴 인증 실패 - 일치하는 얼굴 정보가 없음.");
-                throw new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND);
-            }
-
-            FaceMatch match = response.faceMatches().get(0);
-            String userId = match.face().externalImageId();
-            float similarity = match.similarity();
-
-            return FaceMatchingResponse.of(userId, similarity);
+            return rekognitionClient.searchFacesByImage(request)
+                    .faceMatches()
+                    .stream()
+                    .findFirst()
+                    .map(match -> {
+                        Long userId = Long.parseLong(match.face().externalImageId());
+                        float similarity = match.similarity();
+                        return FaceMatchingResponse.of(userId, similarity);
+                    })
+                    .orElseThrow(() -> new CustomException(ErrorCode.REKOGNITION_NO_MATCH_FOUND));
 
         }catch (CustomException e){
             throw e;
         }
-        catch (Exception e){
-            // 얼굴 매칭 api 호출 시 에러가 발생
-            log.info("얼굴 매칭 중 api 서버 에러.");
+        catch (Exception e) {
+            log.info("얼굴 매칭 중 API 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
         }
     }
@@ -121,6 +117,18 @@ public class RekognitionApiClient {
         }catch (Exception e){
             log.info("collection 생성 중, api 서버 에러.");
             throw new CustomException(ErrorCode.REKOGNITION_CREATE_COLLECTION_FAIL);
+        }
+    }
+
+    public void deleteCollection(){
+        try{
+            rekognitionClient.deleteCollection(DeleteCollectionRequest.builder()
+                    .collectionId(collectionId)
+                    .build());
+            log.info("Rekognition Collection 초기화 완료");
+        }catch (Exception e){
+            log.error("Rekognition Collection 초기화 실패");
+            throw new CustomException(ErrorCode.REKOGNITION_API_FAILURE);
         }
     }
 }

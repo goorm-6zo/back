@@ -127,7 +127,7 @@ class AttendControllerTest {
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(),  user.getRole());
     }
 
     @Test
@@ -141,24 +141,24 @@ class AttendControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.id").value(1),
-                        jsonPath("$.name").value("컨퍼런스A"),
-                        jsonPath("$.description").value("좋은 컨퍼런스A"),
-                        jsonPath("$.location").value("서울 법성포A"),
-                        jsonPath("$.capacity").value(10),
-                        jsonPath("$.hasSessions").value(true),
-                        jsonPath("$.attend").value(true)
+                        jsonPath("$.data.id").value(1),
+                        jsonPath("$.data.name").value("컨퍼런스A"),
+                        jsonPath("$.data.description").value("좋은 컨퍼런스A"),
+                        jsonPath("$.data.location").value("서울 법성포A"),
+                        jsonPath("$.data.capacity").value(10),
+                        jsonPath("$.data.hasSessions").value(true),
+                        jsonPath("$.data.attend").value(true)
                 )
                 .andExpectAll(
-                        jsonPath("$.sessions[0].id").value(1),
-                        jsonPath("$.sessions[0].name").value("세션"),
-                        jsonPath("$.sessions[0].capacity").value(10),
-                        jsonPath("$.sessions[0].location").value("서울 법성포 떡잎마을"),
-                        jsonPath("$.sessions[0].summary").value("좋은 세션"),
-                        jsonPath("$.sessions[0].speakerName").value("발표자"),
-                        jsonPath("$.sessions[0].speakerOrganization").value("발표자 소속"),
-                        jsonPath("$.sessions[0].active").value(true),
-                        jsonPath("$.sessions[0].attend").value(true)
+                        jsonPath("$.data.sessions[0].id").value(1),
+                        jsonPath("$.data.sessions[0].name").value("세션"),
+                        jsonPath("$.data.sessions[0].capacity").value(10),
+                        jsonPath("$.data.sessions[0].location").value("서울 법성포 떡잎마을"),
+                        jsonPath("$.data.sessions[0].summary").value("좋은 세션"),
+                        jsonPath("$.data.sessions[0].speakerName").value("발표자"),
+                        jsonPath("$.data.sessions[0].speakerOrganization").value("발표자 소속"),
+                        jsonPath("$.data.sessions[0].active").value(true),
+                        jsonPath("$.data.sessions[0].attend").value(true)
                 )
                 .andDo(print());
     }
@@ -173,13 +173,13 @@ class AttendControllerTest {
                         .param("conferenceId", String.valueOf(testConferenceB.getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testConferenceB.getId()))
-                .andExpect(jsonPath("$.name").value("컨퍼런스B")) // 컨퍼런스 이름 검증
-                .andExpect(jsonPath("$.location").value("서울 법성포B")) // 위치 검증
-                .andExpect(jsonPath("$.capacity").value(10)) // 정원 검증
-                .andExpect(jsonPath("$.description").value("좋은 컨퍼런스B")) // 설명 검증
-                .andExpect(jsonPath("$.hasSessions").value(false)) // 세션 존재 여부 검증
-                .andExpect(jsonPath("$.attend").value(true)) // 컨퍼런스 참석 여부 검증
+                .andExpect(jsonPath("$.data.id").value(testConferenceB.getId()))
+                .andExpect(jsonPath("$.data.name").value("컨퍼런스B")) // 컨퍼런스 이름 검증
+                .andExpect(jsonPath("$.data.location").value("서울 법성포B")) // 위치 검증
+                .andExpect(jsonPath("$.data.capacity").value(10)) // 정원 검증
+                .andExpect(jsonPath("$.data.description").value("좋은 컨퍼런스B")) // 설명 검증
+                .andExpect(jsonPath("$.data.hasSessions").value(false)) // 세션 존재 여부 검증
+                .andExpect(jsonPath("$.data.attend").value(true)) // 컨퍼런스 참석 여부 검증
                 .andDo(print());
     }
 
@@ -193,13 +193,13 @@ class AttendControllerTest {
                         .param("conferenceId", String.valueOf(testConferenceC.getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testConferenceC.getId()))
-                .andExpect(jsonPath("$.name").value("컨퍼런스C")) // 컨퍼런스 이름 검증
-                .andExpect(jsonPath("$.location").value("서울 법성포C")) // 위치 검증
-                .andExpect(jsonPath("$.capacity").value(10)) // 정원 검증
-                .andExpect(jsonPath("$.description").value("좋은 컨퍼런스C")) // 설명 검증
-                .andExpect(jsonPath("$.hasSessions").value(false)) // 세션 존재 여부 검증
-                .andExpect(jsonPath("$.attend").value(false)) // 컨퍼런스 참석 여부 검증
+                .andExpect(jsonPath("$.data.id").value(testConferenceC.getId()))
+                .andExpect(jsonPath("$.data.name").value("컨퍼런스C")) // 컨퍼런스 이름 검증
+                .andExpect(jsonPath("$.data.location").value("서울 법성포C")) // 위치 검증
+                .andExpect(jsonPath("$.data.capacity").value(10)) // 정원 검증
+                .andExpect(jsonPath("$.data.description").value("좋은 컨퍼런스C")) // 설명 검증
+                .andExpect(jsonPath("$.data.hasSessions").value(false)) // 세션 존재 여부 검증
+                .andExpect(jsonPath("$.data.attend").value(false)) // 컨퍼런스 참석 여부 검증
                 .andDo(print());
     }
 }

@@ -108,7 +108,7 @@ public class QRCodeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isNotFound(),
-                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("존재하지 않는 컨퍼런스입니다.")
                 );
     }
@@ -124,12 +124,12 @@ public class QRCodeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isNotFound(),
-                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()),
+                        jsonPath("$.status").value(false),
                         jsonPath("$.message").value("존재하지 않는 세션입니다.")
                 );
     }
 
     private String generateTestToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole());
     }
 }

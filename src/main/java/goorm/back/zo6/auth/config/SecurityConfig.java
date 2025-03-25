@@ -1,14 +1,15 @@
 package goorm.back.zo6.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goorm.back.zo6.auth.application.OAuth2LoginSuccessHandlerFactory;
 import goorm.back.zo6.auth.exception.CustomAccessDeniedHandler;
 import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.user.application.OAuth2UserServiceFactory;
 import goorm.back.zo6.user.domain.Role;
-import goorm.back.zo6.user.domain.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +17,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,9 +35,8 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-
-    @Value("${server.url}")
-    private String SERVER_URL;
+    private final OAuth2UserServiceFactory oAuth2UserServiceFactory;
+    private final OAuth2LoginSuccessHandlerFactory successHandlerFactory;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -58,11 +60,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/conference/**").permitAll()
                 .requestMatchers("/api/v1/conferences/**").permitAll()
                 .requestMatchers("/api/v1/face/authentication").permitAll()
+                .requestMatchers("/api/v1/conferences/image/**").permitAll()
+                .requestMatchers("/api/v1/face/authentication","/api/v1/face/collection").permitAll()
+                .requestMatchers("/api/v1/redis").permitAll()
                 .requestMatchers("/api/v1/sse/subscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
                 .requestMatchers("/api/v1/admin/conference/**").hasRole(Role.ADMIN.getRoleName())
                 .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
                 .requestMatchers("/api/v1/notices/**").hasRole(Role.ADMIN.getRoleName())
+                .requestMatchers("/oauth2/**", "/auth/login/kakao/**").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -77,6 +83,18 @@ public class SecurityConfig {
                 exceptionHandling
                         .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper)));
+
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserServiceFactory::loadUser))
+                .successHandler((request, response, authentication) -> {
+                    OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) authentication;
+                    String provider = oAuth2Token.getAuthorizedClientRegistrationId();
+
+                    AuthenticationSuccessHandler handler = successHandlerFactory.getHandler(provider);
+                    handler.onAuthenticationSuccess(request, response, authentication);
+                })
+        );
         return http.build();
     }
 
@@ -84,7 +102,6 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        //configuration.addAllowedOriginPattern(SERVER_URL);
         configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");

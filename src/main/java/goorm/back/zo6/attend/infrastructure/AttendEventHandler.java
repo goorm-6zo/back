@@ -25,10 +25,10 @@ public class AttendEventHandler {
         Long sessionId = event.getSessionId();
         Long userId = event.getUserId();
 
-        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId, event.getTimeStamp());
+        AttendInfo attendInfo = attendRedisService.saveUserAttendance(conferenceId, sessionId, userId);
         sseService.sendAttendanceCount(conferenceId, sessionId, attendInfo.attendCount());
 
-        if(!attendInfo.alreadyAttended()) {
+        if(attendInfo.isNewUser()) {
             attendService.registerAttend(userId, conferenceId, sessionId);
         }
     }

@@ -3,6 +3,8 @@ package goorm.back.zo6.attend.application;
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import jakarta.persistence.Tuple;
@@ -160,10 +162,11 @@ class AttendServiceTest {
         when(attendRepository.findAttendInfoByUserAndConference(userId, conferenceId)).thenReturn(Collections.emptyList());
 
         // when
-        ConferenceInfoDto result = attendService.findAllByToken(userId, conferenceId);
-
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            attendService.findAllByToken(userId, conferenceId);
+        });
         // then
-        assertNull(result);
+        assertEquals(ErrorCode.RESERVATION_NOT_FOUND, exception.getErrorCode());
         verify(attendRepository).findAttendInfoByUserAndConference(userId, conferenceId);
     }
 

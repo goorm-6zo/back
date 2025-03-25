@@ -11,7 +11,8 @@ public record UserResponse(
     String name,
     String phone,
     Boolean isDeleted,
-    Role role
+    Role role,
+    Boolean hasFace
 )
 {
     public static UserResponse from(User user){
@@ -21,6 +22,8 @@ public record UserResponse(
                 .name(user.getName())
                 .phone(user.getPhone())
                 .role(user.getRole())
+                .isDeleted(user.getIsDeleted())
+                .hasFace(user.getHasFace())
                 .build();
     }
 }

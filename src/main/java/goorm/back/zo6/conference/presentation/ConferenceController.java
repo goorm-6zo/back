@@ -21,22 +21,22 @@ public class ConferenceController {
 
     @GetMapping
     @Operation(summary = "모든 컨퍼런스 조회", description = "등록된 모든 컨퍼런스 목록을 조회합니다.")
-    public ResponseEntity<List<ConferenceResponse>> getAllConferences() {
+    public ResponseEntity<ResponseDto<List<ConferenceResponse>>> getAllConferences() {
         List<ConferenceResponse> conferences = conferenceQueryService.getAllConferences();
-        return ResponseEntity.ok(conferences);
+        return ResponseEntity.ok(ResponseDto.of(conferences));
     }
 
     @GetMapping("/{conferenceId}")
     @Operation(summary = "특정 컨퍼런스 조회", description = "conferenceId로 특정 컨퍼런스의 상세 정보를 조회합니다.")
-    public ResponseEntity<ConferenceResponse> getConference(@PathVariable Long conferenceId) {
+    public ResponseEntity<ResponseDto<ConferenceResponse>> getConference(@PathVariable Long conferenceId) {
         ConferenceResponse response = conferenceQueryService.getConference(conferenceId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseDto.of(response));
     }
 
     @GetMapping("/{conferenceId}/sessions/{sessionId}")
     @Operation(summary = "특정 세션 상세 조회", description = "conferenceId와 sessionId로 특정 세션의 상세 정보를 조회합니다.")
-    public ResponseEntity<SessionDto> getSessionDetail(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
+    public ResponseEntity<ResponseDto<SessionDto>> getSessionDetail(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
         SessionDto session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(ResponseDto.of(session));
     }
 }

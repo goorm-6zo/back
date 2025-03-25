@@ -4,15 +4,13 @@ import lombok.Builder;
 
 @Builder
 public record FaceAuthResultResponse(
-        String userId,
-        Float similarity,
-        boolean result
+        Long userId,
+        Float similarity
 ) {
-    public static FaceAuthResultResponse of(String userId, Float similarity){
+    public static FaceAuthResultResponse of(Long userId, Float similarity){
         return FaceAuthResultResponse.builder()
                 .userId(userId)
                 .similarity(similarity)
-                .result(true)
                 .build();
     }
 }

@@ -93,9 +93,9 @@ public class NoticeIntegrationTest {
 
         mockMvc.perform(get("/api/v1/notices/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].message").value("메시지1"))
-                .andExpect(jsonPath("$[1].message").value("메시지2"))
+                .andExpect(jsonPath("$.data.length()").value(2))
+                .andExpect(jsonPath("$.data[0].message").value("메시지1"))
+                .andExpect(jsonPath("$.data[1].message").value("메시지2"))
                 .andDo(print());
     }
 
@@ -112,8 +112,8 @@ public class NoticeIntegrationTest {
 
         mockMvc.perform(get("/api/v1/notices/1").param("sessionId","3").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].message").value("메시지3"))
+                .andExpect(jsonPath("$.data.length()").value(1))
+                .andExpect(jsonPath("$.data[0].message").value("메시지3"))
                 .andDo(print());
     }
 }

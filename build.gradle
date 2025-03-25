@@ -92,6 +92,9 @@ dependencies {
 
     // 이미지 압축
     implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.1'
+
+    // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {

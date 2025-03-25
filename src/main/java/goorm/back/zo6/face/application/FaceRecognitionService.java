@@ -1,5 +1,6 @@
 package goorm.back.zo6.face.application;
 
+import goorm.back.zo6.attend.domain.AttendEvent;
 import goorm.back.zo6.common.event.Events;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -10,7 +11,9 @@ import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceMatchingResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
 import goorm.back.zo6.face.infrastructure.RekognitionApiClient;
-import goorm.back.zo6.attend.domain.AttendEvent;
+import goorm.back.zo6.reservation.domain.ReservationRepository;
+import goorm.back.zo6.user.domain.User;
+import goorm.back.zo6.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -27,64 +30,79 @@ import java.nio.ByteBuffer;
 public class FaceRecognitionService {
     private final RekognitionApiClient rekognitionApiClient;
     private final FaceRepository faceRepository;
+    private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
 
     // 얼굴 데이터 collection 저장
     @Transactional
     public FaceResponse uploadUserFace(Long userId, MultipartFile faceImage){
-        try {
-            // 이미지 데이터를 Rekognition Collection에 등록
-            byte[] imageBytes = faceImage.getBytes();
-            String rekognitionFaceId = rekognitionApiClient.addFaceToCollection(userId, imageBytes);
+        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-            // DB에 얼굴 정보 저장
-            Face face = faceRepository.save(Face.of(rekognitionFaceId, userId));
-            log.info("얼굴 등록 완료! userId: {}, Face ID: {}", userId, rekognitionFaceId);
+        // 이미지 데이터를 Rekognition Collection 에 등록
+        byte[] imageBytes = toBytes(faceImage);
+        String rekognitionFaceId = rekognitionApiClient.addFaceToCollection(userId, imageBytes);
 
-            return FaceResponse.from(face);
-        } catch (IOException e) {
-            throw new CustomException(ErrorCode.FILE_CONVERSION_EXCEPTION);
-        }
+        // DB에 얼굴 정보 저장
+        Face face = faceRepository.save(Face.of(rekognitionFaceId, userId));
+        log.info("얼굴 등록 완료! userId: {}, Face ID: {}", userId, rekognitionFaceId);
+        user.faceRegistration();
+
+        return FaceResponse.from(face);
     }
 
-    // 얼굴 데이터 collection  삭제
+    // 얼굴 데이터 collection 에서 삭제
     @Transactional
-    public void deleteFaceImage(Long userId) {
+    public void deleteUserFace(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         Face face = faceRepository.findFaceByUserId(userId);
         String rekognitionId = face.getRekognitionFaceId();
-
         // Rekognition Collection 에 저장된 이미지 삭제
         rekognitionApiClient.deleteFaceFromCollection(rekognitionId);
         // DB 에서 삭제
         faceRepository.deleteByUserId(userId);
-
         log.info("얼굴 데이터 삭제 완료! userId : {}", userId);
+        user.deleteFace();
     }
 
     // 얼굴 비교 및 인증
     @Transactional
     public FaceAuthResultResponse authenticationByUserFace(Long conferenceId, Long sessionId, MultipartFile uploadedFile) {
-        try {
-            // 전달 된 얼굴 이미지를 ByteBuffer 로 변환
-            ByteBuffer imageBytes = ByteBuffer.wrap(uploadedFile.getBytes());
-            // collection 에 존재하는 얼굴 이미지와 전달 된 이미지 비교 결과
-            FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
 
-            log.info("유저 {} 얼굴정보 확인, 유사도 : {}", response.userId(), response.similarity());
+        ByteBuffer imageBytes = ByteBuffer.wrap(toBytes(uploadedFile));
+        FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
 
-            // 여기서 해당 유저가 예매를 한 유저인지 판단 후 예외 던지기
-
-            // 얼굴 인증 후 참가 이벤트 발생
-            Events.raise(new AttendEvent(Long.parseLong(response.userId()), conferenceId, sessionId));
-            return FaceAuthResultResponse.of(response.userId(), response.similarity());
-
-        } catch (IOException e) {
-            throw new CustomException(ErrorCode.FILE_CONVERSION_EXCEPTION);
+        if (!validateReservation(response.userId(), conferenceId, sessionId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_RESERVATION);
         }
+
+        Events.raise(new AttendEvent(response.userId(), conferenceId, sessionId));
+        return FaceAuthResultResponse.of(response.userId(), response.similarity());
     }
 
     // rekognition collection 생성, 초기 1회 실행
     public CollectionResponse createCollection(){
         String collectionArl = rekognitionApiClient.createCollection();
         return CollectionResponse.of(collectionArl);
+    }
+
+    public void deleteCollection(){
+        rekognitionApiClient.deleteCollection();
+    }
+
+    private byte[] toBytes(MultipartFile file) {
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.FILE_CONVERSION_EXCEPTION);
+        }
+    }
+
+    private boolean validateReservation(Long userId, Long conferenceId, Long sessionId) {
+        boolean isReserved = (sessionId == null)
+                ? reservationRepository.existsByUserIdAndConferenceId(userId, conferenceId)
+                : reservationRepository.existsByUserAndConferenceAndSession(userId, conferenceId, sessionId);
+
+        log.info("isReserved : {}", isReserved);
+        return isReserved;
     }
 }

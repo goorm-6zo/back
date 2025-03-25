@@ -1,5 +1,6 @@
 package goorm.back.zo6.notice.presntation;
 
+import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.notice.application.NoticeService;
 import goorm.back.zo6.notice.dto.NoticeRequest;
 import goorm.back.zo6.notice.dto.NoticeResponseDto;
@@ -25,19 +26,19 @@ public class NoticeController {
 
     @PostMapping(value="/{conferenceId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "알림 전송", description = "알림 대상을 ALL, ATTENDEE, NON_ATTENDEE 중 하나로 보내주세요. 세션에 대한 전송은 파라미터로 sessionId를 보내주시면 됩니다.")
-    public ResponseEntity<String> sendNotice(@PathVariable Long conferenceId,
-                                             @RequestParam(value = "sessionId", required = false) Long sessionId,
-                                             @RequestPart(value = "noticeRequest") @RequestBody NoticeRequest noticeRequest,
-                                             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+    public ResponseEntity<ResponseDto<String>> sendNotice(@PathVariable Long conferenceId,
+                                                         @RequestParam(value = "sessionId", required = false) Long sessionId,
+                                                         @RequestPart(value = "noticeRequest") @RequestBody NoticeRequest noticeRequest,
+                                                         @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         noticeService.sendMessage(noticeRequest.message(),conferenceId,sessionId,noticeRequest.noticeTarget(), image);
-        return ResponseEntity.ok("메시지 전송 완료");
+        return ResponseEntity.ok(ResponseDto.of("메시지 전송 완료"));
     }
 
     @GetMapping("/{conferenceId}")
     @Operation(summary = "알림 전송 내역 확인", description = "전송된 알림의 내역을 확인하고 싶은 세션 또는 세션,컨퍼런스 아이디르 보내주세요. 세션에 대한 조회는 파라미터로 sessionId를 보내주시면 됩니다.")
-    public ResponseEntity<List<NoticeResponseDto>> getNotice(@PathVariable Long conferenceId,
+    public ResponseEntity<ResponseDto<List<NoticeResponseDto>>> getNotice(@PathVariable Long conferenceId,
                                                               @RequestParam(value = "sessionId", required = false) Long sessionId){
-        return ResponseEntity.ok(noticeService.getMessages(conferenceId,sessionId));
+        return ResponseEntity.ok(ResponseDto.of(noticeService.getMessages(conferenceId,sessionId)));
     }
 
 }

@@ -17,5 +17,9 @@ public interface ReservationRepository {
     List<Reservation> findAllByNameAndPhone(String name, String phone);
 
     List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId);
+
+    Boolean existsByUserIdAndConferenceId(Long userId, Long conferenceId);
+
+    Boolean existsByUserAndConferenceAndSession(Long userId, Long conferenceId, Long sessionId);
 }
 

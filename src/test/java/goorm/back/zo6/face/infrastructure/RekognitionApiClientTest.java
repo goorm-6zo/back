@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.rekognition.model.*;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -129,11 +130,12 @@ class RekognitionApiClientTest {
 
         // when
         FaceMatchingResponse response = rekognitionApiClient.authorizeUserFace(imageBytes);
-
+        System.out.println("result : " +response.userId());
+        System.out.println("expect: "+ userId);
         // then
         assertNotNull(response);
-        assertEquals(userId, response.userId());
         assertEquals(similarity,response.similarity());
+        assertEquals(Long.parseLong(userId), response.userId());
     }
 
     @Test
@@ -151,12 +153,11 @@ class RekognitionApiClientTest {
                 .thenReturn(mockResponse);
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class,
-                ()-> rekognitionApiClient.authorizeUserFace(imageBytes));
+        CustomException exception = assertThrows(CustomException.class, () -> rekognitionApiClient.authorizeUserFace(imageBytes));
 
         // then
-        verify(rekognitionClient, times(1)).searchFacesByImage(any(SearchFacesByImageRequest.class));
         assertEquals(ErrorCode.REKOGNITION_NO_MATCH_FOUND, exception.getErrorCode());
+        verify(rekognitionClient, times(1)).searchFacesByImage(any(SearchFacesByImageRequest.class));
     }
 
     @Test

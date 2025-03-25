@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Service
 @Log4j2
 public class SseService {
     private final EmitterRepository emitterRepository;
-
+    private final Map<String, Long> lastKnownCounts = new ConcurrentHashMap<>();
     private static final long TIMEOUT = 1800*1000L;
     private static final long RECONNECTION_TIMEOUT = 1000L;
+    private static final String ATTEND_EVENT_NAME = "AttendanceCount";
 
     public SseEmitter subscribe(Long conferenceId, Long sessionId){
         String eventKey = generateEventKey(conferenceId, sessionId);
@@ -25,45 +28,48 @@ public class SseService {
 
         registerEmitterHandler(eventKey, sseEmitter);
 
-        sendToClient(eventKey, sseEmitter, "알림 구독 성공 [key = " + eventKey + "]");
+        sendToClientFirst(eventKey, sseEmitter);
 
         return sseEmitter;
     }
 
-    // SseEmitter를 통해 클라이언트에게 이벤트를 전송하는 역할을 합니다.
-    private void sendToClient(String eventId, SseEmitter sseEmitter, Object data){
-        SseEmitter.SseEventBuilder event = getSseEvent(eventId, data);
+    // SseEmitter 를 통해 클라이언트에게 초기 전달용 이벤트를 전송하는 역할을 합니다.
+    private void sendToClientFirst(String eventKey, SseEmitter sseEmitter){
+        long baseAttendCount = lastKnownCounts.getOrDefault(eventKey, 0L);
+        SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, baseAttendCount);
         try{
             sseEmitter.send(event);
+            lastKnownCounts.putIfAbsent(eventKey, 0L);
         }catch (IOException e){
-            log.error("구독 실패, eventId ={}, {}", eventId, e.getMessage());
+            log.error("구독 실패, eventId ={}, {}", eventKey, e.getMessage());
+            throw new CustomException(ErrorCode.SSE_CONNECTION_FAILED);
         }
-    }
-
-    // 이벤트 id와, data를 이용해서 SSE 이벤트 객체를 생성합니다.
-    private SseEmitter.SseEventBuilder getSseEvent(String eventId, Object data){
-        return SseEmitter.event()
-                .id(eventId)
-                .data(data)
-                .reconnectTime(RECONNECTION_TIMEOUT);  // 클라이언트와 연결이 끊겼을 때 클라이언트가 서버와 재연결을 시도하기 전에 대기할 시간
-        // 해당 기능은 라이언트가 재연결 시도를 할 수 있도록 브라우저에게 힌트를 주는 역할
     }
 
     // 기기에 해당하는 참석자 수 리턴
     public void sendAttendanceCount(Long conferenceId, Long sessionId, long count){
         String eventKey = generateEventKey(conferenceId, sessionId);
         SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
+        SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, count);
+        lastKnownCounts.put(eventKey, count);
         if(emitter != null){
             try{
-                emitter.send(SseEmitter.event()
-                        .name("AttendanceCount")
-                        .id(eventKey)
-                        .reconnectTime(RECONNECTION_TIMEOUT)
-                        .data(count));
+                emitter.send(event);
             } catch (IOException e) {
+                log.error("전송 실패, eventId ={}, {}", eventKey, e.getMessage());
                 throw new CustomException(ErrorCode.SSE_CONNECTION_FAILED);
             }
         }
+    }
+
+    // 이벤트 id와, data 를 이용해서 SSE 이벤트 객체를 생성합니다.
+    private SseEmitter.SseEventBuilder getSseAttendEvent(String eventKey, Object data){
+        return SseEmitter.event()
+                .id(eventKey)
+                .name(ATTEND_EVENT_NAME)
+                .data(data)
+                .reconnectTime(RECONNECTION_TIMEOUT); // 클라이언트와 연결이 끊겼을 때 클라이언트가 서버와 재연결을 시도하기 전에 대기할 시간
+        // 해당 기능은 라이언트가 재연결 시도를 할 수 있도록 브라우저에게 힌트를 주는 역할
     }
 
     // SSE 연결이 종료되거나, 타임아웃되거나, 오류가 발생할 때 적절한 처리를 수행하도록 Emitter에 핸들러를 등록
