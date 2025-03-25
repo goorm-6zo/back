@@ -1,6 +1,5 @@
 package goorm.back.zo6.conference.application.dto;
 
-import goorm.back.zo6.conference.domain.Session;
 import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 
