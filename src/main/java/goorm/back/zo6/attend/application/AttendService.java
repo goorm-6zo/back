@@ -2,8 +2,11 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
+import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
 import goorm.back.zo6.attend.dto.SessionInfoDto;
+import goorm.back.zo6.attend.dto.UserAttendanceResponse;
+import goorm.back.zo6.attend.infrastructure.AttendRedisService;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.User;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +29,23 @@ import java.util.stream.Collectors;
 public class AttendService {
     private final AttendRepository attendRepository;
     private final UserRepository userRepository;
+    private final AttendRedisService attendRedisService;
+
+    public AttendanceSummaryResponse getAttendanceSummary(Long conferenceId, Long sessionId){
+        List<Tuple> results = attendRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId);
+        String title = results.get(0).get(3, String.class);
+        Integer capacity = results.get(0).get(4, Integer.class);
+        long attendCount = attendRedisService.attendCount(conferenceId,sessionId);
+        List<UserAttendanceResponse> userAttendances = new ArrayList<>();
+        for(Tuple tuple: results){
+            Long userId = tuple.get(0, Long.class);
+            String name = tuple.get(1, String.class);
+            boolean isAttended = tuple.get(2, Boolean.class);
+            userAttendances.add(UserAttendanceResponse.of(userId,name,isAttended));
+        }
+
+        return AttendanceSummaryResponse.of(title, capacity,attendCount, userAttendances);
+    }
 
     @Transactional
     public void registerAttend(Long userId, Long conferenceId, Long sessionId) {
