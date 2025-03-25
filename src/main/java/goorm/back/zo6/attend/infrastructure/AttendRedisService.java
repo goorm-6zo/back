@@ -20,6 +20,13 @@ public class AttendRedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
+    public long attendCount(Long conferenceId, Long sessionId){
+        AttendKeys attendKeys = generateKeys(conferenceId, sessionId);
+        String countKey = attendKeys.countKey();
+        String countStr = redisTemplate.opsForValue().get(countKey);
+        return (countStr != null) ? Long.parseLong(countStr) : 0L;
+    }
+
     // 유저 참석 확인
     public AttendInfo saveUserAttendance(Long conferenceId, Long sessionId, Long userId){
         if(conferenceId == null){

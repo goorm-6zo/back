@@ -1,6 +1,7 @@
 package goorm.back.zo6.attend.presentation;
 
 import goorm.back.zo6.attend.application.AttendService;
+import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
 import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.common.dto.ResponseDto;
@@ -25,5 +26,14 @@ public class AttendController {
         Long userId = loginUser.getId();
         ConferenceInfoDto attendResponses = attendService.findAllByToken(userId, conferenceId);
         return ResponseEntity.ok(ResponseDto.of(attendResponses));
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "컨퍼런스, 세션에 예매한 유저들의 참석 내용 조회", description = "컨퍼런스, 세션 예매한 유저들을 조회하고," +
+            " 해당 유저들이 행사에 참여했는지 여부와 함께 조회합니다.")
+    public ResponseEntity<ResponseDto<AttendanceSummaryResponse>> getAttendanceSummary(@RequestParam("conferenceId") Long conferenceId,
+                                                                                       @RequestParam(value = "sessionId", required = false) Long sessionId){
+        AttendanceSummaryResponse attendanceSummaryResponse = attendService.getAttendanceSummary(conferenceId, sessionId);
+        return ResponseEntity.ok(ResponseDto.of(attendanceSummaryResponse));
     }
 }
