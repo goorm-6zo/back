@@ -1,11 +1,14 @@
 package goorm.back.zo6.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goorm.back.zo6.auth.application.OAuth2LoginSuccessHandlerFactory;
 import goorm.back.zo6.auth.exception.CustomAccessDeniedHandler;
 import goorm.back.zo6.auth.exception.CustomAuthenticationEntryPoint;
 import goorm.back.zo6.auth.filter.JwtAuthFilter;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.user.application.OAuth2UserServiceFactory;
 import goorm.back.zo6.user.domain.Role;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +17,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,6 +35,8 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private final OAuth2UserServiceFactory oAuth2UserServiceFactory;
+    private final OAuth2LoginSuccessHandlerFactory successHandlerFactory;
 
 
     @Bean
@@ -57,6 +64,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/admin/conference/**").hasRole(Role.ADMIN.getRoleName())
                 .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
                 .requestMatchers("/api/v1/notices/**").hasRole(Role.ADMIN.getRoleName())
+                .requestMatchers("/oauth2/**", "/auth/login/kakao/**").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -71,6 +79,18 @@ public class SecurityConfig {
                 exceptionHandling
                         .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper)));
+
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserServiceFactory::loadUser))
+                .successHandler((request, response, authentication) -> {
+                    OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) authentication;
+                    String provider = oAuth2Token.getAuthorizedClientRegistrationId();
+
+                    AuthenticationSuccessHandler handler = successHandlerFactory.getHandler(provider);
+                    handler.onAuthenticationSuccess(request, response, authentication);
+                })
+        );
         return http.build();
     }
 
