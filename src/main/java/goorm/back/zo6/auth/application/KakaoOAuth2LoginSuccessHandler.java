@@ -17,7 +17,7 @@ public class KakaoOAuth2LoginSuccessHandler extends AbstractOAuth2LoginSuccessHa
     private final UserRepository userRepository;
 
     public KakaoOAuth2LoginSuccessHandler(JwtUtil jwtUtil, UserRepository userRepository) {
-        super(jwtUtil);
+        super(jwtUtil, userRepository);
         this.userRepository = userRepository;
     }
 

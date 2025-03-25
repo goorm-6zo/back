@@ -2,6 +2,7 @@ package goorm.back.zo6.auth.application;
 
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.user.domain.Role;
+import goorm.back.zo6.user.domain.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractOAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     protected abstract String getEmail(OAuth2User oAuth2User);
     protected abstract Long getUserId(OAuth2User oAuth2User);
@@ -34,6 +36,14 @@ public abstract class AbstractOAuth2LoginSuccessHandler implements Authenticatio
         String accessToken = jwtUtil.createAccessToken(userId, email, role);
         Cookie cookie = createAccessTokenCookie(accessToken);
         response.addCookie(cookie);
+        boolean hasPhone = isHasPhone(email);
+        response.addCookie(new Cookie("hasPhone", String.valueOf(hasPhone)));
+    }
+
+    private boolean isHasPhone(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> user.getPhone() != null)
+                .orElse(false);
     }
 
     private Cookie createAccessTokenCookie(String accessToken) {
