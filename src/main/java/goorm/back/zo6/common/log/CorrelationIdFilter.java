@@ -17,6 +17,7 @@ public class CorrelationIdFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String correlationId = UUID.randomUUID().toString(); // 요청마다 고유한  id 생성
         MDC.put("CORRELATION_ID",correlationId);
+        chain.doFilter(request, response);
         MDC.clear();
     }
 }

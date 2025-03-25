@@ -13,7 +13,9 @@ public class TimeLogPointCut {
     @Pointcut("execution(* goorm.back.zo6.attend..*.*(..))")
     private void attendPackagePointCut() {}
 
-    @Pointcut("execution(* goorm.back.zo6.auth..*.*(..))")
+    @Pointcut("execution(* goorm.back.zo6.auth..*.*(..))"
+            + " && !execution(* goorm.back.zo6.auth.config..*.*(..))"
+            + " && !execution(* goorm.back.zo6.auth.filter..*.*(..))")
     private void authPackagePointCut() {}
 
     @Pointcut("execution(* goorm.back.zo6.conference..*.*(..))")
