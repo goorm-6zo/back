@@ -50,6 +50,6 @@ public class PhoneValidServiceTest {
         boolean isValid = phoneValidService.validPhone(phone,"654321");
 
         //then
-        assertTrue(isValid);
+        assertFalse(isValid);
     }
 }
