@@ -33,6 +33,11 @@ public class AttendService {
 
     public AttendanceSummaryResponse getAttendanceSummary(Long conferenceId, Long sessionId){
         List<Tuple> results = attendRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId);
+
+        if(results.isEmpty()){
+            throw new CustomException(ErrorCode.NO_ATTENDANCE_DATA);
+        }
+
         String title = results.get(0).get(3, String.class);
         Integer capacity = results.get(0).get(4, Integer.class);
         long attendCount = attendRedisService.attendCount(conferenceId,sessionId);

@@ -24,6 +24,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 ext {
@@ -92,6 +93,9 @@ dependencies {
 
     // 이미지 압축
     implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.1'
+
+    // discord log
+    implementation('com.github.napstr:logback-discord-appender:1.0.0')
 }
 
 tasks.named('test') {

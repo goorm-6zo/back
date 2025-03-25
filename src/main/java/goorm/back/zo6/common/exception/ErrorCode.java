@@ -81,6 +81,7 @@ public enum ErrorCode {
 
     // Attendance Error
     MISSING_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "conferenceId 또는 sessionId 가 필요합니다."),
+    NO_ATTENDANCE_DATA(HttpStatus.NO_CONTENT, "해당 컨퍼런스/세션 에 참석 유저 데이터가 존재하지 않습니다."),
 
     // Encryption Error
     ENCRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST, "암호화 과정에서 에러가 발생했습니다."),
