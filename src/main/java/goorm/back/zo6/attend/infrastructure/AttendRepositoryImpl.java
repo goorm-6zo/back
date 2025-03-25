@@ -27,4 +27,9 @@ public class AttendRepositoryImpl implements AttendRepository {
     public List<Tuple> findAttendData(String phone, Long conferenceId, Long sessionId) {
         return attendJpaRepository.findAttendData(phone, conferenceId, sessionId);
     }
+
+    @Override
+    public List<Tuple> findUsersWithAttendanceAndMeta(Long conferenceId, Long sessionId) {
+        return attendJpaRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId);
+    }
 }

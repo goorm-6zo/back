@@ -1,5 +1,6 @@
 package goorm.back.zo6.face.presentation;
 
+import goorm.back.zo6.auth.application.OAuth2LoginSuccessHandlerFactory;
 import goorm.back.zo6.auth.config.SecurityConfig;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.common.exception.CustomException;
@@ -8,6 +9,7 @@ import goorm.back.zo6.face.application.FaceRecognitionService;
 import goorm.back.zo6.face.domain.Face;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
 import goorm.back.zo6.face.dto.response.FaceResponse;
+import goorm.back.zo6.user.application.OAuth2UserServiceFactory;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +46,12 @@ class FaceRecognitionControllerTest {
 
     @MockitoBean
     private JpaMetamodelMappingContext jpaMetamodelMappingContext;
+
+    @MockitoBean
+    private OAuth2LoginSuccessHandlerFactory oAuth2LoginSuccessHandlerFactory;
+
+    @MockitoBean
+    private OAuth2UserServiceFactory oAuth2UserServiceFactory;
 
     @BeforeEach
     void setUp() {
