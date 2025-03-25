@@ -63,7 +63,8 @@ public class ConferenceMapper {
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
                 session.isActive(),
-                generateSpeakerImageUrl(session.getSpeakerImageKey())
+                generateSpeakerImageUrl(session.getSpeakerImageKey()),
+                session.getSpeakerName() != null && !session.getSpeakerName().isBlank()
         );
     }
 
@@ -80,7 +81,8 @@ public class ConferenceMapper {
                 session.getSpeakerName(),
                 session.getSpeakerOrganization(),
                 session.isActive(),
-                generateSpeakerImageUrl(session.getSpeakerImageKey())
+                generateSpeakerImageUrl(session.getSpeakerImageKey()),
+                session.getSpeakerName() != null && !session.getSpeakerName().isBlank()
         );
     }
 

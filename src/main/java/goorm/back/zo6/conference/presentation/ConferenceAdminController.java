@@ -45,7 +45,6 @@ public class ConferenceAdminController {
 
     @PutMapping("/{conferenceId}/status")
     @Operation(summary = "컨퍼런스 상태 변경", description = "활성화 / 비활성화를 변경합니다. (관리자 전용)")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDto<String>> conferenceStatus(@PathVariable Long conferenceId) {
         boolean currentStatus = conferenceQueryService.getConferenceStatus(conferenceId);
         boolean newStatus = !currentStatus;
