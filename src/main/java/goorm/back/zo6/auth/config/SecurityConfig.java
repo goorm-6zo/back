@@ -38,6 +38,7 @@ public class SecurityConfig {
     private final OAuth2UserServiceFactory oAuth2UserServiceFactory;
     private final OAuth2LoginSuccessHandlerFactory successHandlerFactory;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //cors 설정
@@ -53,8 +54,14 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
                 .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
+                .requestMatchers("/api/v1/users/code","/api/v1/users/verify").permitAll()
                 .requestMatchers("/api/v1/rekognition/authentication").permitAll()
                 .requestMatchers("/api/v1/reservation/temp").permitAll()
+                .requestMatchers("/conferences").permitAll()
+                .requestMatchers("/sessions").permitAll()
+                .requestMatchers("/api/v1/conference/**").permitAll()
+                .requestMatchers("/api/v1/conferences/**").permitAll()
+                .requestMatchers("/api/v1/face/authentication").permitAll()
                 .requestMatchers("/api/v1/conferences/image/**").permitAll()
                 .requestMatchers("/api/v1/face/authentication","/api/v1/face/collection").permitAll()
                 .requestMatchers("/api/v1/redis").permitAll()

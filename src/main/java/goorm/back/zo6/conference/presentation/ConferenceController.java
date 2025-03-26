@@ -1,8 +1,9 @@
 package goorm.back.zo6.conference.presentation;
 
 import goorm.back.zo6.common.dto.ResponseDto;
-import goorm.back.zo6.conference.application.*;
-import goorm.back.zo6.conference.domain.Session;
+import goorm.back.zo6.conference.application.dto.ConferenceResponse;
+import goorm.back.zo6.conference.application.dto.SessionDto;
+import goorm.back.zo6.conference.application.query.ConferenceQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,15 @@ public class ConferenceController {
 
     @GetMapping("/{conferenceId}")
     @Operation(summary = "특정 컨퍼런스 조회", description = "conferenceId로 특정 컨퍼런스의 상세 정보를 조회합니다.")
-    public ResponseEntity<ResponseDto<ConferenceDetailResponse>> getConference(@PathVariable Long conferenceId) {
-        ConferenceDetailResponse response = conferenceQueryService.getConference(conferenceId);
+    public ResponseEntity<ResponseDto<ConferenceResponse>> getConference(@PathVariable Long conferenceId) {
+        ConferenceResponse response = conferenceQueryService.getConference(conferenceId);
         return ResponseEntity.ok(ResponseDto.of(response));
     }
 
     @GetMapping("/{conferenceId}/sessions/{sessionId}")
     @Operation(summary = "특정 세션 상세 조회", description = "conferenceId와 sessionId로 특정 세션의 상세 정보를 조회합니다.")
     public ResponseEntity<ResponseDto<SessionDto>> getSessionDetail(@PathVariable Long conferenceId, @PathVariable Long sessionId) {
-        Session session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
-        return ResponseEntity.ok(ResponseDto.of(SessionDto.fromEntity(session)));
+        SessionDto session = conferenceQueryService.getSessionDetail(conferenceId, sessionId);
+        return ResponseEntity.ok(ResponseDto.of(session));
     }
 }

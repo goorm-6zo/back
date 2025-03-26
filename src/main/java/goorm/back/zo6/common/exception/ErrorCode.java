@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     // Role Error
     ROLE_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 Role 입니다."),
+    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "권한 없음"),
 
     // Invalidation Error
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
@@ -81,6 +82,7 @@ public enum ErrorCode {
 
     // Attendance Error
     MISSING_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "conferenceId 또는 sessionId 가 필요합니다."),
+    NO_ATTENDANCE_DATA(HttpStatus.NO_CONTENT, "해당 컨퍼런스/세션 에 참석 유저 데이터가 존재하지 않습니다."),
 
     // Encryption Error
     ENCRYPT_CIPHER_EXCEPTION(HttpStatus.BAD_REQUEST, "암호화 과정에서 에러가 발생했습니다."),
@@ -91,6 +93,9 @@ public enum ErrorCode {
 
     // Sse Error
     SSE_CONNECTION_FAILED(HttpStatus.BAD_REQUEST, "SSE 전송 중 오류가 발생했습니다."),
+
+    // Phone Valid
+    EXPIRED_PHONE(HttpStatus.BAD_REQUEST,"인증번호가 만료되었습니다.")
     ;
 
     private final HttpStatus status;

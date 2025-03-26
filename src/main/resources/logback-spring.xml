@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%magenta([%X{CORRELATION_ID:-NO CORRELATION ID}]) %yellow([%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}]) %green(%thread) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n : %msg%n"/>
+    <property name="FILE_LOG_PATTERN"
+              value=": %msg %n %magenta([%X{CORRELATION_ID:-NO CORRELATION ID}]) %yellow([%d{yyyy-MM-dd HH:mm:ss}]) %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n"/>
+
+    <!-- Discord Webhook Appender 공통 정의 -->
+    <springProperty name="DISCORD_WEBHOOK_URL" source="logging.discord.webhook-url"/>
+    <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
+        <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%X{CORRELATION_ID:-NO CORRELATION ID}] %d{HH:mm:ss} [%thread] [%-5level] %logger{36} - %msg%n%ex{short}</pattern>
+        </layout>
+        <username>MaskPass ERROR</username>
+        <avatarUrl>https://jjal.today/data/file/gallery/1889155643_NZHvkRLz_e0292b65bb682075bfdb752a4dmaskpass_db8f4062f0b7738a.png</avatarUrl>
+        <tts>false</tts>
+    </appender>
+
+    <appender name="ASYNC_DISCORD" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="DISCORD"/>
+        <filter class="goorm.back.zo6.common.log.ExcludeErrorFilter"/>
+    </appender>
+
+    <springProfile name="!prod">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <appender name="FILE-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./log/today-${BY_DATE}.log</file>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern> ./log/history-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>100MB</maxFileSize>
+                <maxHistory>5</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="FILE-LOG"/>
+            <appender-ref ref="ASYNC_DISCORD"/>
+        </root>
+    </springProfile>
+</configuration>

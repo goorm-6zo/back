@@ -21,7 +21,7 @@ public class JwtUtil {
     @Value("${jwt.valid-time}")
     private long TOKEN_VALID_TIME;
 
-    private JwtUtil(@Value("${jwt.secret}") String secret){
+    public JwtUtil(@Value("${jwt.secret}") String secret){
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

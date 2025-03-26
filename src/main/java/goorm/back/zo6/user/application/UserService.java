@@ -61,4 +61,10 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         userRepository.deleteById(user.getId());
     }
+
+    @Transactional
+    public void initPhoneNumber(String email, String phone){
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.initPhone(phone);
+    }
 }

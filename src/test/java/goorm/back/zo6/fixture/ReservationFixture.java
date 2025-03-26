@@ -23,4 +23,18 @@ public class ReservationFixture {
 
         return reservation;
     }
+
+    public static Reservation 미확정된_예약(Conference conference, List<Session> sessions, String name, String phone, User user) {
+        Reservation reservation = Reservation.builder()
+                .conference(conference)
+                .name(name)
+                .phone(phone)
+                .status(ReservationStatus.TEMPORARY)
+                .user(user)
+                .build();
+
+        sessions.forEach(reservation::addSession);
+
+        return reservation;
+    }
 }
