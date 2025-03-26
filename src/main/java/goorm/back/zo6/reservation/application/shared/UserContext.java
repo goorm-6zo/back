@@ -26,6 +26,13 @@ public class UserContext {
         return userRepository.findByPhone(phone).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
+    public Long getCurrentUserId() {
+
+        String email = getCurrentUserEmail();
+        User user = findByEmailOrThrow(email);
+        return user.getId();
+    }
+
     public String getCurrentUserEmail() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

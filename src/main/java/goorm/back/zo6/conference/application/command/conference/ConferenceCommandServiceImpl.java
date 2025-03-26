@@ -9,6 +9,7 @@ import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.ConferenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,14 +31,15 @@ public class ConferenceCommandServiceImpl implements ConferenceCommandService {
     }
 
     @Override
+    @Transactional
     public void updateConferenceStatus(Long conferenceId, boolean newStatus) {
 
         Conference conference = conferenceValidator.findConferenceOrThrow(conferenceId);
         conference.updateActive(newStatus);
-        conferenceRepository.save(conference);
     }
 
     @Override
+    @Transactional
     public ConferenceResponse createConference(ConferenceCreateRequest request) {
 
         Conference conference = conferenceFactory.createConference(request);

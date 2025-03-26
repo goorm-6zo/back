@@ -41,9 +41,8 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     @Override
     public List<ReservationResponse> getMyReservations() {
 
-        User user = userContext.findByEmailOrThrow(userContext.getCurrentUserEmail());
-
-        List<Reservation> reservations = reservationRepository.findAllByUser(user);
+        Long userId = userContext.getCurrentUserId();
+        List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
 
         return reservationMapper.mapAndSortReservations(reservations);
     }
@@ -51,9 +50,8 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     @Override
     public List<ConferenceResponse> getMyConferenceSimpleList() {
 
-        User currentUser = userContext.findByEmailOrThrow(userContext.getCurrentUserEmail());
-
-        List<Reservation> reservations = reservationRepository.findAllByUser(currentUser);
+        Long userId = userContext.getCurrentUserId();
+        List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
 
         return reservationMapper.mapToConferenceSimpleResponse(reservations);
     }

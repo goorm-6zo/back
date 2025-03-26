@@ -5,8 +5,6 @@ import goorm.back.zo6.reservation.domain.ReservationStatus;
 import goorm.back.zo6.user.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -23,6 +21,9 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
 
     @EntityGraph(attributePaths = {"reservationSessions"})
     List<Reservation> findByConferenceIdAndUserId(Long conferenceId, Long userId);
+
+    @EntityGraph(attributePaths = {"reservationSessions"})
+    List<Reservation> findAllByUserId(Long userId);
 
     boolean existsByUserIdAndConferenceIdAndStatus(Long userId, Long conferenceId, ReservationStatus status);
 

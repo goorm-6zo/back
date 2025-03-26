@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface ReservationRepository {
     Optional<Reservation> findById(Long id);
 
+    List<Reservation> findAllByUserId(Long id);
+
     List<Reservation> findAllByUser(User user);
 
     Reservation save(Reservation reservation);

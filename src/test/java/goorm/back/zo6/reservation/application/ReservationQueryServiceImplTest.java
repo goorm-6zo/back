@@ -37,6 +37,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -112,9 +113,8 @@ class ReservationQueryServiceImplTest {
         List<Reservation> reservations = List.of(reservation);
         List<ReservationResponse> reseponses = List.of(ReservationResponse.builder().build());
 
-        given(userContext.getCurrentUserEmail()).willReturn(user.getEmail());
-        given(userContext.findByEmailOrThrow(user.getEmail())).willReturn(user);
-        given(reservationRepository.findAllByUser(user)).willReturn(reservations);
+        given(userContext.getCurrentUserId()).willReturn(user.getId());
+        given(reservationRepository.findAllByUserId(user.getId())).willReturn(reservations);
         given(reservationMapper.mapAndSortReservations(reservations)).willReturn(reseponses);
 
         List<ReservationResponse> actual = reservationQueryService.getMyReservations();
@@ -125,13 +125,13 @@ class ReservationQueryServiceImplTest {
     @Test
     @DisplayName("내 컨퍼런스 간단 목록 조회 성공")
     void getMyConferencesSimpleList_success() {
+
         List<Reservation> reservations = List.of(reservation);
         List<ConferenceResponse> responses = List.of(ConferenceResponse.builder().build());
 
-        given(userContext.getCurrentUserEmail()).willReturn(user.getEmail());
-        given(userContext.findByEmailOrThrow(user.getEmail())).willReturn(user);
-        given(reservationRepository.findAllByUser(user)).willReturn(reservations);
-        given(reservationMapper.mapToConferenceSimpleResponse(reservations)).willReturn(responses);
+        given(userContext.getCurrentUserId()).willReturn(user.getId());
+        given(reservationRepository.findAllByUserId(user.getId())).willReturn(reservations);
+        given(reservationMapper.mapToConferenceSimpleResponse(reservations)).willReturn((responses));
 
         List<ConferenceResponse> actual = reservationQueryService.getMyConferenceSimpleList();
 

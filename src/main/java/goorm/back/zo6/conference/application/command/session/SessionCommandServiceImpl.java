@@ -38,18 +38,15 @@ public class SessionCommandServiceImpl implements SessionCommandService {
         Session session = sessionValidator.getSessionOrThrow(sessionId);
         session.updateSession(location);
 
-        sessionRepository.save(session);
-
         return conferenceMapper.toSessionDto(session);
     }
 
     @Override
+    @Transactional
     public void updateSessionStatus(Long conferenceId, Long sessionId, boolean newStatus) {
 
         Session session = sessionValidator.findSessionByConferenceAndSessionId(conferenceId, sessionId);
         session.updateActive(newStatus);
-
-        sessionRepository.save(session);
     }
 
     @Override
