@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,9 @@ public class FaceRecognitionService {
     @Transactional
     public FaceResponse uploadUserFace(Long userId, MultipartFile faceImage){
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 이미 얼굴 등록이 완료한 유저는 기존에 등록되었던 얼굴 이미지 삭제
+        deleteFaceForUploadIfExists(userId);
 
         // 이미지 데이터를 Rekognition Collection 에 등록
         byte[] imageBytes = toBytes(faceImage);
@@ -54,7 +58,8 @@ public class FaceRecognitionService {
     @Transactional
     public void deleteUserFace(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Face face = faceRepository.findFaceByUserId(userId);
+        Face face = faceRepository.findFaceByUserId(userId).orElseThrow(()-> new CustomException(ErrorCode.FACE_NOT_FOUND));
+
         String rekognitionId = face.getRekognitionFaceId();
         // Rekognition Collection 에 저장된 이미지 삭제
         rekognitionApiClient.deleteFaceFromCollection(rekognitionId);
@@ -104,5 +109,13 @@ public class FaceRecognitionService {
 
         log.info("isReserved : {}", isReserved);
         return isReserved;
+    }
+
+    private void deleteFaceForUploadIfExists(Long userId) {
+        faceRepository.findFaceByUserId(userId).ifPresent(face -> {
+            rekognitionApiClient.deleteFaceFromCollection(face.getRekognitionFaceId());
+            faceRepository.deleteByUserId(userId);
+            log.info("업로드를 위한 기존 얼굴 정보 삭제 완료 - userId: {}, faceId: {}", userId, face.getRekognitionFaceId());
+        });
     }
 }

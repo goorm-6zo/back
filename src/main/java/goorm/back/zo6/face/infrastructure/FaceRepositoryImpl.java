@@ -7,6 +7,8 @@ import goorm.back.zo6.face.domain.FaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class FaceRepositoryImpl implements FaceRepository {
@@ -22,7 +24,8 @@ public class FaceRepositoryImpl implements FaceRepository {
     }
 
     @Override
-    public Face findFaceByUserId(Long userId) {
-        return faceJpaRepository.findFaceByUserId(userId).orElseThrow(()-> new CustomException(ErrorCode.FACE_NOT_FOUND));
+    public Optional<Face> findFaceByUserId(Long userId) {
+        return faceJpaRepository.findFaceByUserId(userId);
     }
+
 }
