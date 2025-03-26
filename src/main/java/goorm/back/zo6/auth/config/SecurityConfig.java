@@ -38,6 +38,7 @@ public class SecurityConfig {
     private final OAuth2UserServiceFactory oAuth2UserServiceFactory;
     private final OAuth2LoginSuccessHandlerFactory successHandlerFactory;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //cors 설정
