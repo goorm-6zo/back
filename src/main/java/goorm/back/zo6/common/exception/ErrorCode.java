@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     // Role Error
     ROLE_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 Role 입니다."),
+    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "권한 없음"),
 
     // Invalidation Error
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),

@@ -20,9 +20,7 @@ public class ConferenceRepositoryImpl implements ConferenceRepository {
     }
 
     @Override
-    public Optional<Conference> findWithSessionsById(Long conferenceId) {
-        return conferenceJpaRepository.findWithSessionsById(conferenceId);
-    }
+    public Optional<Conference> findWithSessionsById(Long conferenceId) { return conferenceJpaRepository.findWithSessionsById(conferenceId); }
 
     @Override
     public List<Conference> findAll() {

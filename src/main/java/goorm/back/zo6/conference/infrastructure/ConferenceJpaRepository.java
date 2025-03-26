@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ConferenceJpaRepository extends JpaRepository<Conference, Long> {
-    @EntityGraph(attributePaths = {"sessions"})
     @Query("""
         SELECT DISTINCT c FROM Conference c
         LEFT JOIN FETCH c.sessions s

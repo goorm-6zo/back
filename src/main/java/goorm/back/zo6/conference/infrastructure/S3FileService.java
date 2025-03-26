@@ -27,31 +27,8 @@ public class S3FileService {
     @Value("${amazon.aws.s3.bucket-name}")
     private String bucketName;
 
-    public String uploadFile(MultipartFile multipartFile, String directoryPrefix) {
-
-        String originalFilename = multipartFile.getOriginalFilename();
-
-        String extension = originalFilename != null && originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-
-        String fileName = UUID.randomUUID() + extension;
-
-        String fileKey = directoryPrefix + fileName;
-
-        try {
-            s3Client.putObject(
-                    PutObjectRequest.builder()
-                            .bucket(bucketName)
-                            .key(fileKey)
-                            .build(),
-                    RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize())
-            );
-            return fileKey;
-        } catch (IOException e) {
-            throw new RuntimeException("파일 업로드에 실패했습니다.", e);
-        }
-    }
-
     public String generatePresignedUrl(String key, int expiresMinutes) {
+
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
