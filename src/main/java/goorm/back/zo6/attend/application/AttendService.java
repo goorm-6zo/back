@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,8 +114,10 @@ public class AttendService {
     }
 
     private List<SessionInfoDto> extractSessionInfoList(List<Tuple> sessionTuples) {
+        Set<Long> seenSessionIds = new HashSet<>();
         return sessionTuples.stream()
                 .filter(sessionTuple -> sessionTuple.get(11, Long.class) != null) // 세션 존재하는 경우만
+                .filter(sessionTuple -> seenSessionIds.add(sessionTuple.get(11, Long.class)))
                 .map(sessionTuple -> new SessionInfoDto(
                         sessionTuple.get(11, Long.class),   // s.id
                         sessionTuple.get(12, String.class), // s.name

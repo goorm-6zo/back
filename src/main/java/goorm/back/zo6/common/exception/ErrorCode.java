@@ -92,6 +92,9 @@ public enum ErrorCode {
 
     // Sse Error
     SSE_CONNECTION_FAILED(HttpStatus.BAD_REQUEST, "SSE 전송 중 오류가 발생했습니다."),
+
+    // Phone Valid
+    EXPIRED_PHONE(HttpStatus.BAD_REQUEST,"인증번호가 만료되었습니다.")
     ;
 
     private final HttpStatus status;
