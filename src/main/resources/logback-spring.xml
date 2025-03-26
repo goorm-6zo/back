@@ -5,7 +5,7 @@
     <property name="CONSOLE_LOG_PATTERN"
               value="%magenta([%X{CORRELATION_ID:-NO CORRELATION ID}]) %yellow([%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}]) %green(%thread) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n : %msg%n"/>
     <property name="FILE_LOG_PATTERN"
-              value=": %msg %n %magenta([%X{CORRELATION_ID:-NO CORRELATION ID}]) %yellow([%d{yyyy-MM-dd HH:mm:ss}]) %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n"/>
+              value="[%X{CORRELATION_ID:-NO CORRELATION ID}] [%d{yyyy-MM-dd HH:mm:ss}] [%thread] %-5level [%C.%M:%L] : %msg%n"/>
 
     <!-- Discord Webhook Appender 공통 정의 -->
     <springProperty name="DISCORD_WEBHOOK_URL" source="logging.discord.webhook-url"/>
