@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.attend.application.AttendService;
 import goorm.back.zo6.attend.domain.Attend;
+import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
+import goorm.back.zo6.attend.dto.UserAttendanceResponse;
 import goorm.back.zo6.attend.infrastructure.AttendJpaRepository;
+import goorm.back.zo6.attend.infrastructure.AttendRedisService;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.common.exception.CustomException;
+import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
@@ -29,6 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +42,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -79,6 +86,9 @@ class AttendControllerTest {
 
     @Autowired
     private AttendJpaRepository attendJpaRepository;
+
+    @MockitoBean
+    private AttendRedisService attendRedisService;
 
     private User testUser;
     private Conference testConferenceA;
@@ -128,6 +138,55 @@ class AttendControllerTest {
 
     private String generateTestToken(User user) {
         return jwtUtil.createAccessToken(user.getId(), user.getEmail(),  user.getRole());
+    }
+
+    @Test
+    @DisplayName("컨퍼런스/세션 기반 예매자들 조회 와 참석 여부 및 행사 메타데이터를 조회 - 성공")
+    void getAttendanceSummary_Success() throws Exception {
+        // given
+        Long conferenceId = testConferenceA.getId();
+        Long sessionId = testSession.getId();
+
+        when(attendRedisService.attendCount(conferenceId, sessionId))
+                .thenReturn(1L);
+
+        // when & then
+        mockMvc.perform(get("/api/v1/attend/users")
+                        .cookie(new Cookie("Authorization", accessToken))
+                        .param("conferenceId", conferenceId.toString())
+                        .param("sessionId", sessionId.toString()))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.status").value(true),
+                        jsonPath("$.data.name").value("세션"),
+                        jsonPath("$.data.capacity").value(10),
+                        jsonPath("$.data.attendedCount").value(1),
+                        jsonPath("$.data.userAttendances", hasSize(1)),
+                        jsonPath("$.data.userAttendances[0].userId").value(1),
+                        jsonPath("$.data.userAttendances[0].userName").value("홍길순"),
+                        jsonPath("$.data.userAttendances[0].isAttended").value(true)
+                )
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("컨퍼런스/세션 기반 예매자 조회 - 출석 데이터 없음 404 반환 실패")
+    void getAttendanceSummary_NoAttendance_Fails() throws Exception {
+        // given
+        Long conferenceId = 999L; // 존재하지 않는 ID
+        Long sessionId = 999L;
+
+        // when & then
+        mockMvc.perform(get("/api/v1/attend/users")
+                        .cookie(new Cookie("Authorization", accessToken))
+                        .param("conferenceId", conferenceId.toString())
+                        .param("sessionId", sessionId.toString()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(false))
+                .andExpect(jsonPath("$.message").exists())
+                .andDo(print());
     }
 
     @Test

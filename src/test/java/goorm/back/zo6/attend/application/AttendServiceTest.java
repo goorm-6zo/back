@@ -2,7 +2,9 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
+import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
 import goorm.back.zo6.attend.dto.ConferenceInfoDto;
+import goorm.back.zo6.attend.infrastructure.AttendRedisService;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.user.domain.User;
@@ -34,6 +36,55 @@ class AttendServiceTest {
     private AttendRepository attendRepository;
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AttendRedisService attendRedisService;
+
+    @Test
+    @DisplayName("컨퍼런스/세션 기반 예매자들 조회 와 참석 여부 및 행사 메타데이터를 조회 - 성공")
+    void getAttendanceSummary_Success(){
+        // given
+        Long conferenceId = 1L;
+        Long sessionId = 1L;
+        List<Tuple> attendanceSummaryTuples = createAttendanceSummaryTuples();
+
+        when(attendRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId)).thenReturn(attendanceSummaryTuples);
+
+        when(attendRedisService.attendCount(conferenceId,sessionId)).thenReturn(2L);
+
+        // when
+        AttendanceSummaryResponse response = attendService.getAttendanceSummary(conferenceId, sessionId);
+
+        // then
+        assertEquals(2L, response.attendedCount());
+        assertEquals(100, response.capacity());
+        assertEquals("세션제목",response.name());
+        assertEquals(10L, response.userAttendances().get(0).userId());
+        assertEquals("홍길동", response.userAttendances().get(0).userName());
+        assertEquals(true, response.userAttendances().get(0).isAttended());
+        assertEquals(11L, response.userAttendances().get(1).userId());
+        assertEquals("김철수", response.userAttendances().get(1).userName());
+        assertEquals(false, response.userAttendances().get(1).isAttended());
+    }
+
+    @Test
+    @DisplayName("컨퍼런스/세션 기반 예매자들 조회 와 참석 여부 및 행사 메타데이터를 조회 - 예매내역이 없어서 실패")
+    void getAttendanceSummary_NoUserFails() {
+        // given
+        Long conferenceId = 1L;
+        Long sessionId = 2L;
+
+        // 결과가 empty
+        when(attendRepository.findUsersWithAttendanceAndMeta(conferenceId, sessionId))
+                .thenReturn(Collections.emptyList());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            attendService.getAttendanceSummary(conferenceId, sessionId);
+        });
+
+        assertEquals(ErrorCode.NO_ATTENDANCE_DATA, exception.getErrorCode());
+    }
 
     @Test
     @DisplayName("유저 행사 참석 데이터 저장 - 컨퍼런스 참석 성공")
@@ -170,6 +221,24 @@ class AttendServiceTest {
         verify(attendRepository).findAttendInfoByUserAndConference(userId, conferenceId);
     }
 
+    private List<Tuple> createAttendanceSummaryTuples(){
+        Tuple tuple1 = mock(Tuple.class);
+        Tuple tuple2 = mock(Tuple.class);
+
+        when(tuple1.get(0, Long.class)).thenReturn(10L);
+        when(tuple1.get(1, String.class)).thenReturn("홍길동");
+        when(tuple1.get(2, Boolean.class)).thenReturn(true);
+        when(tuple1.get(3, String.class)).thenReturn("세션제목");
+        when(tuple1.get(4, Integer.class)).thenReturn(100);
+
+        when(tuple2.get(0, Long.class)).thenReturn(11L);
+        when(tuple2.get(1, String.class)).thenReturn("김철수");
+        when(tuple2.get(2, Boolean.class)).thenReturn(false);
+
+        List<Tuple> tupleList = List.of(tuple1, tuple2);
+
+        return tupleList;
+    }
 
     // Register(참석정보(컨퍼런스 or 세션) Tuple 생성 메서드
     private Tuple createRegisterTuple(Long reservationId, Long reservationSessionId, Long conferenceId, Long sessionId) {
