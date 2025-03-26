@@ -158,12 +158,12 @@ class AttendControllerTest {
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.status").value(true),
-                        jsonPath("$.data.name").value("세션"),
-                        jsonPath("$.data.capacity").value(10),
+                        jsonPath("$.data.name").value(testSession.getName()),
+                        jsonPath("$.data.capacity").value(testSession.getCapacity()),
                         jsonPath("$.data.attendedCount").value(1),
                         jsonPath("$.data.userAttendances", hasSize(1)),
-                        jsonPath("$.data.userAttendances[0].userId").value(1),
-                        jsonPath("$.data.userAttendances[0].userName").value("홍길순"),
+                        jsonPath("$.data.userAttendances[0].userId").value(testUser.getId()),
+                        jsonPath("$.data.userAttendances[0].userName").value(testUser.getName()),
                         jsonPath("$.data.userAttendances[0].isAttended").value(true)
                 )
                 .andDo(print());
