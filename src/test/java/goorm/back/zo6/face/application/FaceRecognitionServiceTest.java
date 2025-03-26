@@ -99,7 +99,7 @@ class FaceRecognitionServiceTest {
         assertEquals(ErrorCode.FACE_UPLOAD_FAIL, exception.getErrorCode());
         // Rekognition 호출이 된다.
         verify(rekognitionApiClient, times(1)).addFaceToCollection(userId, imageBytes);
-        verifyNoInteractions(faceRepository);
+        verify(faceRepository, times(1)).findFaceByUserId(userId);
     }
     @Test
     @DisplayName("얼굴 이미지 삭제 - 성공!")
@@ -111,7 +111,7 @@ class FaceRecognitionServiceTest {
         Face face = Face.of(rekognitionFaceId, userId);
 
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
-        when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
+        when(faceRepository.findFaceByUserId(userId)).thenReturn(Optional.of(face));
         doNothing().when(faceRepository).deleteByUserId(userId);
         doNothing().when(rekognitionApiClient).deleteFaceFromCollection(rekognitionFaceId);
 
@@ -160,7 +160,7 @@ class FaceRecognitionServiceTest {
         User user = User.singUpUser("test@test", "홍길순", "12345", "01011112222", Role.USER);
 
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(user));
-        when(faceRepository.findFaceByUserId(userId)).thenReturn(face);
+        when(faceRepository.findFaceByUserId(userId)).thenReturn(Optional.of(face));
 
         // Rekognition 얼굴 삭제 실패 설정
         doThrow(new CustomException(ErrorCode.REKOGNITION_DELETE_FAILED))
