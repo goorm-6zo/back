@@ -4,7 +4,6 @@ import goorm.back.zo6.conference.domain.Conference;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class ConferenceFixture {
 

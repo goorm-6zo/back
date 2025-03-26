@@ -29,6 +29,7 @@ public class ReservationSession {
     private Session session;
 
     public ReservationSession(Reservation reservation, Session session) {
+
         this.reservation = reservation;
         this.session = session;
     }

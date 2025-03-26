@@ -1,6 +1,5 @@
 package goorm.back.zo6.attend.presentation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.attend.application.AttendService;
 import goorm.back.zo6.attend.domain.Attend;

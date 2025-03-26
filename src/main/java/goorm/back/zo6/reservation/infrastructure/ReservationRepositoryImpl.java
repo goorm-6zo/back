@@ -22,6 +22,11 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public List<Reservation> findAllByUserId(Long id) {
+        return reservationJpaRepository.findAllByUserId(id);
+    }
+
+    @Override
     public List<Reservation> findAllByUser(User user) { return reservationJpaRepository.findAllByUser(user); }
 
     @Override

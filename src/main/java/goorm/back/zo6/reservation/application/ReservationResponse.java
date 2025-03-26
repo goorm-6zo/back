@@ -7,67 +7,38 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class ReservationResponse {
-    private Long reservationId;
-    private ConferenceInfo conference;
-    private List<SessionInfo> sessions;
-    private ReservationStatus status;
-
-    @Data
+public record ReservationResponse (
+    Long reservationId,
+    ConferenceInfo conference,
+    List<SessionInfo> sessions,
+    ReservationStatus status
+) {
     @Builder
-    public static class ConferenceInfo {
+    public record ConferenceInfo(
+            Long conferenceId,
+            String conferenceName,
+            String description,
+            String location,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime,
+            Integer capacity,
+            Boolean hasSessions,
+            String imageUrl
+    ) {}
 
-        private Long conferenceId;
-
-        private String conferenceName;
-
-        private String description;
-
-        private String location;
-
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime startTime;
-
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime endTime;
-
-        private Integer capacity;
-
-        private Boolean hasSessions;
-
-        private String imageUrl;
-    }
-
-    @Data
     @Builder
-    public static class SessionInfo {
-
-        private Long sessionId;
-
-        private Long conferenceId;
-
-        private String sessionName;
-
-        private Integer capacity;
-
-        private String location;
-
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime startTime;
-
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime endTime;
-
-        private String summary;
-
-        private String speaker;
-
-        private String speakerOrganization;
-
-        private String imageUrl;
-    }
+    public record SessionInfo(
+            Long sessionId,
+            Long conferenceId,
+            String sessionName,
+            Integer capacity,
+            String location,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime,
+            String summary,
+            String speaker,
+            String speakerOrganization,
+            String imageUrl
+    ) {}
 }

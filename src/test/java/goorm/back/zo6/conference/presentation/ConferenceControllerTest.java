@@ -34,7 +34,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest
 @Transactional
@@ -122,7 +121,7 @@ class ConferenceControllerTest {
                 .andExpect(jsonPath("$.data.summary").value(session.getSummary()))
                 .andExpect(jsonPath("$.data.speakerName").value(session.getSpeakerName()))
                 .andExpect(jsonPath("$.data.speakerOrganization").value(session.getSpeakerOrganization()))
-                .andExpect(jsonPath("$.data.active").value(session.isActive()));
+                .andExpect(jsonPath("$.data.isActive").value(session.isActive()));
     }
 
     private String generateTestToken(User user) {
