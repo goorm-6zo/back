@@ -71,4 +71,7 @@ public class User extends BaseEntity {
     public void deleteFace(){
         this.hasFace = false;
     }
+    public void initPhone(String phone){
+        this.phone = phone;
+    }
 }

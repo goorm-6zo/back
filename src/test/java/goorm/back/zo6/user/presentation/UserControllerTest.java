@@ -6,6 +6,7 @@ import goorm.back.zo6.user.application.UserService;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
+import goorm.back.zo6.user.dto.request.PhoneRequest;
 import goorm.back.zo6.user.dto.request.SignUpRequest;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
 import jakarta.servlet.http.Cookie;
@@ -54,6 +55,8 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     private User testUser;
+
+
 
     @BeforeEach
     void setUp(){
@@ -224,5 +227,34 @@ class UserControllerTest {
         // 데이터베이스에서 삭제 확인
         Optional<User> user = userRepository.findByEmail(email);
         assertTrue(user.isEmpty());
+    }
+
+    /*@Test
+    @DisplayName("전화 번호 인증 성공 테스트")
+    void verifyPhone_Success() throws Exception {
+        PhoneRequest phoneRequest = new PhoneRequest("");
+        mockMvc.perform(post("/api/v1/users/code")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(phoneRequest)))
+                .andExpect(status().isOk());
+    }*/
+
+    @Test
+    @DisplayName("유저 전화번호 설정 테스트")
+    void setPhone_Success() throws Exception {
+        // given
+        String testToken = generateTestToken(testUser);
+        Long userId = testUser.getId();
+        PhoneRequest request = new PhoneRequest("01012345678");
+
+        // when && then
+        mockMvc.perform(put("/api/v1/users/phone")
+                        .cookie(new Cookie("Authorization", testToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        User user = userJpaRepository.findById(userId).orElse(null);
+        assertEquals(user.getPhone(),"01012345678");
     }
 }
