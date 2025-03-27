@@ -13,6 +13,7 @@ public enum ErrorCode {
     // User Error
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
     USER_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "이미 존재하는 유저입니다."),
+    PHONE_NOT_VERIFIED(HttpStatus.NOT_ACCEPTABLE, "번호 인증 실패"),
 
     // Login Error
     USER_NOT_MATCH_LOGIN_INFO(HttpStatus.BAD_REQUEST, "로그인 정보에 해당하는 유저가 존재하지 않습니다."),

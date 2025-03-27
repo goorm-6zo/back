@@ -57,7 +57,22 @@ public class PhoneValidService {
         if(generatedCode ==null){
             throw new CustomException(ErrorCode.EXPIRED_PHONE);
         }
-        return generatedCode.equals(code);
+
+        boolean isValid = generatedCode.equals(code);
+
+        if (isValid) {
+            redisTemplate.opsForValue().set(phone + ":verified", "true", Duration.ofMinutes(3));
+        }
+
+        return isValid;
+    }
+
+    public boolean isPhoneAlreadyVerified(String phone){
+        return Boolean.TRUE.equals(redisTemplate.hasKey(phone + ":verified"));
+    }
+
+    public void removeVerifiedPhone(String phone){
+        redisTemplate.delete(phone + ":verified");
     }
 
     private int generateRandomNumber(){

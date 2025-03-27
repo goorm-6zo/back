@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,10 +34,13 @@ public class ReservationAttendeePhoneDao {
     }
 
     public List<String> getPhoneByUserId(Set<String> ids) {
-        String sql = "SELECT phone FROM users WHERE user_id IN (:ids)";
+        Set<Long> longIds = ids.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toSet());
+        String sql = "SELECT phone FROM users WHERE user_id IN (:longIds)";
 
         return entityManager.createNativeQuery(sql)
-                .setParameter("ids", ids)
+                .setParameter("longIds", longIds)
                 .getResultList();
     }
 }

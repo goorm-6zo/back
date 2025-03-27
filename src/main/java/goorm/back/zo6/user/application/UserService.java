@@ -2,6 +2,7 @@ package goorm.back.zo6.user.application;
 
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.reservation.application.command.ReservationCommandService;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
@@ -23,6 +24,9 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PhoneValidService phoneValidService;
+    private final UserValidator userValidator;
+    private final ReservationCommandService reservationCommandService;
 
     public UserResponse findById(Long userId){
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -37,6 +41,20 @@ public class UserService {
                 });
 
         User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), Role.of("USER")));
+
+        return SignUpResponse.from(user);
+    }
+
+    @Transactional
+    public SignUpResponse signUpWithPhone(SignUpRequest request){
+
+        userValidator.validatePhone(request.phone());
+
+        User user = userRepository.save(User.singUpUser(request.email(),request.name(), passwordEncoder.encode(request.password()), request.phone(), Role.of("USER")));
+
+        reservationCommandService.linkReservationByPhone(request.phone());
+
+        phoneValidService.removeVerifiedPhone(request.phone());
 
         return SignUpResponse.from(user);
     }
