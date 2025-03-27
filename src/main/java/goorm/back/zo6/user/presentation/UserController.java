@@ -43,9 +43,16 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입", description = "회원가입 정보를 통해 유저를 생성 및 등록 합니다.")
-    public ResponseEntity<ResponseDto<SignUpResponse>> signUp(@Validated @RequestBody SignUpRequest request) {
+    @Operation(summary = "회원가입(테스트용)", description = "회원가입 정보를 통해 유저를 생성 및 등록 합니다.")
+    public ResponseEntity<ResponseDto<SignUpResponse>> signUp(
+            @Validated @RequestBody SignUpRequest request) {
         return ResponseEntity.ok().body(ResponseDto.of(userService.signUp(request)));
+    }
+
+    @PostMapping("/signup-link")
+    @Operation(summary = "회원가입-임시 예매 링크", description = "회원가입 시 임시 예매와 링크 됩니다.")
+    public ResponseEntity<ResponseDto<SignUpResponse>> signUpLink(@Validated @RequestBody SignUpRequest request) {
+        return ResponseEntity.ok().body(ResponseDto.of(userService.signUpWithPhone(request)));
     }
 
     @PutMapping("/phone")
