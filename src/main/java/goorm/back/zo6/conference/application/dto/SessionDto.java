@@ -19,7 +19,8 @@ public record SessionDto (
     String speakerName,
     String speakerOrganization,
     boolean isActive,
-    String speakerImage
+    String speakerImage,
+    boolean speakerStatus
 ) {
     public static SessionDto from(Session session, String speakerImage) {
         return SessionDto.builder()
@@ -35,6 +36,7 @@ public record SessionDto (
                 .speakerOrganization(session.getSpeakerOrganization())
                 .isActive(session.isActive())
                 .speakerImage(speakerImage)
+                .speakerStatus(session.getSpeakerName() != null && !session.getSpeakerName().isBlank())
                 .build();
     }
 
