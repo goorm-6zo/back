@@ -5,21 +5,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessionInfoDto {
+public class ConferenceInfoResponse {
     private Long id;
     private String name;
-    private Integer capacity;
+    private String description;
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String summary;
-    private String speakerName;
-    private String speakerOrganization;
-    private String speakerImageKey;
-    private boolean isActive;
+    private Integer capacity;
+    private Boolean hasSessions;
+    private String imageUrl;
+    private Boolean isActive;
     private boolean isAttend;
+    private List<SessionInfo> sessions;
 }

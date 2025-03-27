@@ -1,13 +1,12 @@
 package goorm.back.zo6.attend.domain;
 
-import jakarta.persistence.Tuple;
-
-import java.util.List;
+import goorm.back.zo6.attend.dto.AttendData;
+import goorm.back.zo6.attend.dto.AttendanceSummaryQuery;
+import goorm.back.zo6.attend.dto.ConferenceInfoResponse;
 
 public interface AttendRepository {
     Attend save(Attend attend);
-    List<Tuple> findAttendInfoByUserAndConference(Long userId, Long conferenceId);
-    List<Tuple> findAttendData(String phone, Long conferenceId, Long sessionId);
-
-    List<Tuple> findUsersWithAttendanceAndMeta(Long conferenceId, Long sessionId);
+    AttendData findAttendInfo(String phone, Long conferenceId, Long sessionId);
+    ConferenceInfoResponse findAttendInfoByUserAndConference(Long userId, Long conferenceId);
+    AttendanceSummaryQuery findAttendanceSummary(Long conferenceId, Long sessionId);
 }
