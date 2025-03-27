@@ -38,6 +38,9 @@ public abstract class AbstractOAuth2LoginSuccessHandler implements Authenticatio
         String accessToken = jwtUtil.createAccessToken(userId, email, role);
         boolean hasPhone = isHasPhone(email);
 
+        Cookie cookie = createAccessTokenCookie(accessToken);
+        response.addCookie(cookie);
+
         String redirectUrl = "https://www.maskpass.site/authorization/callback?token=" + accessToken + "&hasPhone=" + hasPhone;
         response.sendRedirect(redirectUrl);
     }
