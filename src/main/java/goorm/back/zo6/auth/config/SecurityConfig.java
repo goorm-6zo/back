@@ -53,7 +53,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**","/actuator/**").permitAll() // Swagger 관련 경로 허용
-                .requestMatchers("/api/v1/users/signup","/api/v1/auth/login").permitAll()
+                .requestMatchers("/api/v1/users/signup","/api/v1/auth/login","/api/v1/users/check-email").permitAll()
                 .requestMatchers("/api/v1/users/code","/api/v1/users/verify").permitAll()
                 .requestMatchers("/api/v1/rekognition/authentication").permitAll()
                 .requestMatchers("/api/v1/reservation/temp").permitAll()
@@ -104,7 +104,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("https://server.maskpass.site", "http://localhost:5173", "https://maskpass-6zo.vercel.app","https://maskpass.site"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("ACCESS_TOKEN");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
