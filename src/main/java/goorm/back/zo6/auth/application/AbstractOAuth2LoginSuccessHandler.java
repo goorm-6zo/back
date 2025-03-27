@@ -7,11 +7,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -26,7 +28,7 @@ public abstract class AbstractOAuth2LoginSuccessHandler implements Authenticatio
     protected abstract Role getRole(OAuth2User oAuth2User);
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         Long userId = getUserId(oAuth2User);
@@ -34,10 +36,13 @@ public abstract class AbstractOAuth2LoginSuccessHandler implements Authenticatio
         Role role = getRole(oAuth2User);
 
         String accessToken = jwtUtil.createAccessToken(userId, email, role);
+        boolean hasPhone = isHasPhone(email);
+
         Cookie cookie = createAccessTokenCookie(accessToken);
         response.addCookie(cookie);
-        boolean hasPhone = isHasPhone(email);
-        response.addCookie(new Cookie("hasPhone", String.valueOf(hasPhone)));
+
+        String redirectUrl = "https://www.maskpass.site/authorization/callback?token=" + accessToken + "&hasPhone=" + hasPhone;
+        response.sendRedirect(redirectUrl);
     }
 
     private boolean isHasPhone(String email) {

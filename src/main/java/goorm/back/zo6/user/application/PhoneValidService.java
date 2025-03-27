@@ -41,7 +41,7 @@ public class PhoneValidService {
     private String provider;
 
     @Transactional
-    @Async
+    @Async("customTaskExecutor")
     public void sendValidMessage(String phone){
         String code = String.valueOf(generateRandomNumber());
         redisTemplate.opsForValue().set(phone, code, Duration.ofMinutes(3));
