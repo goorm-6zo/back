@@ -75,7 +75,7 @@ public class NoticeService {
     }
 
     @Transactional
-    @Async
+    @Async("customTaskExecutor")
     public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget, MultipartFile image) throws IOException {
         NoticeTarget target = NoticeTarget.from(noticeTarget);
         noticeRepository.save(Notice.builder().message(message).conferenceId(conferenceId).sessionId(sessionId).noticeTarget(target).build());
