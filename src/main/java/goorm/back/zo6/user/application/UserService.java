@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Log4j2
 @Service
@@ -66,5 +68,9 @@ public class UserService {
     public void initPhoneNumber(String email, String phone){
         User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         user.initPhone(phone);
+    }
+
+    public boolean isEmailAvailable(String email) {
+        return userRepository.findByEmail(email).isEmpty();
     }
 }
