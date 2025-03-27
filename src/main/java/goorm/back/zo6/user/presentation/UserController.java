@@ -4,6 +4,7 @@ import goorm.back.zo6.auth.domain.LoginUser;
 import goorm.back.zo6.common.dto.ResponseDto;
 import goorm.back.zo6.user.application.PhoneValidService;
 import goorm.back.zo6.user.application.UserService;
+import goorm.back.zo6.user.dto.request.EmailRequest;
 import goorm.back.zo6.user.dto.request.PhoneRequest;
 import goorm.back.zo6.user.dto.request.PhoneValidRequest;
 import goorm.back.zo6.user.dto.request.SignUpRequest;
@@ -72,5 +73,11 @@ public class UserController {
     @Operation(summary = "전화번호 검증", description = "해당 전화번호에 인증 번호를 검증합니다.")
     public ResponseEntity<Boolean> verifyCode(@Valid @RequestBody PhoneValidRequest request) {
         return ResponseEntity.ok().body(phoneValidService.validPhone(request.phone(), request.code()));
+    }
+
+    @PostMapping("/check-email")
+    @Operation(summary = "이메일 중복 확인",description = "입력한 이메일의 중복을 검증합니다.")
+    public ResponseEntity<Boolean> verifyEmail(@Valid @RequestBody EmailRequest request){
+        return ResponseEntity.ok().body(userService.isEmailAvailable(request.email()));
     }
 }

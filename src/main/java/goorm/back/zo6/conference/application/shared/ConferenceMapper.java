@@ -40,14 +40,14 @@ public class ConferenceMapper {
     }
 
     private String generateConferenceImageUrl(String imageKey) {
-        if (imageKey == null) {
+        if (imageKey == null || imageKey.isBlank()) {
             return null;
         }
         return s3FileService.generatePresignedUrl(imageKey, 60);
     }
 
     private String generateSpeakerImageUrl(String speakerImageKey) {
-        if (speakerImageKey == null) {
+        if (speakerImageKey == null || speakerImageKey.isBlank()) {
             return null;
         }
         return s3FileService.generatePresignedUrl(speakerImageKey, 60);

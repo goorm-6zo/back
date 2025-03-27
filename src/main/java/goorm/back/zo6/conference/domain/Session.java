@@ -58,7 +58,7 @@ public class Session {
     private String speakerImageKey;
 
     public Session(Conference conference, String name, Integer capacity, String location, LocalDateTime startTime, LocalDateTime endTime, String summary, String speakerName, String speakerOrganization) {
-        if (conference == null) {
+        if (conference == null || conference.getId() == null) {
             throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
         if (startTime == null || endTime == null || endTime.isBefore(startTime) || endTime.isEqual(startTime)) {
@@ -86,7 +86,7 @@ public class Session {
     public boolean isReservable() { return capacity > 0; }
 
     public void setConference(Conference conference) {
-        if (conference == null) {
+        if (conference == null || conference.getId() == null) {
             throw new CustomException(ErrorCode.CONFERENCE_NOT_FOUND);
         }
         this.conference = conference;
