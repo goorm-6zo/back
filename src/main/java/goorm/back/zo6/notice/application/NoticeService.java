@@ -19,6 +19,7 @@ import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +75,7 @@ public class NoticeService {
     }
 
     @Transactional
+    @Async("customTaskExecutor")
     public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget, MultipartFile image) throws IOException {
         NoticeTarget target = NoticeTarget.from(noticeTarget);
         noticeRepository.save(Notice.builder().message(message).conferenceId(conferenceId).sessionId(sessionId).noticeTarget(target).build());
