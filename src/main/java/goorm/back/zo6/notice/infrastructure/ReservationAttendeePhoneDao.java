@@ -40,7 +40,7 @@ public class ReservationAttendeePhoneDao {
         String sql = "SELECT phone FROM users WHERE user_id IN (:longIds)";
 
         return entityManager.createNativeQuery(sql)
-                .setParameter("ids", longIds)
+                .setParameter("longIds", longIds)
                 .getResultList();
     }
 }
