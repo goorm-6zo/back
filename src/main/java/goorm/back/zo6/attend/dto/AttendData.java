@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttendDataDto {
+public class AttendData {
     private Long reservationId;
     private Long reservationSessionId;
     private Long conferenceId;
