@@ -41,7 +41,7 @@ public abstract class AbstractOAuth2LoginSuccessHandler implements Authenticatio
         Cookie cookie = createAccessTokenCookie(accessToken);
         response.addCookie(cookie);
 
-        String redirectUrl = "https://www.maskpass.site/authorization/callback?token=" + accessToken + "&hasPhone=" + hasPhone;
+        String redirectUrl = "https://www.maskpass.site/authorization/callback?&hasPhone=" + hasPhone;
         response.sendRedirect(redirectUrl);
     }
 
