@@ -37,10 +37,10 @@ public class ReservationAttendeePhoneDao {
         Set<Long> longIds = ids.stream()
                 .map(Long::parseLong)
                 .collect(Collectors.toSet());
-        String sql = "SELECT phone FROM users WHERE user_id IN (:ids)";
+        String sql = "SELECT phone FROM users WHERE user_id IN (:longIds)";
 
         return entityManager.createNativeQuery(sql)
-                .setParameter("ids", ids)
+                .setParameter("ids", longIds)
                 .getResultList();
     }
 }
