@@ -2,10 +2,7 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.domain.AttendRepository;
-import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
-import goorm.back.zo6.attend.dto.ConferenceInfoDto;
-import goorm.back.zo6.attend.dto.SessionInfoDto;
-import goorm.back.zo6.attend.dto.UserAttendanceResponse;
+import goorm.back.zo6.attend.dto.*;
 import goorm.back.zo6.attend.infrastructure.AttendRedisService;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
@@ -60,11 +57,17 @@ public class AttendService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // Reservation & 관련 데이터 조회 (phone 기반)
-        Tuple attendData = findAttendData(user.getPhone(), conferenceId, sessionId);
-        // attendData 기반으로 Attend 생성
-        Attend attend = convertToAttend(user.getId(), attendData);
+        //Tuple attendData = findAttendData(user.getPhone(), conferenceId, sessionId);
+        AttendDataDto attendDataDto = attendRepository.findAttendInfo(user.getPhone(), conferenceId, sessionId);
 
+        // attendData 기반으로 Attend 생성
+        //Attend attend = convertToAttend(user.getId(), attendData);
+        Attend attend = convertToAttendDto(user.getId(), attendDataDto);
         attendRepository.save(attend);
+    }
+
+    private Attend convertToAttendDto(Long id, AttendDataDto attendDataDto) {
+        return Attend.of(id, attendDataDto.getReservationId(),attendDataDto.getReservationSessionId(),attendDataDto.getConferenceId(),attendDataDto.getSessionId());
     }
 
     public ConferenceInfoDto findAllByToken(Long userId, Long conferenceId) {
