@@ -11,6 +11,7 @@ public class CookieUtil {
                 .maxAge(cookieExpiration)
                 .path("/")
                 .sameSite("None")
+                .domain("maskpass.site")
                 .secure(true)
                 .httpOnly(true)
                 .build();
