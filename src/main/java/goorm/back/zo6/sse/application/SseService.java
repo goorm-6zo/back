@@ -30,7 +30,7 @@ public class SseService {
 
         sendToClientFirst(eventKey, sseEmitter);
 
-        log.info("sse emitter 개수 : {}", emitterRepository.countEmitters());
+        log.info("\n\n===  SSE Emitter 개수: {} ===\n", emitterRepository.countEmitters());
         return sseEmitter;
     }
 
