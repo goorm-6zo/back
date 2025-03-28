@@ -22,6 +22,7 @@ public class CookieUtil {
                 .maxAge(0)
                 .path("/")
                 .sameSite("None")
+                .domain("maskpass.site")
                 .secure(true)
                 .httpOnly(true)
                 .build();
