@@ -11,7 +11,7 @@ public class CookieUtil {
                 .maxAge(cookieExpiration)
                 .path("/")
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .build();
     }
@@ -21,7 +21,7 @@ public class CookieUtil {
                 .maxAge(0)
                 .path("/")
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .build();
     }
