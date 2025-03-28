@@ -76,15 +76,14 @@ public class NoticeService {
 
     @Transactional
     @Async("customTaskExecutor")
-    public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget, MultipartFile image) throws IOException {
+    public void sendMessage(String message, Long conferenceId, Long sessionId, String noticeTarget, File image) throws IOException {
         NoticeTarget target = NoticeTarget.from(noticeTarget);
         noticeRepository.save(Notice.builder().message(message).conferenceId(conferenceId).sessionId(sessionId).noticeTarget(target).build());
         List<String> phones = getTarget(conferenceId,sessionId,target);
         String imageId = null;
         if(image!=null){
-            BufferedImage originalImage = ImageIO.read(image.getInputStream());
             File outputFile = File.createTempFile("image", ".jpg");
-            Thumbnails.of(originalImage)
+            Thumbnails.of(image)
                     .size(800, 800)
                     .keepAspectRatio(true)
                     .outputFormat("jpg")

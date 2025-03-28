@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,7 +32,12 @@ public class NoticeController {
                                                          @RequestParam(value = "sessionId", required = false) Long sessionId,
                                                          @Valid @RequestPart(value = "noticeRequest") NoticeRequest noticeRequest,
                                                          @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-        noticeService.sendMessage(noticeRequest.message(),conferenceId,sessionId,noticeRequest.noticeTarget(), image);
+        File tempImage = null;
+        if (image != null && !image.isEmpty()) {
+            tempImage = File.createTempFile("temp", ".tmp");
+            image.transferTo(tempImage);
+        }
+        noticeService.sendMessage(noticeRequest.message(),conferenceId,sessionId,noticeRequest.noticeTarget(), tempImage);
         return ResponseEntity.ok(ResponseDto.of("메시지 전송 완료"));
     }
 
