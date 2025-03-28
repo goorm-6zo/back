@@ -30,16 +30,17 @@ public class SseService {
 
         sendToClientFirst(eventKey, sseEmitter);
 
+        log.info("sse emitter 개수 : {}", emitterRepository.countEmitters());
         return sseEmitter;
     }
 
     // SseEmitter 를 통해 클라이언트에게 초기 전달용 이벤트를 전송하는 역할을 합니다.
     private void sendToClientFirst(String eventKey, SseEmitter sseEmitter){
+        lastKnownCounts.putIfAbsent(eventKey, 0L);
         long baseAttendCount = lastKnownCounts.getOrDefault(eventKey, 0L);
         SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, baseAttendCount);
         try{
             sseEmitter.send(event);
-            lastKnownCounts.putIfAbsent(eventKey, 0L);
         }catch (IOException e){
             log.error("구독 실패, eventId ={}, {}", eventKey, e.getMessage());
             throw new CustomException(ErrorCode.SSE_CONNECTION_FAILED);
@@ -49,9 +50,9 @@ public class SseService {
     // 기기에 해당하는 참석자 수 리턴
     public void sendAttendanceCount(Long conferenceId, Long sessionId, long count){
         String eventKey = generateEventKey(conferenceId, sessionId);
+        lastKnownCounts.put(eventKey, count);
         SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
         SseEmitter.SseEventBuilder event = getSseAttendEvent(eventKey, count);
-        lastKnownCounts.put(eventKey, count);
         if(emitter != null){
             try{
                 emitter.send(event);
