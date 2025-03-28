@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/conferences/image/**").permitAll()
                 .requestMatchers("/api/v1/face/authentication","/api/v1/face/collection").permitAll()
                 .requestMatchers("/api/v1/redis").permitAll()
-                .requestMatchers("/api/v1/sse/subscribe").permitAll()
+                .requestMatchers("/api/v1/sse/subscribe", "/api/v1/sse/unsubscribe").permitAll()
                 .requestMatchers("/api/v1/admin/signup").permitAll()
                 .requestMatchers("/api/v1/admin/conference/**").hasRole(Role.ADMIN.getRoleName())
                 .requestMatchers(HttpMethod.GET,"/api/v1/notices/**").permitAll()
