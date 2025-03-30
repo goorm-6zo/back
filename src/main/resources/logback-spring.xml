@@ -24,6 +24,7 @@
         <filter class="goorm.back.zo6.common.log.ExcludeErrorFilter"/>
     </appender>
 
+    <!-- 로컬 로깅 -->
     <springProfile name="!prod">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -36,11 +37,12 @@
         </root>
     </springProfile>
 
+    <!-- 배포 환경 로깅 -->
     <springProfile name="prod">
         <appender name="FILE-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/today-${BY_DATE}.log</file>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <fileNamePattern>./log/history-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
