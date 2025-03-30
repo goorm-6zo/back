@@ -25,10 +25,19 @@ public class SseController {
     }
 
     @DeleteMapping("/unsubscribe")
-    @Operation(summary = "얼굴 인식 SSE 연결", description = "각 구역별 기기의 참석률 제공을 위해 SSE 연결을 시도합니다.")
+    @Operation(summary = "얼굴 인식 SSE 연결 끊기", description = "SSE 연결이 제대로 끊어지지 않는 경우 서버 메모리를 위해 연결을 강제로 끊습니다.")
     public ResponseEntity<Void> unsubscribe(@RequestParam("conferenceId") Long conferenceId,
                                             @RequestParam(value = "sessionId", required = false) Long sessionId) {
         sseService.unsubscribe(conferenceId,sessionId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/last-count")
+    @Operation(summary = "마지막 카운트 값 전부 삭제", description = "데이터 일관성을 위해, 마지막 count 값을 저장하여 관리하는 저장소를 비워줍니다.")
+    public ResponseEntity<Void> clearLastKnownCounts() {
+        sseService.clearLastKnownCounts();
+        return ResponseEntity.ok().build();
+    }
+
+
 }
