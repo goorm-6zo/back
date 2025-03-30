@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-    <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <property name="CONSOLE_LOG_PATTERN"
               value="%magenta([%X{CORRELATION_ID:-NO CORRELATION ID}]) %yellow([%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}]) %green(%thread) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n : %msg%n"/>
     <property name="FILE_LOG_PATTERN"
@@ -24,6 +23,7 @@
         <filter class="goorm.back.zo6.common.log.ExcludeErrorFilter"/>
     </appender>
 
+    <!-- 로컬 로깅 -->
     <springProfile name="!prod">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -36,11 +36,12 @@
         </root>
     </springProfile>
 
+    <!-- 배포 환경 로깅 -->
     <springProfile name="prod">
         <appender name="FILE-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/today-${BY_DATE}.log</file>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <fileNamePattern>./log/history-%d{yyyy-MM-dd}.%i.log</fileNamePattern>

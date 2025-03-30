@@ -31,7 +31,7 @@ public class SseService {
 
         sendToClientFirst(eventKey, sseEmitter);
 
-        log.info("\n\n===  SSE Emitter 개수: {} ===\n", emitterRepository.countEmitters());
+        log.info("===  SSE Emitter 개수: {} ===", emitterRepository.countEmitters());
         return sseEmitter;
     }
 
@@ -127,4 +127,10 @@ public class SseService {
         emitterRepository.deleteByEventKey(eventKey);
         log.info("SSE 연결 종료 요청: eventKey = {}", eventKey);
     }
+
+    public void clearLastKnownCounts(){
+        lastKnownCounts.clear();
+        log.info("LastKnownCounts Map 저장소 정보 초기화");
+    }
+
 }
