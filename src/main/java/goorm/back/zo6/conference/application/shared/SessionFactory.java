@@ -30,6 +30,8 @@ public class SessionFactory {
 
     public Session createSession(SessionCreateRequest request, Conference conference) {
 
+        String speakerImageKey = parseSpeakerImageKey(request.speakerImage());
+
         return Session.builder()
                         .name(request.name())
                         .capacity(request.capacity())
@@ -40,8 +42,15 @@ public class SessionFactory {
                         .speakerName(request.speakerName())
                         .speakerOrganization(request.speakerOrganization())
                         .isActive(true)
-                        .speakerImageKey(request.speakerImage())
+                        .speakerImageKey(speakerImageKey)
                         .conference(conference)
                         .build();
+    }
+
+    private String parseSpeakerImageKey(String speakerImage) {
+        if (speakerImage == null || !speakerImage.contains("/conference/speaker/")) {
+            throw new IllegalArgumentException("Invalid speaker image url");
+        }
+        return speakerImage.substring(speakerImage.indexOf("conference/speaker/"));
     }
 }
