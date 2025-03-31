@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="generator" content="Asciidoctor 2.0.18">
 <title>마패(MASKPASS) API 명세서 🔐</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -140,7 +140,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -162,7 +162,6 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
-body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -209,10 +208,13 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
 .sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
 .literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
@@ -328,7 +330,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -391,7 +393,7 @@ b.conum *{color:inherit!important}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
 h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
@@ -433,122 +435,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
-<style>
-/*! Asciidoctor Tabs | Copyright (c) 2018-present Dan Allen | MIT License */
-.tabs {
-    margin-bottom: 1.25em;
-}
-
-.tablist > ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.tablist > ul li {
-    align-items: center;
-    background-color: #fff;
-    cursor: pointer;
-    display: flex;
-    font-weight: bold;
-    line-height: 1.5;
-    padding: 0.25em 1em;
-    position: relative;
-}
-
-.tablist > ul li:focus-visible {
-    outline: none;
-}
-
-.tablist.ulist,
-.tablist.ulist > ul li {
-    margin: 0;
-}
-
-.tablist.ulist > ul li + li {
-    margin-left: 0.25em;
-}
-
-.tabs .tablist li::after {
-    content: "";
-    display: block;
-    height: 1px;
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-}
-
-.tabs.is-loading .tablist li:not(:first-child),
-.tabs:not(.is-loading) .tablist li:not(.is-selected) {
-    background-color: #f5f5f5;
-}
-
-.tabs.is-loading .tablist li:first-child::after,
-.tabs:not(.is-loading) .tablist li.is-selected::after {
-    background-color: #fff;
-}
-
-/*
-.tabs:not(.is-loading) .tablist li,
-.tabs:not(.is-loading) .tablist li::after {
-  transition: background-color 200ms ease-in-out;
-}
-*/
-
-.tablist > ul p {
-    line-height: inherit;
-    margin: 0;
-}
-
-.tabpanel {
-    background-color: #fff;
-    padding: 1.25em;
-}
-
-.tablist > ul li,
-.tabpanel {
-    border: 1px solid #dcdcdc;
-}
-
-.tablist > ul li {
-    border-bottom: 0;
-}
-
-.tabs.is-loading .tabpanel + .tabpanel,
-.tabs:not(.is-loading) .tabpanel.is-hidden {
-    display: none;
-}
-
-.tabpanel > :first-child {
-    margin-top: 0;
-}
-
-/* #content is a signature of the Asciidoctor standalone HTML output */
-#content .tabpanel > :last-child,
-#content .tabpanel > :last-child > :last-child,
-#content .tabpanel > :last-child > :last-child > li:last-child > :last-child {
-    margin-bottom: 0;
-}
-
-.tablecontainer {
-    overflow-x: auto;
-}
-
-#content .tablecontainer {
-    margin-bottom: 1.25em;
-}
-
-#content .tablecontainer > table.tableblock {
-    margin-bottom: 0;
-}
-</style>
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
 <h1>마패(MASKPASS) API 명세서 🔐</h1>
+<div class="details">
+<span id="revnumber">version 0.0.1-SNAPSHOT</span>
+</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -827,9 +720,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_요청_예시">2.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/qr?conferenceId=1&amp;sessionId=1&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/qr?conferenceId=1&amp;sessionId=1&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE5LCJleHAiOjE3NDM0MDkxMTl9.f6VmUcSwGpYPpvuv2_dSMLCrJFs_6-PlQujD6nIX-to</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgwLCJleHAiOjE3NDM0MTM5ODB9.Rp1RDIQpTV_zyZnNcLQinkxtz1h6zUmtBlBT06j7xKk</code></pre>
 </div>
 </div>
 </div>
@@ -850,14 +743,14 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시">2.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;qrImageBase64&quot; : &quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQAAAABRBrPYAAABWUlEQVR4Xu3SQXLFIAwDUG7G1TlSb0At2c5PGQxddjrybwJIj02mbf5mvtqabEdsGbFlxJYRW+bvs9E4fY6OE1a8MhWrGLboGv7Qh8xOrGBoRgK8yCIVu7DRuJlY++ey2IVxh3jmNbEzC4yQHVGkYiVrHFavX6RiFXsPP7A/nxHbMn7I7m8cfnxlsZJZZQgCy/ALfmnSiW1ZxKSTqnudI7Zn3UP2MzDWLMRKxh8LU17GDbGKAbrGP+eM/1LciUZsz7zoyNIitC02YhVD2PHw3dD7w1isYFEy5RreDlRiJ9bxDFL0Ly9WMjZuAZ4ASOzArGI2uOAdWuzAWEE2DI7cORUrWI6HuPRcFDswHi0YltnjAtSRWMV4iNbWQZ25WM3wIVHzQ0NO31GL3RgbqoxxFLsy9tDPMBErWGKzULjSEWARK1l8yVhTcYtebM+uI7aM2DJiy4gt8x/YNwZLcY/cLtB6AAAAAElFTkSuQmCC&quot;
+  "data" : {
+    "qrImageBase64" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQAAAABRBrPYAAABWUlEQVR4Xu3SQXLFIAwDUG7G1TlSb0At2c5PGQxddjrybwJIj02mbf5mvtqabEdsGbFlxJYRW+bvs9E4fY6OE1a8MhWrGLboGv7Qh8xOrGBoRgK8yCIVu7DRuJlY++ey2IVxh3jmNbEzC4yQHVGkYiVrHFavX6RiFXsPP7A/nxHbMn7I7m8cfnxlsZJZZQgCy/ALfmnSiW1ZxKSTqnudI7Zn3UP2MzDWLMRKxh8LU17GDbGKAbrGP+eM/1LciUZsz7zoyNIitC02YhVD2PHw3dD7w1isYFEy5RreDlRiJ9bxDFL0Ly9WMjZuAZ4ASOzArGI2uOAdWuzAWEE2DI7cORUrWI6HuPRcFDswHi0YltnjAtSRWMV4iNbWQZ25WM3wIVHzQ0NO31GL3RgbqoxxFLsy9tDPMBErWGKzULjSEWARK1l8yVhTcYtebM+uI7aM2DJiy4gt8x/YNwZLcY/cLtB6AAAAAElFTkSuQmCC"
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -877,9 +770,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_2">2.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/qr?conferenceId=999&amp;sessionId=2&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/qr?conferenceId=999&amp;sessionId=2&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE5LCJleHAiOjE3NDM0MDkxMTl9.UbYLQwfuLhdOiI99EbOHAaseZfAACYWtPEQRRzolTDk</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgwLCJleHAiOjE3NDM0MTM5ODB9.nARnu90ZLrmZ3R4IP77t2PR7_a2jB6Lsrp8s-lXD4pU</code></pre>
 </div>
 </div>
 </div>
@@ -887,12 +780,12 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_2">2.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 404 Not Found
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 404 Not Found
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;존재하지 않는 컨퍼런스입니다.&quot;
+  "status" : false,
+  "message" : "존재하지 않는 컨퍼런스입니다."
 }</code></pre>
 </div>
 </div>
@@ -908,9 +801,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_3">2.4.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/qr?conferenceId=3&amp;sessionId=999&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/qr?conferenceId=3&amp;sessionId=999&amp;url=https%3A%2F%2Fwww.google.com HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE5LCJleHAiOjE3NDM0MDkxMTl9.dgn7b1HbrPN4rSSbcMmPYuISIsLYmc5SPGhvmZ-FKjQ</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgwLCJleHAiOjE3NDM0MTM5ODB9.l4cP4LvdymwjfMxvFlJ4rmhlXotKuXfyNWfi35d_66w</code></pre>
 </div>
 </div>
 </div>
@@ -918,12 +811,12 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_3">2.4.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 404 Not Found
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 404 Not Found
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;존재하지 않는 세션입니다.&quot;
+  "status" : false,
+  "message" : "존재하지 않는 세션입니다."
 }</code></pre>
 </div>
 </div>
@@ -960,7 +853,7 @@ Content-Type: application/json
 <h4 id="_요청_예시_4">3.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/sse/subscribe?conferenceId=1&amp;sessionId=2 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sse/subscribe?conferenceId=1&amp;sessionId=2 HTTP/1.1
 Accept: text/event-stream</code></pre>
 </div>
 </div>
@@ -982,7 +875,7 @@ Accept: text/event-stream</code></pre>
 <h4 id="_응답_예시_4">3.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -1006,7 +899,7 @@ retry:1000</code></pre>
 <h4 id="_요청_예시_5">3.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/sse/subscribe?sessionId=2 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sse/subscribe?sessionId=2 HTTP/1.1
 Accept: text/event-stream</code></pre>
 </div>
 </div>
@@ -1015,7 +908,7 @@ Accept: text/event-stream</code></pre>
 <h4 id="_응답_예시_5">3.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
@@ -1033,7 +926,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <h4 id="_요청_예시_6">3.4.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/sse/subscribe?conferenceId=1&amp;sessionId=2 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sse/subscribe?conferenceId=1&amp;sessionId=2 HTTP/1.1
 Accept: text/event-stream</code></pre>
 </div>
 </div>
@@ -1042,7 +935,7 @@ Accept: text/event-stream</code></pre>
 <h4 id="_응답_예시_6">3.4.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -1096,14 +989,14 @@ retry:1000</code></pre>
 <h4 id="_요청_예시_7">4.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/users/signup HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/users/signup HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;name&quot; : &quot;홍길동&quot;,
-  &quot;email&quot; : &quot;test@naver.com&quot;,
-  &quot;password&quot; : &quot;4321&quot;,
-  &quot;phone&quot; : &quot;010-1234-5678&quot;
+  "name" : "홍길동",
+  "email" : "test@naver.com",
+  "password" : "4321",
+  "phone" : "010-1234-5678"
 }</code></pre>
 </div>
 </div>
@@ -1125,23 +1018,23 @@ Content-Type: application/json
 <h4 id="_응답_예시_7">4.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 13,
-    &quot;email&quot; : &quot;test@naver.com&quot;,
-    &quot;phone&quot; : &quot;010-1234-5678&quot;,
-    &quot;name&quot; : &quot;홍길동&quot;,
-    &quot;role&quot; : &quot;USER&quot;,
-    &quot;hasFace&quot; : false,
-    &quot;createdAt&quot; : &quot;2025-03-31T16:48:40.680283&quot;
+  "data" : {
+    "id" : 13,
+    "email" : "test@naver.com",
+    "phone" : "010-1234-5678",
+    "name" : "홍길동",
+    "role" : "USER",
+    "hasFace" : false,
+    "createdAt" : "2025-03-31T18:09:41.532826"
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1160,18 +1053,18 @@ Content-Type: application/json
 <h3 id="_실패_이름_누락">5.1. 실패 - 이름 누락</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;name&quot;,
-    &quot;message&quot; : &quot;이름을 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "name",
+    "message" : "이름을 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -1181,18 +1074,18 @@ Content-Type: application/json
 <h3 id="_실패_비밀번호_누락">5.2. 실패 - 비밀번호 누락</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;password&quot;,
-    &quot;message&quot; : &quot;비밀번호를 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "password",
+    "message" : "비밀번호를 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -1202,18 +1095,18 @@ Content-Type: application/json
 <h3 id="_실패_전화번호_누락">5.3. 실패 - 전화번호 누락</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;phone&quot;,
-    &quot;message&quot; : &quot;전화 번호를 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "phone",
+    "message" : "전화 번호를 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -1223,18 +1116,18 @@ Content-Type: application/json
 <h3 id="_실패_이메일_누락">5.4. 실패 - 이메일 누락</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;email&quot;,
-    &quot;message&quot; : &quot;이메일을 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "email",
+    "message" : "이메일을 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -1265,9 +1158,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_8">6.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/users HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMyMCwiZXhwIjoxNzQzNDA5MTIwfQ.lX4WUSLRNxqy7Udsrgg7ZJd6U-Qiu2AMClWbHflDahU</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE4MSwiZXhwIjoxNzQzNDEzOTgxfQ.US_atwFESIXuJSVp2JchazP3ut5_2-J49KB_lwxkN1A</code></pre>
 </div>
 </div>
 </div>
@@ -1288,23 +1181,23 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwLCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_8">6.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 10,
-    &quot;email&quot; : &quot;test@gmail.com&quot;,
-    &quot;name&quot; : &quot;홍길순&quot;,
-    &quot;phone&quot; : &quot;01011112222&quot;,
-    &quot;isDeleted&quot; : false,
-    &quot;role&quot; : &quot;USER&quot;,
-    &quot;hasFace&quot; : false
+  "data" : {
+    "id" : 10,
+    "email" : "test@gmail.com",
+    "name" : "홍길순",
+    "phone" : "01011112222",
+    "isDeleted" : false,
+    "role" : "USER",
+    "hasFace" : false
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1335,9 +1228,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_9">7.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/users/14 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users/14 HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE0LCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMyMCwiZXhwIjoxNzQzNDA5MTIwfQ.OXDOxPFyABc4Y-DPQQQrlKgmUfqk7P7KXYKmGlnzglI</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE0LCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE4MSwiZXhwIjoxNzQzNDEzOTgxfQ.turoP9czc4Vi0OwtbgOfm5vcRoK4-moceNY_NewNPA8</code></pre>
 </div>
 </div>
 </div>
@@ -1358,23 +1251,23 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE0LCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_9">7.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 14,
-    &quot;email&quot; : &quot;test@gmail.com&quot;,
-    &quot;name&quot; : &quot;홍길순&quot;,
-    &quot;phone&quot; : &quot;01011112222&quot;,
-    &quot;isDeleted&quot; : false,
-    &quot;role&quot; : &quot;USER&quot;,
-    &quot;hasFace&quot; : false
+  "data" : {
+    "id" : 14,
+    "email" : "test@gmail.com",
+    "name" : "홍길순",
+    "phone" : "01011112222",
+    "isDeleted" : false,
+    "role" : "USER",
+    "hasFace" : false
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1408,12 +1301,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_10">8.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">PUT /api/v1/users/phone HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/users/phone HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE4LCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMyMCwiZXhwIjoxNzQzNDA5MTIwfQ.1VfgCQY69ExL31dJwA4tYDQqp2obXFgxS7vma3AUPyE
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE4LCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE4MSwiZXhwIjoxNzQzNDEzOTgxfQ.CK8dUbm_e00nBfWk49OqW_h4iVa_DO70EnnS2ExN9qo
 
 {
-  &quot;phone&quot; : &quot;01012345678&quot;
+  "phone" : "01012345678"
 }</code></pre>
 </div>
 </div>
@@ -1435,7 +1328,7 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE4LCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_10">8.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -1486,15 +1379,15 @@ Content-Type: text/plain;charset=UTF-8
 <h4 id="_요청_예시_11">9.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/reservation/create HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/reservation/create HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJuYW1lIjoi7ZmN6ri47IicIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MjIyODMyNSwiZXhwIjoxNzQyMjMwMTI1fQ.IkBJulw1Q032jeu_GFZrOaD0B8NYNnfj8zVFvPGAjLE
 
 {
-  &quot;conferenceId&quot; : 8,
-  &quot;sessionIds&quot; : [ 8, 9 ],
-  &quot;name&quot; : &quot;홍길동&quot;,
-  &quot;phone&quot; : &quot;01012345678&quot;
+  "conferenceId" : 8,
+  "sessionIds" : [ 8, 9 ],
+  "name" : "홍길동",
+  "phone" : "01012345678"
 }</code></pre>
 </div>
 </div>
@@ -1516,38 +1409,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_11">9.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
-  &quot;reservationId&quot; : 1,
-  &quot;conference&quot; : {
-    &quot;conferenceId&quot; : 8,
-    &quot;conferenceName&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;conferenceAt&quot; : &quot;2025-03-18T01:18:45.767377&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;hasSessions&quot; : true
+  "reservationId" : 1,
+  "conference" : {
+    "conferenceId" : 8,
+    "conferenceName" : "테스트 컨퍼런스",
+    "description" : "테스트 컨퍼런스 소개",
+    "location" : "테스트 주소 1234",
+    "conferenceAt" : "2025-03-18T01:18:45.767377",
+    "capacity" : 100,
+    "hasSessions" : true
   },
-  &quot;sessions&quot; : [ {
-    &quot;sessionId&quot; : 8,
-    &quot;conferenceId&quot; : 8,
-    &quot;sessionName&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;온라인&quot;,
-    &quot;time&quot; : &quot;2025-03-18T01:18:45.768326&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;
+  "sessions" : [ {
+    "sessionId" : 8,
+    "conferenceId" : 8,
+    "sessionName" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "온라인",
+    "time" : "2025-03-18T01:18:45.768326",
+    "summary" : "테스트 세션 요약"
   }, {
-    &quot;sessionId&quot; : 9,
-    &quot;conferenceId&quot; : 8,
-    &quot;sessionName&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;온라인&quot;,
-    &quot;time&quot; : &quot;2025-03-18T01:18:45.768331&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;
+    "sessionId" : 9,
+    "conferenceId" : 8,
+    "sessionName" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "온라인",
+    "time" : "2025-03-18T01:18:45.768331",
+    "summary" : "테스트 세션 요약"
   } ],
-  &quot;status&quot; : &quot;CONFIRMED&quot;
+  "status" : "CONFIRMED"
 }</code></pre>
 </div>
 </div>
@@ -1578,9 +1471,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_12">10.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/reservation/my/conference HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/reservation/my/conference HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzIwLCJleHAiOjE3NDM0MDkxMjB9.MSqQKUe9m8bHpYhIdnMhJeijCCyyz4n5SvbOg6mxadY</code></pre>
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgxLCJleHAiOjE3NDM0MTM5ODF9.Q7FyKfcS3dArNUY7hUmnsLYvlaxpfH0gKyXjDs5ssEM</code></pre>
 </div>
 </div>
 </div>
@@ -1601,24 +1494,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_12">10.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : [ {
-    &quot;id&quot; : 6,
-    &quot;name&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : null,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:40.273221&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:40.273223&quot;,
-    &quot;capacity&quot; : null,
-    &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;,
-    &quot;isActive&quot; : null,
-    &quot;hasSessions&quot; : null,
-    &quot;sessions&quot; : null
+  "data" : [ {
+    "id" : 6,
+    "name" : "테스트 컨퍼런스",
+    "description" : null,
+    "location" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:41.158762",
+    "endTime" : "2025-03-31T18:09:41.158763",
+    "capacity" : null,
+    "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa",
+    "isActive" : null,
+    "hasSessions" : null,
+    "sessions" : null
   } ],
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1649,9 +1542,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_13">11.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/reservation/my/conference/7 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/reservation/my/conference/7 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzIwLCJleHAiOjE3NDM0MDkxMjB9.qEizYLlj54k4uSCoEbe-JT2bKeQAYr2fjaGUqSFkm5Q</code></pre>
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgxLCJleHAiOjE3NDM0MTM5ODF9.nzcEVElGHJ43ByRZxO7pCDhSKO3JboR1r3p9F2ajsHw</code></pre>
 </div>
 </div>
 </div>
@@ -1672,34 +1565,34 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_13">11.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;conferenceId&quot; : 7,
-    &quot;conferenceName&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;conferenceLocation&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:40.292652&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:40.292653&quot;,
-    &quot;conferenceDescription&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;sessions&quot; : [ {
-      &quot;id&quot; : 7,
-      &quot;conferenceId&quot; : 7,
-      &quot;name&quot; : &quot;테스트 세션&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;location&quot; : &quot;온라인&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:40.293191&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:40.293192&quot;,
-      &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-      &quot;speakerName&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;isActive&quot; : true,
-      &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;,
-      &quot;speakerStatus&quot; : true
+  "data" : {
+    "conferenceId" : 7,
+    "conferenceName" : "테스트 컨퍼런스",
+    "conferenceLocation" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:41.176068",
+    "endTime" : "2025-03-31T18:09:41.176069",
+    "conferenceDescription" : "테스트 컨퍼런스 소개",
+    "sessions" : [ {
+      "id" : 7,
+      "conferenceId" : 7,
+      "name" : "테스트 세션",
+      "capacity" : 100,
+      "location" : "온라인",
+      "startTime" : "2025-03-31T18:09:41.176536",
+      "endTime" : "2025-03-31T18:09:41.176537",
+      "summary" : "테스트 세션 요약",
+      "speakerName" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "isActive" : true,
+      "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa",
+      "speakerStatus" : true
     } ]
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1733,14 +1626,14 @@ Content-Type: application/json
 <h4 id="_요청_예시_14">12.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/reservation/temp HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/reservation/temp HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;sessionIds&quot; : [ 5 ],
-  &quot;name&quot; : &quot;홍길순&quot;,
-  &quot;phone&quot; : &quot;01011112222&quot;,
-  &quot;conferenceId&quot; : 5
+  "sessionIds" : [ 5 ],
+  "name" : "홍길순",
+  "phone" : "01011112222",
+  "conferenceId" : 5
 }</code></pre>
 </div>
 </div>
@@ -1762,39 +1655,39 @@ Content-Type: application/json
 <h4 id="_응답_예시_14">12.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;reservationId&quot; : 3,
-    &quot;conference&quot; : {
-      &quot;conferenceId&quot; : 5,
-      &quot;conferenceName&quot; : &quot;테스트 컨퍼런스&quot;,
-      &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-      &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:40.249188&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:40.249189&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;hasSessions&quot; : true,
-      &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;
+  "data" : {
+    "reservationId" : 3,
+    "conference" : {
+      "conferenceId" : 5,
+      "conferenceName" : "테스트 컨퍼런스",
+      "description" : "테스트 컨퍼런스 소개",
+      "location" : "테스트 주소 1234",
+      "startTime" : "2025-03-31T18:09:41.13541",
+      "endTime" : "2025-03-31T18:09:41.135411",
+      "capacity" : 100,
+      "hasSessions" : true,
+      "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa"
     },
-    &quot;sessions&quot; : [ {
-      &quot;sessionId&quot; : 5,
-      &quot;conferenceId&quot; : 5,
-      &quot;sessionName&quot; : &quot;테스트 세션&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;location&quot; : &quot;온라인&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:40.249761&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:40.249762&quot;,
-      &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-      &quot;speaker&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;
+    "sessions" : [ {
+      "sessionId" : 5,
+      "conferenceId" : 5,
+      "sessionName" : "테스트 세션",
+      "capacity" : 100,
+      "location" : "온라인",
+      "startTime" : "2025-03-31T18:09:41.135877",
+      "endTime" : "2025-03-31T18:09:41.135878",
+      "summary" : "테스트 세션 요약",
+      "speaker" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa"
     } ],
-    &quot;status&quot; : &quot;TEMPORARY&quot;
+    "status" : "TEMPORARY"
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1825,9 +1718,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_15">13.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/reservation/my HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/reservation/my HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzIwLCJleHAiOjE3NDM0MDkxMjB9.ocN4BniXEgU69ynTnykQ68Aa-N4ODkdVkiwyLKBpZho</code></pre>
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTgxLCJleHAiOjE3NDM0MTM5ODF9.U3K53otDpA2BO7bLNYHrb_aFGlJruVyY58GgD2gJQYI</code></pre>
 </div>
 </div>
 </div>
@@ -1848,39 +1741,39 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_15">13.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : [ {
-    &quot;reservationId&quot; : 1,
-    &quot;conference&quot; : {
-      &quot;conferenceId&quot; : 4,
-      &quot;conferenceName&quot; : &quot;테스트 컨퍼런스&quot;,
-      &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-      &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:40.218289&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:40.21829&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;hasSessions&quot; : true,
-      &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;
+  "data" : [ {
+    "reservationId" : 1,
+    "conference" : {
+      "conferenceId" : 4,
+      "conferenceName" : "테스트 컨퍼런스",
+      "description" : "테스트 컨퍼런스 소개",
+      "location" : "테스트 주소 1234",
+      "startTime" : "2025-03-31T18:09:41.105837",
+      "endTime" : "2025-03-31T18:09:41.105839",
+      "capacity" : 100,
+      "hasSessions" : true,
+      "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa"
     },
-    &quot;sessions&quot; : [ {
-      &quot;sessionId&quot; : 4,
-      &quot;conferenceId&quot; : 4,
-      &quot;sessionName&quot; : &quot;테스트 세션&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;location&quot; : &quot;온라인&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:40.219081&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:40.219082&quot;,
-      &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-      &quot;speaker&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074840Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=e333898a9f3fc88ed44f16a7dea2d11bf40b26c5b0f6f76c443f9f28b3cf5735&quot;
+    "sessions" : [ {
+      "sessionId" : 4,
+      "conferenceId" : 4,
+      "sessionName" : "테스트 세션",
+      "capacity" : 100,
+      "location" : "온라인",
+      "startTime" : "2025-03-31T18:09:41.106461",
+      "endTime" : "2025-03-31T18:09:41.106462",
+      "summary" : "테스트 세션 요약",
+      "speaker" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090941Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b40e5a4701ecf17234490c5eae8f57620eff212d819676b528b928d8a97c4dfa"
     } ],
-    &quot;status&quot; : &quot;CONFIRMED&quot;
+    "status" : "CONFIRMED"
   } ],
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1917,7 +1810,7 @@ Content-Type: application/json
 <h4 id="_요청_예시_16">14.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/face/upload HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/face/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Cookie: Authorization=testToken
 
@@ -1925,7 +1818,7 @@ Cookie: Authorization=testToken
 Content-Disposition: form-data; name=faceImage; filename=face.jpg
 Content-Type: image/jpeg
 
-    
+
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1947,19 +1840,19 @@ Content-Type: image/jpeg
 <h4 id="_응답_예시_16">14.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 1,
-    &quot;userId&quot; : 1,
-    &quot;rekognitionId&quot; : &quot;rekognition-12345&quot;
+  "data" : {
+    "id" : 1,
+    "userId" : 1,
+    "rekognitionId" : "rekognition-12345"
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -1993,7 +1886,7 @@ Content-Type: application/json
 <h4 id="_요청_예시_17">15.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">DELETE /api/v1/face/delete HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/face/delete HTTP/1.1
 Content-Type: application/json
 Cookie: Authorization=testToken</code></pre>
 </div>
@@ -2016,15 +1909,15 @@ Cookie: Authorization=testToken</code></pre>
 <h4 id="_응답_예시_17">15.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : &quot;얼굴 이미지 삭제 완료&quot;,
-  &quot;status&quot; : true
+  "data" : "얼굴 이미지 삭제 완료",
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2058,14 +1951,14 @@ Content-Type: application/json
 <h4 id="_요청_예시_18">16.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/face/authentication HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/face/authentication HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Content-Disposition: form-data; name=faceImage; filename=face.jpg
 Content-Type: image/jpeg
 
-    
+
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -2087,18 +1980,18 @@ Content-Type: image/jpeg
 <h4 id="_응답_예시_18">16.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;userId&quot; : 1,
-    &quot;similarity&quot; : 99.5
+  "data" : {
+    "userId" : 1,
+    "similarity" : 99.5
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2129,7 +2022,7 @@ Content-Type: application/json
 <h4 id="_요청_예시_19">17.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/face/collection HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/face/collection HTTP/1.1
 Content-Type: application/json
 Cookie: Authorization=testToken</code></pre>
 </div>
@@ -2152,15 +2045,15 @@ Cookie: Authorization=testToken</code></pre>
 <h4 id="_응답_예시_19">17.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : &quot;Rekognition Collection 생성 완료!&quot;,
-  &quot;status&quot; : true
+  "data" : "Rekognition Collection 생성 완료!",
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2184,14 +2077,14 @@ Content-Type: application/json
 <h4 id="_요청_예시_20">18.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/face/authentication HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/face/authentication HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Content-Disposition: form-data; name=faceImage; filename=face.jpg
 Content-Type: image/jpeg
 
-    
+
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -2200,15 +2093,15 @@ Content-Type: image/jpeg
 <h4 id="_응답_예시_20">18.1.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;Rekognition 얼굴 매칭에 실패하였습니다.&quot;
+  "status" : false,
+  "message" : "Rekognition 얼굴 매칭에 실패하였습니다."
 }</code></pre>
 </div>
 </div>
@@ -2224,14 +2117,14 @@ Content-Type: application/json
 <h4 id="_요청_예시_21">18.2.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/face/upload HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/face/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Content-Disposition: form-data; name=faceImage; filename=face.jpg
 Content-Type: image/jpeg
 
-    
+
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -2240,15 +2133,15 @@ Content-Type: image/jpeg
 <h4 id="_응답_예시_21">18.2.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 401 Unauthorized
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 401 Unauthorized
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;인증에 실패하였습니다. 다시 로그인 해 주세요.&quot;
+  "status" : false,
+  "message" : "인증에 실패하였습니다. 다시 로그인 해 주세요."
 }</code></pre>
 </div>
 </div>
@@ -2264,7 +2157,7 @@ Content-Type: application/json;charset=UTF-8
 <h4 id="_요청_예시_22">18.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">DELETE /api/v1/face/delete HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/face/delete HTTP/1.1
 Content-Type: application/json</code></pre>
 </div>
 </div>
@@ -2273,15 +2166,15 @@ Content-Type: application/json</code></pre>
 <h4 id="_응답_예시_22">18.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 401 Unauthorized
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 401 Unauthorized
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;인증에 실패하였습니다. 다시 로그인 해 주세요.&quot;
+  "status" : false,
+  "message" : "인증에 실패하였습니다. 다시 로그인 해 주세요."
 }</code></pre>
 </div>
 </div>
@@ -2312,8 +2205,8 @@ Content-Type: application/json;charset=UTF-8
 <h4 id="_요청_예시_23">19.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/conference HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.EmTgOvsgt3FfZepniIcSiunyyR5tpyQnKeSyiFzymqA</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/conference HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.2ef19WN6vWBsUIScLj3GRvol6aixMZcR2ljJa96XQI0</code></pre>
 </div>
 </div>
 </div>
@@ -2334,24 +2227,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_23">19.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : [ {
-    &quot;id&quot; : 8,
-    &quot;name&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.277485&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.277487&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;isActive&quot; : true,
-    &quot;hasSessions&quot; : true,
-    &quot;sessions&quot; : [ ]
+  "data" : [ {
+    "id" : 8,
+    "name" : "테스트 컨퍼런스",
+    "description" : "테스트 컨퍼런스 소개",
+    "location" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:38.145174",
+    "endTime" : "2025-03-31T18:09:38.145175",
+    "capacity" : 100,
+    "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "isActive" : true,
+    "hasSessions" : true,
+    "sessions" : [ ]
   } ],
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2382,8 +2275,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_24">20.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/conference/7 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEyLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.Zv2uM016EUyIVhi1mQzMoSLeFIpCDksiNMNyAaBroO8</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/conference/7 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEyLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.aeYIVZad4z852dGjnov2iWKzV2DsV3IkQ9s57IDZ5aA</code></pre>
 </div>
 </div>
 </div>
@@ -2404,38 +2297,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEyLCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_24">20.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 7,
-    &quot;name&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.258229&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.258231&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;isActive&quot; : true,
-    &quot;hasSessions&quot; : true,
-    &quot;sessions&quot; : [ {
-      &quot;id&quot; : 7,
-      &quot;conferenceId&quot; : 7,
-      &quot;name&quot; : &quot;테스트 세션&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;location&quot; : &quot;온라인&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:37.259435&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:37.259438&quot;,
-      &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-      &quot;speakerName&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;isActive&quot; : true,
-      &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-      &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 7,
+    "name" : "테스트 컨퍼런스",
+    "description" : "테스트 컨퍼런스 소개",
+    "location" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:38.129799",
+    "endTime" : "2025-03-31T18:09:38.1298",
+    "capacity" : 100,
+    "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "isActive" : true,
+    "hasSessions" : true,
+    "sessions" : [ {
+      "id" : 7,
+      "conferenceId" : 7,
+      "name" : "테스트 세션",
+      "capacity" : 100,
+      "location" : "온라인",
+      "startTime" : "2025-03-31T18:09:38.130369",
+      "endTime" : "2025-03-31T18:09:38.130371",
+      "summary" : "테스트 세션 요약",
+      "speakerName" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "isActive" : true,
+      "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+      "speakerStatus" : true
     } ]
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2451,7 +2344,7 @@ Content-Type: application/json
 <h4 id="_요청_예시_25">20.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/conference/999 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/conference/999 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJuYW1lIjoi7ZmN6ri47IicIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MjM2MTIyOSwiZXhwIjoxNzQyMzYzMDI5fQ.h9x-0PTY2-jaFcqh4mkQdoePT4TrHPSNJef-D5VQljY</code></pre>
 </div>
 </div>
@@ -2460,12 +2353,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_25">20.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 404 Not Found
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 404 Not Found
 Content-Type: application/json
 
 {
-  &quot;status&quot; : &quot;NOT_FOUND&quot;,
-  &quot;message&quot; : &quot;존재하지 않는 컨퍼런스입니다.&quot;
+  "status" : "NOT_FOUND",
+  "message" : "존재하지 않는 컨퍼런스입니다."
 }</code></pre>
 </div>
 </div>
@@ -2496,8 +2389,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_26">21.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/conference/6/sessions/6 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.lPHg8yl-leZt2nU_4o8aDQqohsttbwVmgW1vHn2xxSI</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/conference/6/sessions/6 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.pNyxJEL9UCf2GAP7E2uF51dpyDIbcnB2k_V4veMmfMY</code></pre>
 </div>
 </div>
 </div>
@@ -2518,26 +2411,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_26">21.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 6,
-    &quot;conferenceId&quot; : 6,
-    &quot;name&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;온라인&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.239722&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.239725&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-    &quot;speakerName&quot; : &quot;발표자&quot;,
-    &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-    &quot;isActive&quot; : true,
-    &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 6,
+    "conferenceId" : 6,
+    "name" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "온라인",
+    "startTime" : "2025-03-31T18:09:38.11475",
+    "endTime" : "2025-03-31T18:09:38.114752",
+    "summary" : "테스트 세션 요약",
+    "speakerName" : "발표자",
+    "speakerOrganization" : "발표자 소속",
+    "isActive" : true,
+    "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "speakerStatus" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2568,8 +2461,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_27">22.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/conference/6/sessions/6 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.lPHg8yl-leZt2nU_4o8aDQqohsttbwVmgW1vHn2xxSI</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/conference/6/sessions/6 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.pNyxJEL9UCf2GAP7E2uF51dpyDIbcnB2k_V4veMmfMY</code></pre>
 </div>
 </div>
 </div>
@@ -2590,26 +2483,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InRlc3RAZ
 <h4 id="_응답_예시_27">22.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 6,
-    &quot;conferenceId&quot; : 6,
-    &quot;name&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;온라인&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.239722&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.239725&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-    &quot;speakerName&quot; : &quot;발표자&quot;,
-    &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-    &quot;isActive&quot; : true,
-    &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 6,
+    "conferenceId" : 6,
+    "name" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "온라인",
+    "startTime" : "2025-03-31T18:09:38.11475",
+    "endTime" : "2025-03-31T18:09:38.114752",
+    "summary" : "테스트 세션 요약",
+    "speakerName" : "발표자",
+    "speakerOrganization" : "발표자 소속",
+    "isActive" : true,
+    "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "speakerStatus" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2640,8 +2533,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_28">23.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/conference HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjksImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.D6IFTiJk5-kpe_Dc0AjyvuKjhGMlMskbuLvayzfDkCw</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/conference HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjksImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.q3TvzMGykSdCQrfNfodbGQZoQ-3HbgV7xitEGN-_ax8</code></pre>
 </div>
 </div>
 </div>
@@ -2662,24 +2555,24 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjksImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_28">23.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : [ {
-    &quot;id&quot; : 4,
-    &quot;name&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.190305&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.190307&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;isActive&quot; : true,
-    &quot;hasSessions&quot; : true,
-    &quot;sessions&quot; : [ ]
+  "data" : [ {
+    "id" : 4,
+    "name" : "테스트 컨퍼런스",
+    "description" : "테스트 컨퍼런스 소개",
+    "location" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:38.078067",
+    "endTime" : "2025-03-31T18:09:38.078068",
+    "capacity" : 100,
+    "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "isActive" : true,
+    "hasSessions" : true,
+    "sessions" : [ ]
   } ],
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2710,8 +2603,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_29">24.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/conference/2 HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.z3EnEYrgk916sqyrRZdvRFL4nEL8MXkCmmAWuTtiYSA</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/conference/2 HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.dU7LUm-4IJD0RsQ5rGV7EKP8whJryMbIDfjWBfFxnh4</code></pre>
 </div>
 </div>
 </div>
@@ -2732,38 +2625,38 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjcsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_29">24.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 2,
-    &quot;name&quot; : &quot;테스트 컨퍼런스&quot;,
-    &quot;description&quot; : &quot;테스트 컨퍼런스 소개&quot;,
-    &quot;location&quot; : &quot;테스트 주소 1234&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.15452&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.154522&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;imageUrl&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;isActive&quot; : true,
-    &quot;hasSessions&quot; : true,
-    &quot;sessions&quot; : [ {
-      &quot;id&quot; : 2,
-      &quot;conferenceId&quot; : 2,
-      &quot;name&quot; : &quot;테스트 세션&quot;,
-      &quot;capacity&quot; : 100,
-      &quot;location&quot; : &quot;온라인&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:37.155154&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:37.155157&quot;,
-      &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-      &quot;speakerName&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;isActive&quot; : true,
-      &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-      &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 2,
+    "name" : "테스트 컨퍼런스",
+    "description" : "테스트 컨퍼런스 소개",
+    "location" : "테스트 주소 1234",
+    "startTime" : "2025-03-31T18:09:38.045848",
+    "endTime" : "2025-03-31T18:09:38.045851",
+    "capacity" : 100,
+    "imageUrl" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "isActive" : true,
+    "hasSessions" : true,
+    "sessions" : [ {
+      "id" : 2,
+      "conferenceId" : 2,
+      "name" : "테스트 세션",
+      "capacity" : 100,
+      "location" : "온라인",
+      "startTime" : "2025-03-31T18:09:38.046622",
+      "endTime" : "2025-03-31T18:09:38.046625",
+      "summary" : "테스트 세션 요약",
+      "speakerName" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "isActive" : true,
+      "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+      "speakerStatus" : true
     } ]
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2794,8 +2687,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_30">25.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">PUT /api/v1/admin/conference/5/sessions/5 HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NDM0MDczMTcsImV4cCI6MTc0MzQwOTExN30.dkAOWpQS2XHz_078Na9hDIgDHxImLcE3ktRuTGTEJuw
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/admin/conference/5/sessions/5 HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NDM0MTIxNzgsImV4cCI6MTc0MzQxMzk3OH0.M-utB9fVEejdRssQd-wDZk2SLAvqEsDZG5c6qN8YceA
 Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
@@ -2817,12 +2710,12 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <h4 id="_응답_예시_30">25.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : &quot;상태가 변경되었습니다.&quot;,
-  &quot;status&quot; : true
+  "data" : "상태가 변경되었습니다.",
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2853,8 +2746,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_31">26.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/admin/conference/1/sessions/1 HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.8hNx6y-eJk8usmCB8T25t0vOCxC1EgZNm0cTz0-OMgM</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin/conference/1/sessions/1 HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQxMjE3NywiZXhwIjoxNzQzNDEzOTc3fQ.zIoc-CS5nKAz0Ct8EaLiE66QUwzD87_VQnwDNsUeqJw</code></pre>
 </div>
 </div>
 </div>
@@ -2875,26 +2768,26 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_31">26.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 1,
-    &quot;conferenceId&quot; : 1,
-    &quot;name&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;온라인&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.086437&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.086441&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-    &quot;speakerName&quot; : &quot;발표자&quot;,
-    &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-    &quot;isActive&quot; : true,
-    &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 1,
+    "conferenceId" : 1,
+    "name" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "온라인",
+    "startTime" : "2025-03-31T18:09:37.983881",
+    "endTime" : "2025-03-31T18:09:37.983885",
+    "summary" : "테스트 세션 요약",
+    "speakerName" : "발표자",
+    "speakerOrganization" : "발표자 소속",
+    "isActive" : true,
+    "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "speakerStatus" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -2925,12 +2818,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_32">27.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">PUT /api/v1/admin/conference/sessions/3 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/admin/conference/sessions/3 HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQwNzMxNywiZXhwIjoxNzQzNDA5MTE3fQ.E52ksyQbGp815GRO0SnSH1bCKi_RGV7s0awQDxJSiL4
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MzQxMjE3OCwiZXhwIjoxNzQzNDEzOTc4fQ.Aarw_QBvxhiFMZK_CzETb9tybfLWmrk6Q1gOoHhtAxc
 
 {
-  &quot;location&quot; : &quot;변경된 장소&quot;
+  "location" : "변경된 장소"
 }</code></pre>
 </div>
 </div>
@@ -2952,26 +2845,26 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjgsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_32">27.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 3,
-    &quot;conferenceId&quot; : 3,
-    &quot;name&quot; : &quot;테스트 세션&quot;,
-    &quot;capacity&quot; : 100,
-    &quot;location&quot; : &quot;변경된 장소&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:37.175087&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:37.17509&quot;,
-    &quot;summary&quot; : &quot;테스트 세션 요약&quot;,
-    &quot;speakerName&quot; : &quot;발표자&quot;,
-    &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-    &quot;isActive&quot; : true,
-    &quot;speakerImage&quot; : &quot;https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T074837Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=b637dfce504194daed0c627725a1099165124921a3314c2687b0fdcfb173d9b7&quot;,
-    &quot;speakerStatus&quot; : true
+  "data" : {
+    "id" : 3,
+    "conferenceId" : 3,
+    "name" : "테스트 세션",
+    "capacity" : 100,
+    "location" : "변경된 장소",
+    "startTime" : "2025-03-31T18:09:38.064589",
+    "endTime" : "2025-03-31T18:09:38.0646",
+    "summary" : "테스트 세션 요약",
+    "speakerName" : "발표자",
+    "speakerOrganization" : "발표자 소속",
+    "isActive" : true,
+    "speakerImage" : "https://user-faces-storage.s3.ap-northeast-2.amazonaws.com/test.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250331T090938Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=3600&amp;X-Amz-Credential=AKIAYKFQQZLXFVB7FVFI%2F20250331%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=72fa2d2c66db45d687226e9273d4652faf4749b98597b483e86c1de16c67e7ba",
+    "speakerStatus" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3014,12 +2907,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_33">28.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/auth/login HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;email&quot; : &quot;test@gmail.com&quot;,
-  &quot;password&quot; : &quot;1234&quot;
+  "email" : "test@gmail.com",
+  "password" : "1234"
 }</code></pre>
 </div>
 </div>
@@ -3041,23 +2934,23 @@ Content-Type: application/json
 <h4 id="_응답_예시_33">28.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE2LCJleHAiOjE3NDM0MDkxMTZ9.58D2IularjaAI3a1t0MzAKGwbiQbIQQchng4_EIheXQ; Path=/; Max-Age=1800000; Expires=Mon, 21 Apr 2025 03:48:36 GMT; Secure; HttpOnly; SameSite=None
+Set-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc3LCJleHAiOjE3NDM0MTM5Nzd9.DOVOwMFk3YZs-Bp3F3ERJPYd-jWPmMiRB4auQHjuvRc; Path=/; Max-Age=1800000; Expires=Mon, 21 Apr 2025 05:09:37 GMT; Secure; HttpOnly; SameSite=None
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;accessToken&quot; : &quot;eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE2LCJleHAiOjE3NDM0MDkxMTZ9.58D2IularjaAI3a1t0MzAKGwbiQbIQQchng4_EIheXQ&quot;,
-    &quot;id&quot; : 4,
-    &quot;email&quot; : &quot;test@gmail.com&quot;,
-    &quot;name&quot; : &quot;홍길순&quot;,
-    &quot;phone&quot; : &quot;01011112222&quot;,
-    &quot;role&quot; : &quot;USER&quot;
+  "data" : {
+    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc3LCJleHAiOjE3NDM0MTM5Nzd9.DOVOwMFk3YZs-Bp3F3ERJPYd-jWPmMiRB4auQHjuvRc",
+    "id" : 4,
+    "email" : "test@gmail.com",
+    "name" : "홍길순",
+    "phone" : "01011112222",
+    "role" : "USER"
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3081,12 +2974,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_34">29.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/auth/login HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;email&quot; : &quot;nonexistent@gmail.com&quot;,
-  &quot;password&quot; : &quot;1234&quot;
+  "email" : "nonexistent@gmail.com",
+  "password" : "1234"
 }</code></pre>
 </div>
 </div>
@@ -3095,15 +2988,15 @@ Content-Type: application/json
 <h4 id="_응답_예시_34">29.1.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;로그인 정보에 해당하는 유저가 존재하지 않습니다.&quot;
+  "status" : false,
+  "message" : "로그인 정보에 해당하는 유저가 존재하지 않습니다."
 }</code></pre>
 </div>
 </div>
@@ -3119,12 +3012,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_35">29.2.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/auth/login HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;email&quot; : &quot;&quot;,
-  &quot;password&quot; : &quot;1234&quot;
+  "email" : "",
+  "password" : "1234"
 }</code></pre>
 </div>
 </div>
@@ -3133,18 +3026,18 @@ Content-Type: application/json
 <h4 id="_응답_예시_35">29.2.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;email&quot;,
-    &quot;message&quot; : &quot;이메일을 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "email",
+    "message" : "이메일을 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -3161,12 +3054,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_36">29.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/auth/login HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;email&quot; : &quot;test@gmail.com&quot;,
-  &quot;password&quot; : &quot;&quot;
+  "email" : "test@gmail.com",
+  "password" : ""
 }</code></pre>
 </div>
 </div>
@@ -3175,18 +3068,18 @@ Content-Type: application/json
 <h4 id="_응답_예시_36">29.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;잘못된 요청입니다.&quot;,
-  &quot;validationErrors&quot; : [ {
-    &quot;field&quot; : &quot;password&quot;,
-    &quot;message&quot; : &quot;비밀번호를 입력해 주세요.&quot;
+  "status" : false,
+  "message" : "잘못된 요청입니다.",
+  "validationErrors" : [ {
+    "field" : "password",
+    "message" : "비밀번호를 입력해 주세요."
   } ]
 }</code></pre>
 </div>
@@ -3203,12 +3096,12 @@ Content-Type: application/json
 <h4 id="_요청_예시_37">29.4.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/v1/auth/login HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  &quot;email&quot; : &quot;test@gmail.com&quot;,
-  &quot;password&quot; : &quot;wrongpassword&quot;
+  "email" : "test@gmail.com",
+  "password" : "wrongpassword"
 }</code></pre>
 </div>
 </div>
@@ -3217,15 +3110,15 @@ Content-Type: application/json
 <h4 id="_응답_예시_37">29.4.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 400 Bad Request
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;로그인 정보에 해당하는 유저가 존재하지 않습니다.&quot;
+  "status" : false,
+  "message" : "로그인 정보에 해당하는 유저가 존재하지 않습니다."
 }</code></pre>
 </div>
 </div>
@@ -3258,9 +3151,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_38">30.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/attend?conferenceId=14 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/attend?conferenceId=14 HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE1LCJleHAiOjE3NDM0MDkxMTV9.FU4RiAe6ZaGP0hshCa3vG_pJITbvnkaWKPwaEtuk9S8</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc2LCJleHAiOjE3NDM0MTM5NzZ9.zgxNCrrFMBkd5QL-1_mUNfjC4HBsCu79c7K1tOb-0ig</code></pre>
 </div>
 </div>
 </div>
@@ -3281,28 +3174,28 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_38">30.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 14,
-    &quot;name&quot; : &quot;컨퍼런스B&quot;,
-    &quot;description&quot; : &quot;좋은 컨퍼런스B&quot;,
-    &quot;location&quot; : &quot;서울 법성포B&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:35.240257&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:35.240258&quot;,
-    &quot;capacity&quot; : 10,
-    &quot;hasSessions&quot; : false,
-    &quot;imageUrl&quot; : &quot;test.png&quot;,
-    &quot;isActive&quot; : true,
-    &quot;sessions&quot; : [ ],
-    &quot;attend&quot; : true
+  "data" : {
+    "id" : 14,
+    "name" : "컨퍼런스B",
+    "description" : "좋은 컨퍼런스B",
+    "location" : "서울 법성포B",
+    "startTime" : "2025-03-31T18:09:36.134725",
+    "endTime" : "2025-03-31T18:09:36.134726",
+    "capacity" : 10,
+    "hasSessions" : false,
+    "imageUrl" : "test.png",
+    "isActive" : true,
+    "sessions" : [ ],
+    "attend" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3318,9 +3211,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_39">30.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/attend?conferenceId=6 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/attend?conferenceId=6 HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE0LCJleHAiOjE3NDM0MDkxMTR9.de9O5qci-yZT3us7qhDExluCt-KyIQyIGDXaMIfSjzg</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc1LCJleHAiOjE3NDM0MTM5NzV9.9IoCXofhEoSTwUTtWxltCBqC6eqYV1KHzQMZS4rMGEc</code></pre>
 </div>
 </div>
 </div>
@@ -3328,28 +3221,28 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_39">30.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 6,
-    &quot;name&quot; : &quot;컨퍼런스C&quot;,
-    &quot;description&quot; : &quot;좋은 컨퍼런스C&quot;,
-    &quot;location&quot; : &quot;서울 법성포C&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:34.896498&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:34.8965&quot;,
-    &quot;capacity&quot; : 10,
-    &quot;hasSessions&quot; : false,
-    &quot;imageUrl&quot; : &quot;test.png&quot;,
-    &quot;isActive&quot; : true,
-    &quot;sessions&quot; : [ ],
-    &quot;attend&quot; : false
+  "data" : {
+    "id" : 6,
+    "name" : "컨퍼런스C",
+    "description" : "좋은 컨퍼런스C",
+    "location" : "서울 법성포C",
+    "startTime" : "2025-03-31T18:09:35.799166",
+    "endTime" : "2025-03-31T18:09:35.799168",
+    "capacity" : 10,
+    "hasSessions" : false,
+    "imageUrl" : "test.png",
+    "isActive" : true,
+    "sessions" : [ ],
+    "attend" : false
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3383,9 +3276,9 @@ Content-Type: application/json
 <h4 id="_요청_예시_40">31.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/attend?conferenceId=1 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/attend?conferenceId=1 HTTP/1.1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE0LCJleHAiOjE3NDM0MDkxMTR9._M2M1VgSr5qUh7AyeNiGybmXqLl_uevLqeynyJGw800</code></pre>
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc1LCJleHAiOjE3NDM0MTM5NzV9.YY3nesjlOedfByxlER94JU137PLgmxaS7W5f48FlFDY</code></pre>
 </div>
 </div>
 </div>
@@ -3406,41 +3299,41 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_40">31.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;id&quot; : 1,
-    &quot;name&quot; : &quot;컨퍼런스A&quot;,
-    &quot;description&quot; : &quot;좋은 컨퍼런스A&quot;,
-    &quot;location&quot; : &quot;서울 법성포A&quot;,
-    &quot;startTime&quot; : &quot;2025-03-31T16:48:34.220155&quot;,
-    &quot;endTime&quot; : &quot;2025-03-31T16:48:34.220164&quot;,
-    &quot;capacity&quot; : 10,
-    &quot;hasSessions&quot; : true,
-    &quot;imageUrl&quot; : &quot;test.png&quot;,
-    &quot;isActive&quot; : true,
-    &quot;sessions&quot; : [ {
-      &quot;id&quot; : 1,
-      &quot;name&quot; : &quot;세션&quot;,
-      &quot;capacity&quot; : 10,
-      &quot;location&quot; : &quot;서울 법성포 떡잎마을&quot;,
-      &quot;startTime&quot; : &quot;2025-03-31T16:48:34.232771&quot;,
-      &quot;endTime&quot; : &quot;2025-03-31T16:48:34.232779&quot;,
-      &quot;summary&quot; : &quot;좋은 세션&quot;,
-      &quot;speakerName&quot; : &quot;발표자&quot;,
-      &quot;speakerOrganization&quot; : &quot;발표자 소속&quot;,
-      &quot;speakerImageKey&quot; : null,
-      &quot;active&quot; : true,
-      &quot;attend&quot; : true
+  "data" : {
+    "id" : 1,
+    "name" : "컨퍼런스A",
+    "description" : "좋은 컨퍼런스A",
+    "location" : "서울 법성포A",
+    "startTime" : "2025-03-31T18:09:35.14476",
+    "endTime" : "2025-03-31T18:09:35.14477",
+    "capacity" : 10,
+    "hasSessions" : true,
+    "imageUrl" : "test.png",
+    "isActive" : true,
+    "sessions" : [ {
+      "id" : 1,
+      "name" : "세션",
+      "capacity" : 10,
+      "location" : "서울 법성포 떡잎마을",
+      "startTime" : "2025-03-31T18:09:35.156562",
+      "endTime" : "2025-03-31T18:09:35.15657",
+      "summary" : "좋은 세션",
+      "speakerName" : "발표자",
+      "speakerOrganization" : "발표자 소속",
+      "speakerImageKey" : null,
+      "attend" : true,
+      "active" : true
     } ],
-    &quot;attend&quot; : true
+    "attend" : true
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3471,8 +3364,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_41">32.1.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/attend/users?conferenceId=10&amp;sessionId=4 HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE1LCJleHAiOjE3NDM0MDkxMTV9.RJOl4GkyEUK5iv_s0fF4qdlRtvb2bb12zsx4AgfDpGU</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/attend/users?conferenceId=10&amp;sessionId=4 HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc2LCJleHAiOjE3NDM0MTM5NzZ9.jsBEsKqNaxSh5tNwvm8kDp6TGxG2Lgn2FKE7ZmJ-LNc</code></pre>
 </div>
 </div>
 </div>
@@ -3493,24 +3386,24 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_41">32.2.1. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;data&quot; : {
-    &quot;name&quot; : &quot;세션&quot;,
-    &quot;capacity&quot; : 10,
-    &quot;attendedCount&quot; : 1,
-    &quot;userAttendances&quot; : [ {
-      &quot;userId&quot; : 4,
-      &quot;userName&quot; : &quot;홍길순&quot;,
-      &quot;isAttended&quot; : true
+  "data" : {
+    "name" : "세션",
+    "capacity" : 10,
+    "attendedCount" : 1,
+    "userAttendances" : [ {
+      "userId" : 4,
+      "userName" : "홍길순",
+      "isAttended" : true
     } ]
   },
-  &quot;status&quot; : true
+  "status" : true
 }</code></pre>
 </div>
 </div>
@@ -3526,8 +3419,8 @@ Content-Type: application/json
 <h4 id="_요청_예시_42">32.3.1. 요청 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/v1/attend/users?conferenceId=999&amp;sessionId=999 HTTP/1.1
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDA3MzE1LCJleHAiOjE3NDM0MDkxMTV9.LfDQs8Vk1XeBkgZcCzTNVk3-IeRsjOO7NgoMGX_lw64</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/attend/users?conferenceId=999&amp;sessionId=999 HTTP/1.1
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQzNDEyMTc1LCJleHAiOjE3NDM0MTM5NzV9.CAZ-uW9JhZvnhO4HuobNE0Ul4njXf9vg2fuyimNPkQ4</code></pre>
 </div>
 </div>
 </div>
@@ -3535,15 +3428,15 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdEBnb
 <h4 id="_응답_예시_42">32.3.2. 응답 예시</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 204 No Content
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 
 {
-  &quot;status&quot; : false,
-  &quot;message&quot; : &quot;해당 컨퍼런스/세션 에 참석 유저 데이터가 존재하지 않습니다.&quot;
+  "status" : false,
+  "message" : "해당 컨퍼런스/세션 에 참석 유저 데이터가 존재하지 않습니다."
 }</code></pre>
 </div>
 </div>
@@ -3554,137 +3447,9 @@ Content-Type: application/json
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-31 17:37:26 +0900
+Version 0.0.1-SNAPSHOT<br>
+Last updated 2025-03-31 18:09:18 +0900
 </div>
 </div>
-<script>
-;(function () { /*! Asciidoctor Tabs | Copyright (c) 2018-present Dan Allen | MIT License */
-  'use strict'
-
-  var config = (document.currentScript || {}).dataset || {}
-  var forEach = Array.prototype.forEach
-
-  init(document.querySelectorAll('.tabs'))
-
-  function init (tabsBlocks) {
-    if (!tabsBlocks.length) return
-    forEach.call(tabsBlocks, function (tabs) {
-      var syncIds = tabs.classList.contains('is-sync') ? {} : undefined
-      var tablist = tabs.querySelector('.tablist ul')
-      tablist.setAttribute('role', 'tablist')
-      var start
-      forEach.call(tablist.querySelectorAll('li'), function (tab, idx) {
-        tab.tabIndex = -1
-        tab.setAttribute('role', tab.classList.add('tab') || 'tab')
-        var id, anchor, syncId
-        if (!(id = tab.id) && (anchor = tab.querySelector('a[id]'))) {
-          id = tab.id = anchor.parentNode.removeChild(anchor).id
-        }
-        var panel = id && tabs.querySelector('.tabpanel[aria-labelledby~="' + id + '"]')
-        if (!panel) return idx ? undefined : toggleSelected(tab, true) // invalid state
-        syncIds && (((syncId = tab.textContent.trim()) in syncIds) ? (syncId = undefined) : true) &&
-        (syncIds[(tab.dataset.syncId = syncId)] = tab)
-        idx || (syncIds && (start = { tab: tab, panel: panel })) ? toggleHidden(panel, true) : toggleSelected(tab, true)
-        tab.setAttribute('aria-controls', panel.id)
-        panel.setAttribute('role', 'tabpanel')
-        var onClick = syncId === undefined ? activateTab : activateTabSync
-        tab.addEventListener('click', onClick.bind({ tabs: tabs, tab: tab, panel: panel }))
-      })
-      if (!tabs.closest('.tabpanel')) {
-        forEach.call(tabs.querySelectorAll('.tabpanel table.tableblock'), function (table) {
-          var container = Object.assign(document.createElement('div'), { className: 'tablecontainer' })
-          table.parentNode.insertBefore(container, table).appendChild(table)
-        })
-      }
-      if (start) {
-        var syncGroupId
-        for (var i = 0, lst = tabs.classList, len = lst.length, className; i !== len; i++) {
-          if (!(className = lst.item(i)).startsWith('data-sync-group-id=')) continue
-          tabs.dataset.syncGroupId = syncGroupId = lst.remove(className) || className.slice(19).replace(/\u00a0/g, ' ')
-          break
-        }
-        if (syncGroupId === undefined) tabs.dataset.syncGroupId = syncGroupId = Object.keys(syncIds).sort().join('|')
-        var preferredSyncId = 'syncStorageKey' in config &&
-          window[(config.syncStorageScope || 'local') + 'Storage'].getItem(config.syncStorageKey + '-' + syncGroupId)
-        var tab = preferredSyncId && syncIds[preferredSyncId]
-        tab && Object.assign(start, { tab: tab, panel: document.getElementById(tab.getAttribute('aria-controls')) })
-        toggleSelected(start.tab, true) || toggleHidden(start.panel, false)
-      }
-    })
-    onHashChange()
-    toggleClassOnEach(tabsBlocks, 'is-loading', 'remove')
-    window.setTimeout(toggleClassOnEach.bind(null, tabsBlocks, 'is-loaded', 'add'), 0)
-    window.addEventListener('hashchange', onHashChange)
-  }
-
-  function activateTab (e) {
-    var tab = this.tab
-    var tabs = this.tabs || (this.tabs = tab.closest('.tabs'))
-    var panel = this.panel || (this.panel = document.getElementById(tab.getAttribute('aria-controls')))
-    querySelectorWithSiblings(tabs, '.tablist .tab', 'tab').forEach(function (el) {
-      toggleSelected(el, el === tab)
-    })
-    querySelectorWithSiblings(tabs, '.tabpanel', 'tabpanel').forEach(function (el) {
-      toggleHidden(el, el !== panel)
-    })
-    if (!this.isSync && 'syncStorageKey' in config && 'syncGroupId' in tabs.dataset) {
-      var storageKey = config.syncStorageKey + '-' + tabs.dataset.syncGroupId
-      window[(config.syncStorageScope || 'local') + 'Storage'].setItem(storageKey, tab.dataset.syncId)
-    }
-    if (!e) return
-    var loc = window.location
-    var hashIdx = loc.hash ? loc.href.indexOf('#') : -1
-    if (~hashIdx) window.history.replaceState(null, '', loc.href.slice(0, hashIdx))
-    e.preventDefault()
-  }
-
-  function activateTabSync (e) {
-    activateTab.call(this, e)
-    var thisTabs = this.tabs
-    var thisTab = this.tab
-    var initialY = thisTabs.getBoundingClientRect().y
-    forEach.call(document.querySelectorAll('.tabs'), function (tabs) {
-      if (tabs === thisTabs || tabs.dataset.syncGroupId !== thisTabs.dataset.syncGroupId) return
-      querySelectorWithSiblings(tabs, '.tablist .tab', 'tab').forEach(function (tab) {
-        if (tab.dataset.syncId === thisTab.dataset.syncId) activateTab.call({ tabs: tabs, tab: tab, isSync: true })
-      })
-    })
-    var shiftedBy = thisTabs.getBoundingClientRect().y - initialY
-    if (shiftedBy && (shiftedBy = Math.round(shiftedBy))) window.scrollBy({ top: shiftedBy, behavior: 'instant' })
-  }
-
-  function querySelectorWithSiblings (scope, selector, siblingClass) {
-    var el = scope.querySelector(selector)
-    if (!el) return []
-    var result = [el]
-    while ((el = el.nextElementSibling) && el.classList.contains(siblingClass)) result.push(el)
-    return result
-  }
-
-  function toggleClassOnEach (elements, className, method) {
-    forEach.call(elements, function (el) {
-      el.classList[method](className)
-    })
-  }
-
-  function toggleHidden (el, state) {
-    el.classList[(el.hidden = state) ? 'add' : 'remove']('is-hidden')
-  }
-
-  function toggleSelected (el, state) {
-    el.setAttribute('aria-selected', '' + state)
-    el.classList[state ? 'add' : 'remove']('is-selected')
-    el.tabIndex = state ? 0 : -1
-  }
-
-  function onHashChange () {
-    var id = window.location.hash.slice(1)
-    if (!id) return
-    var tab = document.getElementById(~id.indexOf('%') ? decodeURIComponent(id) : id)
-    if (!(tab && tab.classList.contains('tab'))) return
-    'syncId' in tab.dataset ? activateTabSync.call({ tab: tab }) : activateTab.call({ tab: tab })
-  }
-})()
-</script>
 </body>
 </html>
