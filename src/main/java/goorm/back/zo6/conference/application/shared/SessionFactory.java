@@ -47,10 +47,10 @@ public class SessionFactory {
                         .build();
     }
 
-    private String parseSpeakerImageKey(String speakerImage) {
-        if (speakerImage == null || !speakerImage.contains("/conference/speaker/")) {
+    private String parseSpeakerImageKey(String speakerImageUrl) {
+        if (speakerImageUrl == null || !speakerImageUrl.contains("/conference/images")) {
             throw new IllegalArgumentException("Invalid speaker image url");
         }
-        return speakerImage.substring(speakerImage.indexOf("conference/speaker/"));
+        return speakerImageUrl.substring(speakerImageUrl.indexOf("conference/images"));
     }
 }
