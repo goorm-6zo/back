@@ -6,6 +6,7 @@ import goorm.back.zo6.attend.dto.*;
 import goorm.back.zo6.attend.infrastructure.AttendRedisService;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +36,8 @@ class AttendServiceTest {
     private UserRepository userRepository;
     @Mock
     private AttendRedisService attendRedisService;
+    @Mock
+    private AttendDtoConverter attendDtoConverter;
 
     @Test
     @DisplayName("컨퍼런스/세션 기반 예매자들 조회 와 참석 여부 및 행사 메타데이터를 조회 - 성공")
@@ -175,9 +178,28 @@ class AttendServiceTest {
 
         when(attendRepository.findAttendInfoByUserAndConference(userId, conferenceId))
                 .thenReturn(mockResponse);
+        when(attendDtoConverter.convertConferenceInfoResponse(any(ConferenceInfoResponse.class)))
+                .thenAnswer(invocation -> {
+                    ConferenceInfoResponse arg = invocation.getArgument(0);
+                    return new ConferenceInfoResponse(
+                            arg.getId(),
+                            arg.getName(),
+                            arg.getDescription(),
+                            arg.getLocation(),
+                            arg.getStartTime(),
+                            arg.getEndTime(),
+                            arg.getCapacity(),
+                            arg.getHasSessions(),
+                            "https://mockimage.com/" + arg.getImageUrl(),
+                            arg.getIsActive(),
+                            arg.isAttend(),
+                            arg.getSessions()
+                    );
+                });
 
         // when
         ConferenceInfoResponse result = attendService.findAllByToken(userId, conferenceId);
+
 
         // then
         assertNotNull(result);
@@ -222,6 +244,24 @@ class AttendServiceTest {
 
         when(attendRepository.findAttendInfoByUserAndConference(userId, conferenceId))
                 .thenReturn(mockResponse);
+        when(attendDtoConverter.convertConferenceInfoResponse(any(ConferenceInfoResponse.class)))
+                .thenAnswer(invocation -> {
+                    ConferenceInfoResponse arg = invocation.getArgument(0);
+                    return new ConferenceInfoResponse(
+                            arg.getId(),
+                            arg.getName(),
+                            arg.getDescription(),
+                            arg.getLocation(),
+                            arg.getStartTime(),
+                            arg.getEndTime(),
+                            arg.getCapacity(),
+                            arg.getHasSessions(),
+                            "https://mockimage.com/" + arg.getImageUrl(),
+                            arg.getIsActive(),
+                            arg.isAttend(),
+                            arg.getSessions()
+                    );
+                });
 
         // when
         ConferenceInfoResponse result = attendService.findAllByToken(userId, conferenceId);

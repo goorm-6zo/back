@@ -2,7 +2,6 @@ package goorm.back.zo6.attend.application;
 
 import goorm.back.zo6.attend.dto.ConferenceInfoResponse;
 import goorm.back.zo6.attend.dto.SessionInfo;
-import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.infrastructure.S3FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
