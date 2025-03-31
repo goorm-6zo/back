@@ -14,6 +14,7 @@ import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
 import goorm.back.zo6.conference.infrastructure.SessionJpaRepository;
+import goorm.back.zo6.config.RestDocsConfiguration;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.domain.ReservationSession;
 import goorm.back.zo6.reservation.domain.ReservationStatus;
@@ -27,15 +28,21 @@ import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,15 +50,26 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
+@Import(RestDocsConfiguration.class)
 class AttendControllerTest {
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private RestDocumentationResultHandler restDocs;
 
     @Autowired
     private MockMvc mockMvc;
@@ -105,7 +123,13 @@ class AttendControllerTest {
     private  LocalDateTime localDateTime;
 
     @BeforeEach
-    void setUp() {
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = webAppContextSetup(context)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(restDocs)
+                .build();
+
         localDateTime = LocalDateTime.now();
 
         testUser = User.builder().name("홍길순").email("test@gmail.com").phone("010-1111-2222").password(Password.from(passwordEncoder.encode("1234"))).role(Role.of("USER")).build();

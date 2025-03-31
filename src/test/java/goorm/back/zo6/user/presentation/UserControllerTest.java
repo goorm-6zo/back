@@ -2,8 +2,8 @@ package goorm.back.zo6.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.fixture.UserFixture;
 import goorm.back.zo6.user.application.UserService;
-import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.domain.UserRepository;
 import goorm.back.zo6.user.dto.request.PhoneRequest;
@@ -14,29 +14,46 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import java.util.Optional;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import goorm.back.zo6.config.RestDocsConfiguration;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
+@Import(RestDocsConfiguration.class)
 class UserControllerTest {
 
     @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private RestDocumentationResultHandler restDocs;
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -56,16 +73,15 @@ class UserControllerTest {
 
     private User testUser;
 
-
-
     @BeforeEach
-    void setUp(){
-        testUser = User.builder()
-                .name("홍길순")
-                .email("test@gmail.com")
-                .phone("01011112222")
-                .role(Role.of("USER"))
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = webAppContextSetup(context)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(restDocs)
                 .build();
+
+        this.testUser = userJpaRepository.saveAndFlush(UserFixture.유저());
         userJpaRepository.saveAndFlush(testUser);
     }
 
@@ -160,7 +176,7 @@ class UserControllerTest {
         // given
         SignUpRequest request = new SignUpRequest("홍길동", "", "4321", "01012345678");
 
-        // when & then
+        // when && then
         mockMvc.perform(post("/api/v1/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
