@@ -3,7 +3,7 @@ name: Deploy Spring Boot to ECS (Fargate)
 on:
   push:
     branches:
-      - main
+
 
 env:
   AWS_REGION: ap-northeast-2
