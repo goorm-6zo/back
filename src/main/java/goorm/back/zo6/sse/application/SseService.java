@@ -5,7 +5,6 @@ import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -25,6 +24,16 @@ public class SseService {
 
     public SseEmitter subscribe(Long conferenceId, Long sessionId){
         String eventKey = generateEventKey(conferenceId, sessionId);
+        SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
+        if(emitter != null){
+            try {
+                emitter.complete();
+            } catch (Exception e) {
+                log.warn("Emitter 연결 끊기에 실패하였습니다.: {}", e.getMessage());
+            }
+            emitterRepository.deleteByEventKey(eventKey);
+        }
+
         SseEmitter sseEmitter = emitterRepository.save(eventKey, new SseEmitter(TIMEOUT));
 
         registerEmitterHandler(eventKey, sseEmitter);
