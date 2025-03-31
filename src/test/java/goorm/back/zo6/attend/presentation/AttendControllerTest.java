@@ -1,6 +1,7 @@
 package goorm.back.zo6.attend.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goorm.back.zo6.attend.application.AttendDtoConverter;
 import goorm.back.zo6.attend.application.AttendService;
 import goorm.back.zo6.attend.domain.Attend;
 import goorm.back.zo6.attend.dto.AttendanceSummaryResponse;
@@ -13,6 +14,7 @@ import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.conference.domain.Conference;
 import goorm.back.zo6.conference.domain.Session;
 import goorm.back.zo6.conference.infrastructure.ConferenceJpaRepository;
+import goorm.back.zo6.conference.infrastructure.S3FileService;
 import goorm.back.zo6.conference.infrastructure.SessionJpaRepository;
 import goorm.back.zo6.config.RestDocsConfiguration;
 import goorm.back.zo6.reservation.domain.Reservation;
@@ -49,6 +51,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -103,6 +107,12 @@ class AttendControllerTest {
 
     @Autowired
     private AttendJpaRepository attendJpaRepository;
+
+    @Autowired
+    private AttendDtoConverter attendDtoConverter;
+
+    @MockitoBean
+    private S3FileService s3FileService;
 
     @MockitoBean
     private AttendRedisService attendRedisService;
@@ -217,10 +227,13 @@ class AttendControllerTest {
     void findByToken_ConferenceSessionSuccess() throws Exception {
         // given
         // when & then
+        when(s3FileService.generatePresignedUrl(any(String.class), eq(60))).thenReturn("test.png");
+
         mockMvc.perform(get("/api/v1/attend")
                         .cookie(new Cookie("Authorization", accessToken))
                         .param("conferenceId", String.valueOf(testConferenceA.getId()))
                         .contentType(MediaType.APPLICATION_JSON))
+
                 .andExpect(status().isOk())
                 .andExpectAll(
                         jsonPath("$.data.id").value(1),

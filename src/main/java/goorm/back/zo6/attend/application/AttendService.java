@@ -21,6 +21,7 @@ public class AttendService {
     private final AttendRepository attendRepository;
     private final UserRepository userRepository;
     private final AttendRedisService attendRedisService;
+    private final AttendDtoConverter attendDtoConverter;
 
     // 참석 정보 저장
     @Transactional
@@ -45,7 +46,7 @@ public class AttendService {
     // 해당 유저의 컨퍼런스/세션 참석 데이터를 조회
     public ConferenceInfoResponse findAllByToken(Long userId, Long conferenceId) {
         ConferenceInfoResponse conferenceInfoDto = attendRepository.findAttendInfoByUserAndConference(userId, conferenceId);
-        return conferenceInfoDto;
+        return attendDtoConverter.convertConferenceInfoResponse(conferenceInfoDto);
     }
     // 참석 객체로 변환
     private Attend convertToAttend(Long id, AttendData attendDataDto) {

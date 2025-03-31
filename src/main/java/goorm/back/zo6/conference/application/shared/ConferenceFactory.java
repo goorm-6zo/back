@@ -25,7 +25,7 @@ public class ConferenceFactory {
     }
 
     private String parseS3ImageKeyFromUrl(String imageUrl) {
-        if (imageUrl == null || !imageUrl.contains("/conference/images/")) {
+        if (imageUrl == null || !imageUrl.contains("/conference/images")) {
             throw new IllegalArgumentException("Invalid image url");
         }
         return imageUrl.substring(imageUrl.indexOf("conference/images"));
