@@ -23,7 +23,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +33,11 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest
-@Transactional
 @AutoConfigureMockMvc
+@Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
 class ConferenceControllerTest {
 
@@ -114,7 +113,7 @@ class ConferenceControllerTest {
                         .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(session.getId()))
-                .andExpect(jsonPath("$.data.conferenceId").value(session.getId()))
+                .andExpect(jsonPath("$.data.conferenceId").value(conference.getId()))
                 .andExpect(jsonPath("$.data.name").value(session.getName()))
                 .andExpect(jsonPath("$.data.capacity").value(session.getCapacity()))
                 .andExpect(jsonPath("$.data.location").value(session.getLocation()))

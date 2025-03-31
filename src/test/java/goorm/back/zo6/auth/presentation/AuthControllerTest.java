@@ -3,6 +3,7 @@ package goorm.back.zo6.auth.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.back.zo6.auth.application.AuthService;
 import goorm.back.zo6.auth.util.JwtUtil;
+import goorm.back.zo6.config.RestDocsConfiguration;
 import goorm.back.zo6.user.domain.Password;
 import goorm.back.zo6.user.domain.Role;
 import goorm.back.zo6.user.domain.User;
@@ -14,25 +15,42 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
+@Import(RestDocsConfiguration.class)
 class AuthControllerTest {
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private RestDocumentationResultHandler restDocs;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,7 +75,13 @@ class AuthControllerTest {
     private User testUser;
 
     @BeforeEach
-    void setUp() {
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = webAppContextSetup(context)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(restDocs)
+                .build();
+
         testUser = User.builder()
                 .name("홍길순")
                 .email("test@gmail.com")

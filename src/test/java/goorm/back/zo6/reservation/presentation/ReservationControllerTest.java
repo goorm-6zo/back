@@ -12,12 +12,10 @@ import goorm.back.zo6.fixture.ConferenceFixture;
 import goorm.back.zo6.fixture.ReservationFixture;
 import goorm.back.zo6.fixture.SessionFixture;
 import goorm.back.zo6.fixture.UserFixture;
-import goorm.back.zo6.reservation.application.ReservationRequest;
 import goorm.back.zo6.reservation.domain.Reservation;
 import goorm.back.zo6.reservation.infrastructure.ReservationJpaRepository;
 import goorm.back.zo6.user.domain.User;
 import goorm.back.zo6.user.infrastructure.UserJpaRepository;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,10 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @ActiveProfiles("test")
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
-@Transactional
 class ReservationControllerTest {
 
     @Autowired

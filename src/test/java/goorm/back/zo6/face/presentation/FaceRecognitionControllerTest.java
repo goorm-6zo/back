@@ -1,10 +1,10 @@
 package goorm.back.zo6.face.presentation;
 
 import goorm.back.zo6.auth.application.OAuth2LoginSuccessHandlerFactory;
-import goorm.back.zo6.auth.config.SecurityConfig;
 import goorm.back.zo6.auth.util.JwtUtil;
 import goorm.back.zo6.common.exception.CustomException;
 import goorm.back.zo6.common.exception.ErrorCode;
+import goorm.back.zo6.config.RestDocsConfiguration;
 import goorm.back.zo6.face.application.FaceRecognitionService;
 import goorm.back.zo6.face.domain.Face;
 import goorm.back.zo6.face.dto.response.FaceAuthResultResponse;
@@ -14,32 +14,47 @@ import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
+@Import(RestDocsConfiguration.class)
 class FaceRecognitionControllerTest {
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private RestDocumentationResultHandler restDocs;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,7 +75,13 @@ class FaceRecognitionControllerTest {
     private OAuth2UserServiceFactory oAuth2UserServiceFactory;
 
     @BeforeEach
-    void setUp() {
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = webAppContextSetup(context)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(restDocs)
+                .build();
+
         when(jwtUtil.validateToken(anyString())).thenReturn(true);
         when(jwtUtil.getUserId(anyString())).thenReturn(1L);
         when(jwtUtil.getUsername(anyString())).thenReturn("test@example.com");
