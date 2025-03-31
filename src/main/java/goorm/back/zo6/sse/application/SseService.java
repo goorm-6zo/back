@@ -25,11 +25,16 @@ public class SseService {
     public SseEmitter subscribe(Long conferenceId, Long sessionId){
         String eventKey = generateEventKey(conferenceId, sessionId);
         SseEmitter emitter = emitterRepository.findEmitterByKey(eventKey);
-        if(emitter != null){
+
+        // 기존 emitter가 있다면 send 시도로 연결 상태 확인
+        if (emitter != null) {
             try {
+                emitter.send(SseEmitter.event().name("check").data("ping")); // 끊기지 않았다면 이게 보내짐
+                log.info("기존 SSE 연결이 유지 중: {}", eventKey);
+                emitter.complete(); // 새로 연결하므로 기존 건 정리
+            } catch (IOException e) {
+                log.info("기존 SSE 연결이 끊김 (CLOSE_WAIT 추정): {}", eventKey);
                 emitter.complete();
-            } catch (Exception e) {
-                log.warn("Emitter 연결 끊기에 실패하였습니다.: {}", e.getMessage());
             }
             emitterRepository.deleteByEventKey(eventKey);
         }
