@@ -42,6 +42,7 @@ dependencies {
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -161,6 +162,7 @@ tasks.jacocoTestCoverageVerification {
 
 
 asciidoctor {
+    attributes 'projectdir': projectDir
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
     dependsOn test

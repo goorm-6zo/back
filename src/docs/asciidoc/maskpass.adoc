@@ -1,0 +1,860 @@
+= 마패(MASKPASS) API 명세서 🔐
+:doctype: book
+:toc: left
+:toclevels: 2
+:sectnums:
+:snippets: {projectdir}/build/generated-snippets
+
+== 소개
+
+이 문서는 마패(MASKPASS) 프로젝트의 API 명세서입니다.
+주요 기능은 다음과 같습니다:
+
+- QR 코드 생성 및 조회
+- 실시간 알림(SSE) 구독
+- 사용자 인증 및 회원 관리
+- 예약 등록 및 조회
+- 얼굴 인식 기반 인증
+- 관리자 전용 컨퍼런스/세션 관리
+- 출입 인증 및 출입 내역 조회
+
+각 API는 실제 테스트 기반의 요청/응답 예시를 포함하고 있습니다.
+
+== QR 코드 생성 API
+
+QR 코드를 생성하여 URL과 함께 반환합니다.
+컨퍼런스 ID와 세션 ID를 기반으로 QR을 생성하며, 세션 ID는 선택값입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/admin/qr`
+- **Query Parameters:**
+- `conferenceId` (필수): 컨퍼런스 ID
+- `sessionId` (선택): 세션 ID
+- `url` (필수): QR에 포함될 URL
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-create_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** QR 코드 정보 반환
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-create_-success/http-response.adoc[]
+
+'''
+
+QR 코드 생성 과정에서 발생할 수 있는 오류 케이스를 설명합니다.
+
+'''
+
+=== 실패 - 존재하지 않는 Conference ID
+
+요청한 `conferenceId`가 존재하지 않을 때 발생합니다.
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-conference-id_-not-found/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-conference-id_-not-found/http-response.adoc[]
+
+'''
+
+=== 실패 - 존재하지 않는 Session ID
+
+요청한 `sessionId`가 존재하지 않을 때 발생합니다.
+
+==== 요청 예시
+include::{snippets}/qr-code-controller-test/qr-code_-session-id_-not-found/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/qr-code-controller-test/qr-code_-session-id_-not-found/http-response.adoc[]
+
+'''
+== SSE 구독 API
+
+SSE 방식으로 클라이언트가 컨퍼런스에 구독을 요청하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/subscribe`
+- **Query Parameters:**
+- `conferenceId` (필수): 구독하려는 컨퍼런스 ID
+
+==== 요청 예시
+include::{snippets}/sse-controller-test/subscribe_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** SSE 스트림 시작
+
+==== 응답 예시
+include::{snippets}/sse-controller-test/subscribe_-success/http-response.adoc[]
+
+'''
+
+=== 실패 - conferenceId 누락
+
+conferenceId 없이 요청했을 때 발생합니다.
+
+==== 요청 예시
+include::{snippets}/sse-controller-test/subscribe_-none-conference-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/sse-controller-test/subscribe_-none-conference-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - emitter 저장 실패
+
+서버에 emitter 저장 실패 시 발생합니다.
+
+==== 요청 예시
+include::{snippets}/sse-controller-test/subscribe_-emitter-not-stored_-should-return-null/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/sse-controller-test/subscribe_-emitter-not-stored_-should-return-null/http-response.adoc[]
+
+'''
+
+== 사용자 회원가입 API
+
+사용자가 이름, 비밀번호, 전화번호를 입력하여 회원가입을 진행하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/users/signup`
+- **Content-Type:** `application/json`
+- **Request Body 필드:**
+  - `name` (필수): 사용자 이름
+  - `password` (필수): 비밀번호
+  - `phone` (필수): 전화번호
+
+==== 요청 예시
+include::{snippets}/user-controller-test/sign-up_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `201 Created`
+- **응답 내용:** 사용자 정보 반환
+
+==== 응답 예시
+include::{snippets}/user-controller-test/sign-up_-success/http-response.adoc[]
+
+'''
+
+== 오류 케이스 (회원가입)
+
+입력값 누락 또는 유효성 검사 실패 시 발생하는 오류입니다.
+
+=== 실패 - 이름 누락
+include::{snippets}/user-controller-test/sign-up_-name-blank-fails/http-response.adoc[]
+
+=== 실패 - 비밀번호 누락
+include::{snippets}/user-controller-test/sign-up_-password-blank-fails/http-response.adoc[]
+
+=== 실패 - 전화번호 누락
+include::{snippets}/user-controller-test/sign-up_-phone-blank-fails/http-response.adoc[]
+
+=== 실패 - 이메일 누락
+include::{snippets}/user-controller-test/sign-up_-email-blank-fails/http-response.adoc[]
+
+'''
+
+== 사용자 조회 API (토큰 기반)
+
+로그인된 사용자가 자신의 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/users`
+
+==== 요청 예시
+include::{snippets}/user-controller-test/find-by-token_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 사용자 정보 반환
+
+==== 응답 예시
+include::{snippets}/user-controller-test/find-by-token_-success/http-response.adoc[]
+
+'''
+
+== 사용자 ID 조회 API
+
+사용자 ID를 통해 특정 사용자의 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/users/{userId}`
+
+==== 요청 예시
+include::{snippets}/user-controller-test/get-user-by-id_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 사용자 정보 반환
+
+==== 응답 예시
+include::{snippets}/user-controller-test/get-user-by-id_-success/http-response.adoc[]
+
+'''
+
+== 전화번호 변경 API
+
+사용자의 전화번호를 변경하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `PATCH`
+- **URL:** `/api/v1/users/phone`
+- **Content-Type:** `application/json`
+
+==== 요청 예시
+include::{snippets}/user-controller-test/set-phone_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 전화번호 변경 완료 응답
+
+==== 응답 예시
+include::{snippets}/user-controller-test/set-phone_-success/http-response.adoc[]
+
+'''
+
+== 예약 생성 API
+
+사용자가 특정 컨퍼런스에 대한 예약을 생성하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/reservations`
+- **Content-Type:** `application/json`
+- **Request Body 필드:**
+  - `conferenceId` (필수): 예약하려는 컨퍼런스 ID
+  - `sessionId` (선택): 세션 ID
+  - `memo` (선택): 메모
+
+==== 요청 예시
+include::{snippets}/reservation-controller-test/create-reservation_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `201 Created`
+- **응답 내용:** 예약 ID 또는 예약 완료 정보
+
+==== 응답 예시
+include::{snippets}/reservation-controller-test/create-reservation_-success/http-response.adoc[]
+
+'''
+
+== 예약한 컨퍼런스 목록 조회 API
+
+사용자가 예약한 컨퍼런스 목록을 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/reservations/conferences`
+
+==== 요청 예시
+include::{snippets}/reservation-controller-test/내가_예약한_컨퍼런스목록조회_api_테스트/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 예약된 컨퍼런스 목록
+
+==== 응답 예시
+include::{snippets}/reservation-controller-test/내가_예약한_컨퍼런스목록조회_api_테스트/http-response.adoc[]
+
+'''
+
+== 예약한 특정 컨퍼런스 상세조회 API
+
+사용자가 예약한 컨퍼런스 중 하나에 대한 상세 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/reservations/conferences/{conferenceId}`
+
+==== 요청 예시
+include::{snippets}/reservation-controller-test/예약한_특정_컨퍼런스상세조회_api_테스트/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 컨퍼런스 상세 정보
+
+==== 응답 예시
+include::{snippets}/reservation-controller-test/예약한_특정_컨퍼런스상세조회_api_테스트/http-response.adoc[]
+
+'''
+
+== 예약 임시생성 API
+
+임시 예약을 생성하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/reservations/temporary`
+- **Content-Type:** `application/json`
+
+==== 요청 예시
+include::{snippets}/reservation-controller-test/예약_임시생성_api테스트/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `201 Created`
+- **응답 내용:** 임시 예약 정보
+
+==== 응답 예시
+include::{snippets}/reservation-controller-test/예약_임시생성_api테스트/http-response.adoc[]
+
+'''
+
+== 사용자와 연결된 예약 전체조회 API
+
+사용자와 연결된 모든 예약 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/reservations/me`
+
+==== 요청 예시
+include::{snippets}/reservation-controller-test/내_예약_모두조회_api_테스트/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 예약 목록 반환
+
+==== 응답 예시
+include::{snippets}/reservation-controller-test/내_예약_모두조회_api_테스트/http-response.adoc[]
+
+'''
+
+== 얼굴 이미지 업로드 API
+
+사용자의 얼굴 이미지를 업로드하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/face/upload`
+- **Content-Type:** `multipart/form-data`
+- **요구사항:** 인증 쿠키 필요
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/upload-user-face_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 업로드 성공 여부
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/upload-user-face_-success/http-response.adoc[]
+
+'''
+
+== 얼굴 이미지 삭제 API
+
+사용자의 얼굴 이미지를 삭제하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `DELETE`
+- **URL:** `/api/v1/face/delete`
+- **요구사항:** 인증 쿠키 필요
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/delete-face-image_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 삭제 성공 여부
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/delete-face-image_-success/http-response.adoc[]
+
+'''
+
+== 얼굴 기반 인증 API
+
+사용자의 얼굴 이미지와 등록된 이미지를 비교하여 인증하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/face/authenticate`
+- **Content-Type:** `multipart/form-data`
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/authentication-by-user-face_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 인증 성공 여부 및 사용자 정보
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/authentication-by-user-face_-success/http-response.adoc[]
+
+'''
+
+== Rekognition Collection 생성 API (관리자용)
+
+AWS Rekognition Collection을 생성하는 관리자용 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/admin/rekognition/collection`
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/create-collection_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 생성 완료 메시지
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/create-collection_-success/http-response.adoc[]
+
+'''
+
+== 얼굴 인식 API 오류 케이스
+
+얼굴 이미지 인증, 업로드, 삭제 중 발생할 수 있는 오류 케이스입니다.
+
+=== 실패 - 얼굴 인증 실패
+
+등록된 얼굴과 일치하지 않아 인증이 실패한 경우입니다.
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/authentication-by-user-face_-when-face-auth_-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/authentication-by-user-face_-when-face-auth_-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - 쿠키 없음 (업로드 시)
+
+쿠키가 없어서 사용자를 식별할 수 없는 경우입니다. 얼굴 업로드 시 주로 발생합니다.
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/upload-user-face_-when-cookie-none_-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/upload-user-face_-when-cookie-none_-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - 쿠키 없음 (삭제 시)
+
+쿠키가 없어서 사용자를 식별할 수 없는 경우입니다. 얼굴 삭제 시 주로 발생합니다.
+
+==== 요청 예시
+include::{snippets}/face-recognition-controller-test/delete-face-image_-when-cookie-none_-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/face-recognition-controller-test/delete-face-image_-when-cookie-none_-fails/http-response.adoc[]
+
+'''
+
+== 전체 컨퍼런스 목록 조회 API
+
+등록된 전체 컨퍼런스를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/conferences`
+
+==== 요청 예시
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 컨퍼런스 목록 반환
+
+==== 응답 예시
+include::{snippets}/conference-controller-test/get-all-conferences_-returns-conference-list/http-response.adoc[]
+
+'''
+
+== 특정 컨퍼런스 조회 API
+
+특정 ID를 가진 컨퍼런스의 상세 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/conferences/{conferenceId}`
+
+==== 요청 예시
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 해당 컨퍼런스의 상세 정보
+
+==== 응답 예시
+include::{snippets}/conference-controller-test/get-conference_-returns-specific-conference/http-response.adoc[]
+
+'''
+
+=== 실패 - 존재하지 않는 컨퍼런스 ID
+
+조회하려는 컨퍼런스가 존재하지 않을 때 발생하는 오류입니다.
+
+==== 요청 예시
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/conference-controller-test/get-conference_-not-found/http-response.adoc[]
+
+'''
+
+== 특정 컨퍼런스의 세션 목록 조회 API
+
+특정 컨퍼런스에 포함된 세션 목록을 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/conferences/{conferenceId}/sessions`
+
+==== 요청 예시
+include::{snippets}/conference-controller-test/get-session-detail_-returns-specific-session/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 세션 목록 반환
+
+==== 응답 예시
+include::{snippets}/conference-controller-test/get-session-detail_-returns-specific-session/http-response.adoc[]
+
+'''
+
+== 세션 상세 조회 API
+
+특정 세션의 상세 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/sessions/{sessionId}`
+
+==== 요청 예시
+include::{snippets}/conference-controller-test/get-session-detail_-returns-specific-session/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 세션 상세 정보
+
+==== 응답 예시
+include::{snippets}/conference-controller-test/get-session-detail_-returns-specific-session/http-response.adoc[]
+
+'''
+
+== [관리자] 전체 컨퍼런스 목록 조회 API
+
+관리자가 전체 컨퍼런스를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/admin/conferences`
+
+==== 요청 예시
+include::{snippets}/conference-admin-controller-test/all-conferences_get_success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 전체 컨퍼런스 목록
+
+==== 응답 예시
+include::{snippets}/conference-admin-controller-test/all-conferences_get_success/http-response.adoc[]
+
+'''
+
+== [관리자] 특정 컨퍼런스 조회 API
+
+관리자가 특정 컨퍼런스의 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/admin/conferences/{conferenceId}`
+
+==== 요청 예시
+include::{snippets}/conference-admin-controller-test/conference_get_success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 해당 컨퍼런스의 상세 정보
+
+==== 응답 예시
+include::{snippets}/conference-admin-controller-test/conference_get_success/http-response.adoc[]
+
+'''
+
+== [관리자] 세션 상태 수정 API
+
+관리자가 세션의 상태(활성/비활성)를 변경하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `PUT`
+- **URL:** `/api/v1/admin/sessions/{sessionId}/status`
+
+==== 요청 예시
+include::{snippets}/conference-admin-controller-test/session-status_put_success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 상태 변경 결과
+
+==== 응답 예시
+include::{snippets}/conference-admin-controller-test/session-status_put_success/http-response.adoc[]
+
+'''
+
+== [관리자] 세션 상세 조회 API
+
+관리자가 세션의 상세 정보를 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/admin/sessions/{sessionId}`
+
+==== 요청 예시
+include::{snippets}/conference-admin-controller-test/session-detail_get_success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 세션 상세 정보
+
+==== 응답 예시
+include::{snippets}/conference-admin-controller-test/session-detail_get_success/http-response.adoc[]
+
+'''
+
+== [관리자] 세션 데이터 수정 API
+
+관리자가 세션의 데이터를 수정하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `PUT`
+- **URL:** `/api/v1/admin/sessions/{sessionId}`
+
+==== 요청 예시
+include::{snippets}/conference-admin-controller-test/session-data_put_success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 수정된 세션 정보
+
+==== 응답 예시
+include::{snippets}/conference-admin-controller-test/session-data_put_success/http-response.adoc[]
+
+'''
+
+== 로그인 API
+
+사용자가 이메일과 비밀번호를 통해 로그인하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/auth/login`
+- **Content-Type:** `application/json`
+- **Request Body 필드:**
+  - `email` (필수): 사용자 이메일
+  - `password` (필수): 사용자 비밀번호
+
+==== 요청 예시
+include::{snippets}/auth-controller-test/login_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 로그인 성공 시 사용자 정보 및 인증 토큰 반환
+
+==== 응답 예시
+include::{snippets}/auth-controller-test/login_-success/http-response.adoc[]
+
+'''
+
+== 로그인 실패 케이스
+
+로그인 시 발생 가능한 실패 응답을 설명합니다.
+
+=== 실패 - 이메일 없음
+
+입력된 이메일이 존재하지 않을 경우입니다.
+
+==== 요청 예시
+include::{snippets}/auth-controller-test/login_-non-existent-email-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/auth-controller-test/login_-non-existent-email-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - 이메일 누락
+
+이메일을 입력하지 않은 경우입니다.
+
+==== 요청 예시
+include::{snippets}/auth-controller-test/login_-email-blank-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/auth-controller-test/login_-email-blank-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - 비밀번호 누락
+
+비밀번호를 입력하지 않은 경우입니다.
+
+==== 요청 예시
+include::{snippets}/auth-controller-test/login_-password-blank-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/auth-controller-test/login_-password-blank-fails/http-response.adoc[]
+
+'''
+
+=== 실패 - 비밀번호 불일치
+
+비밀번호가 일치하지 않은 경우입니다.
+
+==== 요청 예시
+include::{snippets}/auth-controller-test/login-test_-wrong-password-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/auth-controller-test/login-test_-wrong-password-fails/http-response.adoc[]
+
+
+== 출입 인증 API (컨퍼런스 단위)
+
+QR 토큰을 통해 사용자의 컨퍼런스 출입을 인증하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/attend/token/conference`
+- **Content-Type:** `application/json`
+
+==== 요청 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 입장 인증 성공 메시지
+
+==== 응답 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-success/http-response.adoc[]
+
+'''
+
+=== 실패 - 잘못된 컨퍼런스 토큰
+
+존재하지 않거나 만료된 토큰으로 컨퍼런스 입장 시도 시 발생합니다.
+
+==== 요청 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-fails/http-response.adoc[]
+
+'''
+
+== 출입 인증 API (세션 단위)
+
+QR 토큰을 통해 사용자의 세션 출입을 인증하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `POST`
+- **URL:** `/api/v1/attend/token/session`
+- **Content-Type:** `application/json`
+
+==== 요청 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-session-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 세션 입장 인증 성공 메시지
+
+==== 응답 예시
+include::{snippets}/attend-controller-test/find-by-token_-conference-session-success/http-response.adoc[]
+
+'''
+
+== 출입 요약 정보 조회 API
+
+사용자의 컨퍼런스 또는 세션 출입 정보를 요약해서 조회하는 API입니다.
+
+=== 요청 정보
+
+- **HTTP Method:** `GET`
+- **URL:** `/api/v1/attend/summary`
+
+==== 요청 예시
+include::{snippets}/attend-controller-test/get-attendance-summary_-success/http-request.adoc[]
+
+=== 응답 정보
+
+- **Status:** `200 OK`
+- **응답 내용:** 출입 현황 요약
+
+==== 응답 예시
+include::{snippets}/attend-controller-test/get-attendance-summary_-success/http-response.adoc[]
+
+'''
+
+=== 실패 - 출입 내역 없음
+
+출입한 이력이 존재하지 않는 경우입니다.
+
+==== 요청 예시
+include::{snippets}/attend-controller-test/get-attendance-summary_-no-attendance_-fails/http-request.adoc[]
+
+==== 응답 예시
+include::{snippets}/attend-controller-test/get-attendance-summary_-no-attendance_-fails/http-response.adoc[]

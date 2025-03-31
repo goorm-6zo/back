@@ -35,11 +35,11 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest
-@Transactional
 @AutoConfigureMockMvc
+@Transactional
 @ActiveProfiles("test")
+@ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
 public class ConferenceAdminControllerTest {
 
