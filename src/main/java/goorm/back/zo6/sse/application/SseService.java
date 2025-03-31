@@ -5,10 +5,8 @@ import goorm.back.zo6.common.exception.ErrorCode;
 import goorm.back.zo6.sse.infrastructure.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.yaml.snakeyaml.emitter.Emitter;
 
 import java.io.IOException;
 import java.util.Map;
